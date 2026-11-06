@@ -1,0 +1,56 @@
+name: Thumbnail-Zentrale bauen
+
+# Baut bei jeder Änderung im Ordner thumbnail-zentrale/ das Docker-Image für den Zima-Server,
+# testet den kompletten Ablauf und legt es unter ghcr.io/<besitzer>/thumbnail-zentrale:latest ab.
+on:
+  push:
+    branches: [main]
+    paths: ["thumbnail-zentrale/**", ".github/workflows/thumbnail-zentrale.yml"]
+  pull_request:
+    paths: ["thumbnail-zentrale/**", ".github/workflows/thumbnail-zentrale.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Namen
+        id: name
+        run: |
+          echo "image=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/thumbnail-zentrale" >> "$GITHUB_OUTPUT"
+          echo "built=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+      - name: Bauen
+        uses: docker/build-push-action@v6
+        with:
+          context: thumbnail-zentrale
+          platforms: linux/amd64
+          load: true
+          build-args: |
+            APP_VERSION=${{ github.sha }}
+            APP_BUILT=${{ steps.name.outputs.built }}
+          tags: ${{ steps.name.outputs.image }}:latest
+          labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Kompletter Ablauf (Bestellung, Bilder, Gmail-Entwurf, Abo)
+        run: docker run --rm -e PORT=18091 ${{ steps.name.outputs.image }}:latest python tests/test_ablauf.py
+      - name: App startet
+        run: |
+          docker run -d --name app -p 8091:8080 ${{ steps.name.outputs.image }}:latest
+          for i in $(seq 1 30); do curl -sf localhost:8091/api/stand > /dev/null && break; sleep 2; done
+          curl -sf localhost:8091/api/stand | python3 -c "import json,sys; d=json.load(sys.stdin); print('Version', d['version'])"
+          curl -sf -o /dev/null localhost:8091/
+      - name: Log bei Fehler
+        if: failure()
+        run: docker logs app || true
+      - name: Hochladen
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker push ${{ steps.name.outputs.image }}:latest
