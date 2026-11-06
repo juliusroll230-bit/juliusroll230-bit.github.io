@@ -20,10 +20,12 @@ import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 import ki
+import rechnung
 import mail
 import planer
 import render
 import store
+import website
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 WEB = os.path.join(HERE, "web")
@@ -31,10 +33,12 @@ PORT = int(os.environ.get("PORT", "8080"))
 PASSWORD = os.environ.get("PASSWORD", "")
 VERSION = {"sha": os.environ.get("APP_VERSION", "dev")[:7], "built": os.environ.get("APP_BUILT", "")}
 VARIANTEN = "abc"
+MONATE = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"]
 OFFEN = ("neu", "bereit", "in_gmail", "aenderung")
 
 mail_lock = threading.Lock()
 status = {"mail_laeuft": False}
+GEHEIM = ("app_passwort", "ki_schluessel", "github_token")
 
 
 # ======================= Aufträge =======================
@@ -108,48 +112,174 @@ def auftrag_anlegen(b, quelle="manuell", mail_info=None, bilder=()):
     return a_id
 
 
-def antwort_text(s, a):
+def antwort_text(s, a, vorlage=None):
     e = s["einstellungen"]
+    vorlage = vorlage or e["antwort_text"]
     vorname = (a.get("name") or "").split(" ")[0] or "du"
     try:
-        return e["antwort_text"].format(vorname=vorname, name=a.get("name", ""), kanal=a.get("kanal", ""),
+        return vorlage.format(vorname=vorname, name=a.get("name", ""), kanal=a.get("kanal", ""),
                                         thema_satz=f" zu „{a['thema']}“" if a.get("thema") else "",
-                                        dein_name=e.get("dein_name", ""))
+                                        dein_name=e.get("dein_name", ""), zahlung="{zahlung}",
+                                        monat=MONATE[dt.date.today().month - 1] + " " + str(dt.date.today().year))
     except (KeyError, IndexError, ValueError):
-        return e["antwort_text"]
+        return vorlage
 
 
-def gmail_entwurf(a_id, nummern=None, text=None):
+def liefer_text(s, a):
+    return antwort_text(s, a, s["einstellungen"].get("liefer_text") or s["einstellungen"]["antwort_text"])
+
+
+def mail_raus(e, an, betreff, text, anhaenge, senden, antwort_auf="", references=""):
+    """Baut die Mail (Text + HTML) und legt sie als Gmail-Entwurf an oder sendet sie. Gibt die Message-ID zurück."""
+    if not (e["gmail"] and e["app_passwort"]):
+        raise ValueError("Gmail ist noch nicht verbunden (Einstellungen).")
+    if senden and not e.get("direkt_senden"):
+        raise ValueError("Direktes Senden ist in den Einstellungen ausgeschaltet.")
+    msg = mail.entwurf_bauen(e["gmail"], an, betreff, text, antwort_auf, references, anhaenge,
+                             html_text=mail.html_mail(text, e.get("dein_name", "")), absender_name=e.get("dein_name", ""))
+    if senden:
+        mail.senden(e["gmail"], e["app_passwort"], msg)
+    else:
+        imap = mail.verbinden(e["gmail"], e["app_passwort"])
+        try:
+            mail.entwurf_anlegen(imap, msg)
+        finally:
+            try:
+                imap.logout()
+            except Exception:
+                pass
+    return msg["Message-ID"]
+
+
+def impressum(e):
+    return {"name": e.get("absender_name") or e.get("kontoinhaber") or e.get("dein_name", ""),
+            "strasse": e.get("absender_strasse", ""), "ort": e.get("absender_ort", ""),
+            "kleinunternehmer": e.get("kleinunternehmer", True)}
+
+
+def rechnung_pdf(r_id):
+    s = store.lesen()
+    r = next(x for x in s["rechnungen"] if x["id"] == r_id)
+    pfad = rechnung.pdf_bauen(s, r, impressum(s["einstellungen"]), store.RECHNUNGEN)
+    with store.aendern() as s:
+        next(x for x in s["rechnungen"] if x["id"] == r_id)["datei"] = os.path.basename(pfad)
+    return pfad
+
+
+def rechnung_fuer_auftrag(a_id):
+    """Offene Rechnung zum Auftrag holen oder neu anlegen (Einzel-Thumbnail)."""
+    with store.aendern() as s:
+        a = store.auftrag(s, a_id)
+        r = next((x for x in s["rechnungen"] if x["auftrag"] == a_id and not x.get("storniert")), None)
+        if not r:
+            posten = "Einzel-Thumbnail" + (f" „{a['thema']}“" if a.get("thema") else "") + (f" für {a['kanal']}" if a.get("kanal") else "")
+            r = rechnung.anlegen(s, a["email"], a.get("name", ""), a.get("kanal", ""), posten,
+                                 s["einstellungen"].get("preis_einzel") or 0, a_id)
+            store.ereignis(s, f"Rechnung {r['nr']} erstellt: {rechnung.euro(r['betrag'])} an {a['kanal'] or a['email']}", a_id)
+        r = dict(r)
+    rechnung_pdf(r["id"])
+    return r
+
+
+def gmail_entwurf(a_id, nummern=None, text=None, betreff=None, extra=(), senden=False, mit_rechnung=False):
+    """Antwort an den Kunden mit den angehakten PNGs (und optional Rechnung und weiteren Dateien).
+    senden=False legt einen Gmail-Entwurf an, senden=True schickt die Mail sofort ab."""
     s = store.lesen()
     a = store.auftrag(s, a_id)
     e = s["einstellungen"]
-    if not (e["gmail"] and e["app_passwort"]):
-        raise ValueError("Gmail ist noch nicht verbunden (Einstellungen).")
     if not a.get("email"):
         raise ValueError("Bei diesem Auftrag fehlt die E-Mail-Adresse des Kunden.")
+    if not (e["gmail"] and e["app_passwort"]):
+        raise ValueError("Gmail ist noch nicht verbunden (Einstellungen).")
     nummern = list(range(len(a["entwuerfe"]))) if nummern is None else nummern
     slug = re.sub(r"[^a-z0-9]+", "-", (a.get("kanal") or a.get("name") or "thumbnail").lower()).strip("-") or "thumbnail"
     anhaenge = []
     for n in nummern:
         with open(png_pfad(a_id, n), "rb") as f:
             anhaenge.append((f"thumbnail-{slug}-{VARIANTEN[n]}.png", f.read()))
-    betreff = a["mail"].get("betreff") or f"Dein Thumbnail{(' für ' + a['kanal']) if a.get('kanal') else ''}"
-    msg = mail.entwurf_bauen(e["gmail"], a["email"], betreff, text or antwort_text(s, a),
-                             a["mail"].get("message_id", ""), a["mail"].get("references", ""), anhaenge)
-    imap = mail.verbinden(e["gmail"], e["app_passwort"])
-    try:
-        mail.entwurf_anlegen(imap, msg)
-    finally:
-        try:
-            imap.logout()
-        except Exception:
-            pass
+    r = None
+    if mit_rechnung and a["paket"] != "Monats-Abo":
+        r = rechnung_fuer_auftrag(a_id)
+        with open(os.path.join(store.RECHNUNGEN, f"{r['nr']}.pdf"), "rb") as f:
+            anhaenge.append((f"Rechnung-{r['nr']}.pdf", f.read()))
+    anhaenge += list(extra)
+    if not anhaenge:
+        raise ValueError("Die Mail hat keinen Anhang.")
+    betreff = betreff or a["mail"].get("betreff") or f"Dein Thumbnail{(' für ' + a['kanal']) if a.get('kanal') else ''}"
+    text = (text or antwort_text(s, a)).replace("{zahlung}", rechnung.zahlungs_hinweis(e, r))
+    mid = mail_raus(e, a["email"], betreff, text, anhaenge, senden, a["mail"].get("message_id", ""), a["mail"].get("references", ""))
     with store.aendern() as s:
         a = store.auftrag(s, a_id)
-        a["gmail_entwurf"] = store.jetzt()
-        if a["status"] in ("neu", "bereit", "aenderung"):
-            a["status"] = "in_gmail"
-        store.ereignis(s, f"Antwort-Entwurf mit {len(anhaenge)} Bild(ern) in Gmail angelegt: {a['kanal'] or a['email']}", a_id)
+        if r:
+            next(x for x in s["rechnungen"] if x["id"] == r["id"])["verschickt"] = store.jetzt() if senden else ""
+        if senden:
+            a["gesendet"] = store.jetzt()
+            a["mail"]["message_id"] = mid  # damit die Antwort des Kunden im selben Verlauf landet
+            a["aenderungen"].append({"zeit": store.jetzt(), "von": "du", "fotos": [],
+                                     "text": f"Mail gesendet mit {len(anhaenge)} Anhang/Anhängen: {betreff}"})
+            if a["status"] != "archiv":
+                a["status"] = "geliefert"
+                a["geliefert"] = a.get("geliefert") or store.jetzt()
+            store.ereignis(s, f"Mail mit {len(anhaenge)} Anhang/Anhängen gesendet an {a['kanal'] or a['email']}", a_id)
+        else:
+            a["gmail_entwurf"] = store.jetzt()
+            if a["status"] in ("neu", "bereit", "aenderung"):
+                a["status"] = "in_gmail"
+            store.ereignis(s, f"Antwort-Entwurf mit {len(anhaenge)} Anhang/Anhängen in Gmail angelegt: {a['kanal'] or a['email']}", a_id)
+
+
+def abo_rechnung(email, senden=False, text=None):
+    """Monatsrechnung für ein Abo erstellen und per Mail schicken (oder als Entwurf)."""
+    with store.aendern() as s:
+        k = store.kunde_fuer(s, email)
+        if not k:
+            raise ValueError("Kunde nicht gefunden")
+        e = s["einstellungen"]
+        von = rechnung._ab(k.get("bezahlt_bis"))
+        bis = _monat_weiter(von) - dt.timedelta(days=1)
+        posten = f"Monats-Abo Thumbnails (unbegrenzt), {von.strftime('%d.%m.%Y')} bis {bis.strftime('%d.%m.%Y')}"
+        r = rechnung.anlegen(s, k["email"], k.get("name", ""), k.get("kanal", ""), posten,
+                             k.get("abo_betrag") or e.get("preis_abo") or 0)
+        r["abo"] = True
+        store.ereignis(s, f"Abo-Rechnung {r['nr']} erstellt: {rechnung.euro(r['betrag'])} an {k['kanal'] or k['email']}")
+        r, k = dict(r), dict(k)
+    pfad = rechnung_pdf(r["id"])
+    s = store.lesen()
+    e = s["einstellungen"]
+    if not (e["gmail"] and e["app_passwort"]):
+        return r  # Rechnung liegt als PDF bereit, Mail geht ohne Gmail nicht
+    a = {"name": k.get("name", ""), "kanal": k.get("kanal", ""), "thema": ""}
+    text = (text or antwort_text(s, a, e.get("abo_rechnung_text"))).replace("{zahlung}", rechnung.zahlungs_hinweis(e, r))
+    with open(pfad, "rb") as f:
+        mail_raus(e, k["email"], f"Rechnung {r['nr']} – Thumbnail-Abo", text, [(f"Rechnung-{r['nr']}.pdf", f.read())], senden)
+    with store.aendern() as s:
+        x = next(x for x in s["rechnungen"] if x["id"] == r["id"])
+        x["verschickt"] = store.jetzt() if senden else ""
+        store.ereignis(s, f"Abo-Rechnung {r['nr']} " + ("gesendet" if senden else "als Gmail-Entwurf angelegt"))
+    return r
+
+
+def rechnung_bezahlt(s, r, bezahlt=True):
+    """Rechnung als bezahlt markieren: Zahlung buchen, Auftrag bzw. Abo mitziehen."""
+    if bezahlt and not r.get("bezahlt"):
+        r["bezahlt"] = dt.date.today().isoformat()
+        zahlung_buchen(s, r["betrag"], r["email"], f"{r['nr']} · {r['posten']}", r.get("auftrag", ""))
+        s["zahlungen"][0]["rechnung"] = r["id"]
+        a = store.auftrag(s, r.get("auftrag", ""))
+        if a:
+            a["bezahlt"] = True
+        if r.get("abo"):
+            k = store.kunde_fuer(s, r["email"])
+            if k:
+                k["bezahlt_bis"] = _monat_weiter(rechnung._ab(k.get("bezahlt_bis"))).isoformat()
+                k["abo_status"], k["paket"] = "aktiv", "Abo"
+                k["abo_seit"] = k.get("abo_seit") or dt.date.today().isoformat()
+    elif not bezahlt and r.get("bezahlt"):
+        r["bezahlt"] = ""
+        s["zahlungen"] = [z for z in s["zahlungen"] if z.get("rechnung") != r["id"]]
+        a = store.auftrag(s, r.get("auftrag", ""))
+        if a:
+            a["bezahlt"] = False
 
 
 # ======================= Gmail abrufen =======================
@@ -229,9 +359,20 @@ def kunden_antwort(m):
         store.ereignis(s, f"Antwort von {a['kanal'] or a['email']}: „{text[:80]}“", a["id"])
 
 
+def abos_aufraeumen():
+    """Abos, deren Kündigungsdatum erreicht ist, auf "gekündigt" setzen."""
+    heute = dt.date.today().isoformat()
+    with store.aendern() as s:
+        for k in s["kunden"]:
+            if k.get("abo_status") == "aktiv" and k.get("kuendigt_zum") and k["kuendigt_zum"] <= heute:
+                k["abo_status"] = "gekündigt"
+                store.ereignis(s, f"Abo beendet: {k['kanal'] or k['email']}")
+
+
 def zeitplan():
     while True:
         try:
+            abos_aufraeumen()
             mail_pruefen()
         except Exception:
             traceback.print_exc()
@@ -278,8 +419,15 @@ def kennzahlen(s):
         "aenderungen": sum(1 for a in auftraege if a["status"] == "aenderung"),
         "abos_aktiv": len(abos_aktiv),
         "abos_angefragt": sum(1 for k in s["kunden"] if k.get("abo_status") == "angefragt"),
+        "abos_kuendigen": sum(1 for k in s["kunden"] if k.get("abo_status") == "aktiv" and k.get("kuendigt_zum")),
+        "abo_umsatz": round(sum(float(k.get("abo_betrag") or e.get("preis_abo") or 0) for k in abos_aktiv if not k.get("kuendigt_zum")), 2),
+        "abo_umsatz_hinweis": "pro Monat",
         "geliefert_monat": len(geliefert_monat),
         "umsatz_monat": len(abos_aktiv) * float(e.get("preis_abo") or 0) + len(einzel_monat) * float(e.get("preis_einzel") or 0),
+        "offen_betrag": round(sum(r["betrag"] for r in s["rechnungen"] if not r.get("bezahlt") and not r.get("storniert")), 2),
+        "offen_rechnungen": sum(1 for r in s["rechnungen"] if not r.get("bezahlt") and not r.get("storniert")),
+        "ueberfaellig": sum(1 for r in s["rechnungen"] if not r.get("bezahlt") and not r.get("storniert") and r["faellig"] < dt.date.today().isoformat()),
+        "abos_faellig": sum(1 for k in abos_aktiv if k.get("bezahlt_bis") and k["bezahlt_bis"] <= (dt.date.today() + dt.timedelta(days=3)).isoformat()),
         "unbezahlt": sum(1 for a in auftraege if a["status"] == "geliefert" and not a.get("bezahlt") and a["paket"] != "Monats-Abo"),
     }
 
@@ -287,17 +435,64 @@ def kennzahlen(s):
 def stand():
     s = store.lesen()
     e = dict(s["einstellungen"])
-    e["app_passwort"] = "••••" if e.get("app_passwort") else ""
-    e["ki_schluessel"] = "••••" if e.get("ki_schluessel") else ""
+    for g in GEHEIM:
+        e[g] = "••••" if e.get(g) else ""
     return {
         "einstellungen": e, "auftraege": s["auftraege"], "kunden": s["kunden"], "verlauf": s["verlauf"][:60],
         "zahlungen": s.get("zahlungen", [])[:200],
+        "rechnungen": s.get("rechnungen", [])[:300],
         "mail": {"letzte_pruefung": s["mail"]["letzte_pruefung"], "fehler": s["mail"]["fehler"],
                  "laeuft": status["mail_laeuft"]},
         "kennzahlen": kennzahlen(s), "version": VERSION,
         "optionen": {"vorlagen": planer.VORLAGEN, "stile": planer.STILE, "schriften": planer.SCHRIFTEN,
                      "emojis": sorted(f[:-4] for f in os.listdir(os.path.join(render.ASSETS, "emoji")) if f.endswith(".png"))},
     }
+
+
+# ======================= Website-Editor =======================
+website_cache = {}
+
+
+def _gh_einstellungen():
+    e = store.lesen()["einstellungen"]
+    if not e.get("github_token"):
+        raise ValueError("Für den Website-Editor fehlt der GitHub-Token (Einstellungen).")
+    return e["github_token"], e["github_repo"], e["github_branch"], e["github_datei"]
+
+
+def website_laden():
+    inhalt, sha = website.laden(*_gh_einstellungen())
+    website_cache.update(inhalt=inhalt, sha=sha)
+    return inhalt, sha
+
+
+def website_speichern(d):
+    """Änderungen immer auf den frischesten Stand anwenden und committen. Bei einem Wettlauf einmal neu versuchen."""
+    token, repo, branch, datei = _gh_einstellungen()
+    config, texte, bilder = d.get("config") or {}, d.get("texte") or {}, d.get("bilder") or {}
+    if not (config or texte or bilder):
+        raise ValueError("Keine Änderungen.")
+    teile = ([f"{len(config)} Einstellung(en)"] if config else []) + ([f"{len(texte)} Text(e)"] if texte else []) + \
+            ([f"{len(bilder)} Bild(er)"] if bilder else [])
+    for versuch in range(2):
+        inhalt, sha = website.laden(token, repo, branch, datei)
+        neu = website.config_setzen(inhalt, config) if config else inhalt
+        neu = website.texte_setzen(neu, texte) if texte else neu
+        for name, data_url in bilder.items():
+            neu = website.bild_setzen(neu, name, data_url)
+        try:
+            commit = website.speichern(token, repo, branch, datei, neu, sha, "Website-Editor: " + ", ".join(teile) + " geändert")
+            break
+        except website.WebsiteFehler as ex:
+            if versuch or "422" not in str(ex) and "409" not in str(ex):
+                raise
+    website_cache.update(inhalt=neu, sha=commit)
+    with store.aendern() as s:  # Preise der App mitziehen, damit Zahlungen und Kennzahlen stimmen
+        for web_key, app_key in (("preisEinzel", "preis_einzel"), ("preisAbo", "preis_abo")):
+            if web_key in config:
+                s["einstellungen"][app_key] = float(str(config[web_key]).replace(",", "."))
+        store.ereignis(s, "Website geändert: " + ", ".join(teile))
+    return dict(website.lesen(neu), sha=commit, url=store.lesen()["einstellungen"]["website_url"], stand=stand())
 
 
 # ======================= Website =======================
@@ -361,11 +556,21 @@ class Handler(BaseHTTPRequestHandler):
             return self._datei(os.path.join(WEB, p[5:]))
         if p.startswith("/assets/") and ".." not in p:
             return self._datei(os.path.join(render.ASSETS, p[8:]))
+        m = re.match(r"^/rechnungen/(RE-[\d\-]+\.pdf)$", p)
+        if m:
+            return self._datei(os.path.join(store.RECHNUNGEN, m.group(1)), download="download" in q)
         m = re.match(r"^/dateien/([\w\-]+)/([\w.\-]+)$", p)
         if m:
             return self._datei(os.path.join(store.AUFTRAEGE, m.group(1), m.group(2)), download="download" in q)
         if p == "/api/stand":
             return self._senden(200, stand())
+        m = re.match(r"^/api/website/bild/([\w\-]+)$", p)
+        if m:
+            src = website.bild_daten(website_cache.get("inhalt", ""), m.group(1))
+            if not src.startswith("data:"):
+                return self._senden(404, {"fehler": "nicht gefunden"})
+            kopf, daten = src.split(",", 1)
+            return self._senden(200, base64.b64decode(daten), kopf[5:].split(";")[0], {"Cache-Control": "max-age=60"})
         self._senden(404, {"fehler": "nicht gefunden"})
 
     def do_POST(self):
@@ -401,7 +606,7 @@ class Handler(BaseHTTPRequestHandler):
             d = self._json()
             with store.aendern() as s:
                 k = store.kunde_fuer(s, d.get("email"), anlegen={})
-                for feld in ("name", "kanal", "paket", "abo_status", "abo_seit", "bezahlt_bis", "notiz"):
+                for feld in ("name", "kanal", "paket", "abo_status", "abo_seit", "bezahlt_bis", "notiz", "kuendigt_zum", "abo_betrag"):
                     if feld in d:
                         k[feld] = str(d[feld])
                 if d.get("loeschen"):
@@ -414,6 +619,11 @@ class Handler(BaseHTTPRequestHandler):
                 k = store.kunde_fuer(s, d.get("email"))
                 if not k:
                     raise ValueError("Kunde nicht gefunden")
+                r = next((r for r in reversed(s["rechnungen"]) if r["email"] == k["email"] and r.get("abo")
+                          and not r.get("bezahlt") and not r.get("storniert")), None)
+                if r:  # offene Abo-Rechnung vorhanden: die gilt als bezahlt
+                    rechnung_bezahlt(s, r)
+                    return self._senden(200, stand())
                 betrag = float(d.get("betrag") or s["einstellungen"].get("preis_abo") or 0)
                 zahlung_buchen(s, betrag, k["email"], f"Abo {k['kanal'] or k['name'] or k['email']}")
                 start = max(dt.date.today(), _datum(k.get("bezahlt_bis")) or dt.date.today())
@@ -437,20 +647,52 @@ class Handler(BaseHTTPRequestHandler):
             with store.aendern() as s:
                 e = s["einstellungen"]
                 for k, v in d.items():
-                    if k not in e or (k in ("app_passwort", "ki_schluessel") and v == "••••"):
+                    if k not in e or (k in GEHEIM and v == "••••"):
                         continue
                     if isinstance(e[k], bool):
                         v = bool(v)
                     elif isinstance(e[k], (int, float)) and not isinstance(e[k], bool):
                         v = float(v) if "." in str(v) else int(v or 0)
                     else:
-                        v = str(v).strip() if k != "antwort_text" else str(v)
+                        v = str(v).strip() if k not in ("antwort_text", "liefer_text", "abo_rechnung_text") else str(v)
+                    if k == "iban" and v:
+                        if not rechnung.iban_gueltig(v):
+                            raise ValueError("Die IBAN stimmt nicht. Bitte nochmal prüfen.")
+                        v = rechnung.iban_schoen(v)
                     e[k] = v
             return self._senden(200, stand())
 
         if p == "/api/mail/pruefen":
             ergebnis = mail_pruefen()
             return self._senden(200, dict(stand(), ergebnis=ergebnis))
+
+        if p == "/api/rechnung":
+            d = self._json()
+            if d.get("abo_email"):  # Monatsrechnung fürs Abo
+                abo_rechnung(d["abo_email"], senden=d.get("modus") == "senden")
+                return self._senden(200, stand())
+            if d.get("auftrag"):  # nur Rechnung erstellen, ohne Mail
+                rechnung_fuer_auftrag(d["auftrag"])
+                return self._senden(200, stand())
+            with store.aendern() as s:
+                r = next((r for r in s["rechnungen"] if r["id"] == d.get("id")), None)
+                if not r:
+                    raise ValueError("Rechnung nicht gefunden")
+                if "bezahlt" in d:
+                    rechnung_bezahlt(s, r, bool(d["bezahlt"]))
+                if d.get("storniert") and not r.get("bezahlt"):
+                    r["storniert"] = dt.date.today().isoformat()
+                    store.ereignis(s, f"Rechnung {r['nr']} storniert", r.get("auftrag", ""))
+            if d.get("neu_bauen"):
+                rechnung_pdf(d["id"])
+            return self._senden(200, stand())
+
+        if p == "/api/website":  # Website frisch von GitHub laden
+            inhalt, sha = website_laden()
+            return self._senden(200, dict(website.lesen(inhalt), sha=sha, url=store.lesen()["einstellungen"]["website_url"]))
+
+        if p == "/api/website/speichern":
+            return self._senden(200, website_speichern(self._json()))
 
         if p == "/api/mail/test":
             e = store.lesen()["einstellungen"]
@@ -470,7 +712,11 @@ class Handler(BaseHTTPRequestHandler):
         if aktion == "entwurf":  # Entwurf aus dem Editor speichern und neu rendern
             e = planer.entwurf_pruefen(self._json().get("entwurf") or {})
             with store.aendern() as s:
-                store.auftrag(s, a_id)["entwuerfe"][n]["entwurf"] = e
+                x = store.auftrag(s, a_id)
+                x["entwuerfe"][n]["entwurf"] = e
+                x["geoeffnet"] = True
+                if x["status"] == "in_gmail":  # der Gmail-Entwurf ist jetzt veraltet
+                    x["status"] = "bereit"
             rendern(a_id, [n])
         elif aktion == "ki":
             d = self._json()
@@ -494,6 +740,31 @@ class Handler(BaseHTTPRequestHandler):
             d = self._json()
             nummern = [int(x) for x in d.get("varianten", [])] or None
             gmail_entwurf(a_id, nummern, d.get("text") or None)
+        elif aktion == "versand":  # Fenster "Per Mail senden": Text, Betreff, Bilder, eigene Anhänge
+            d = self._json()
+            extra = []
+            for x in d.get("extra", [])[:10]:
+                daten = base64.b64decode(str(x.get("daten", "")).split(",")[-1])
+                if len(daten) > 20_000_000:
+                    raise ValueError("Ein Anhang ist größer als 20 MB.")
+                extra.append((re.sub(r"[^\w.\- ]", "_", os.path.basename(str(x.get("name") or "anhang")))[-80:], daten))
+            gmail_entwurf(a_id, [int(x) for x in d.get("varianten", [])], str(d.get("text") or "") or None,
+                          str(d.get("betreff") or "") or None, extra, senden=d.get("modus") == "senden",
+                          mit_rechnung=bool(d.get("rechnung")))
+        elif aktion == "mailvorschlag":
+            e = s["einstellungen"]
+            offen = next((r for r in s["rechnungen"] if r["auftrag"] == a_id and not r.get("storniert")), None)
+            fertig = a["status"] in ("in_gmail", "geliefert") or bool(a.get("geoeffnet"))
+            return self._senden(200, {
+                "betreff": a["mail"].get("betreff") or f"Dein Thumbnail{(' für ' + a['kanal']) if a.get('kanal') else ''}",
+                "text": antwort_text(s, a, e.get("liefer_text") if fertig else e["antwort_text"]),
+                "rechnung": a["paket"] != "Monats-Abo" and not a.get("bezahlt"),
+                "rechnung_nr": offen["nr"] if offen else rechnung.naechste_nummer(s),
+                "rechnung_betrag": offen["betrag"] if offen else float(e.get("preis_einzel") or 0),
+                "rechnung_vorhanden": bool(offen),
+                "iban": bool(e.get("iban")), "direkt": bool(e.get("direkt_senden")),
+                "vorlagen": {"erste": antwort_text(s, a, e["antwort_text"]), "fertig": antwort_text(s, a, e.get("liefer_text"))},
+            })
         elif aktion == "status":
             d = self._json()
             with store.aendern() as s:
@@ -503,7 +774,10 @@ class Handler(BaseHTTPRequestHandler):
                     if d["status"] == "geliefert" and not x.get("geliefert"):
                         x["geliefert"] = store.jetzt()
                         store.ereignis(s, f"Geliefert: {x['kanal'] or x['email']}", a_id)
-                if "bezahlt" in d and bool(d["bezahlt"]) != bool(x.get("bezahlt")):
+                r = next((r for r in s["rechnungen"] if r["auftrag"] == a_id and not r.get("storniert")), None)
+                if "bezahlt" in d and r:
+                    rechnung_bezahlt(s, r, bool(d["bezahlt"]))
+                elif "bezahlt" in d and bool(d["bezahlt"]) != bool(x.get("bezahlt")):
                     x["bezahlt"] = bool(d["bezahlt"])
                     if x["paket"] != "Monats-Abo":  # Einzel-Thumbnail: Zahlung verbuchen bzw. zurücknehmen
                         if x["bezahlt"]:
@@ -513,6 +787,8 @@ class Handler(BaseHTTPRequestHandler):
                             s["zahlungen"] = [z for z in s["zahlungen"] if z.get("auftrag") != a_id]
                 if "email" in d:
                     x["email"] = str(d["email"]).strip().lower()
+                if "geoeffnet" in d:
+                    x["geoeffnet"] = bool(d["geoeffnet"])
         elif aktion == "notiz":
             text = str(self._json().get("text", "")).strip()
             if text:

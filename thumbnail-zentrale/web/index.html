@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f5f5f7">
+<meta name="theme-color" content="#0b0b0c">
+<meta name="color-scheme" content="dark">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Thumbnails">
 <link rel="icon" href="/web/icon.png">
@@ -11,172 +12,252 @@
 <title>Thumbnail-Zentrale</title>
 <style>
 :root {
-  --bg: #f5f5f7; --card: #ffffff; --text: #1d1d1f; --muted: #6e6e73; --line: #e5e5ea;
-  --blue: #0071e3; --blue-soft: #e8f1fc; --green: #1d9a4a; --green-soft: #e6f6ea;
-  --orange: #c25e00; --orange-soft: #fff1e0; --red: #d70015; --red-soft: #fde8ea; --grey-soft: #f0f0f2;
-  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 6px 24px rgba(0,0,0,.06);
-  --radius: 18px;
-  color-scheme: light;
+  --bg: #0b0b0c; --card: #161618; --card-2: #1c1c1f; --card-3: #232327; --text: #ffffff; --text-2: #e4e4e7; --muted: #a1a1aa; --muted-2: #71717a;
+  --line: #27272a; --line-2: #3f3f46;
+  --blue: #3b82f6; --blue-soft: rgba(59,130,246,.14); --green: #22c55e; --green-soft: rgba(34,197,94,.13);
+  --orange: #f59e0b; --orange-soft: rgba(245,158,11,.14); --red: #ef4444; --red-soft: rgba(239,68,68,.14);
+  --violet: #a78bfa; --violet-soft: rgba(167,139,250,.14); --grey-soft: rgba(255,255,255,.06);
+  --shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 10px 30px -12px rgba(0,0,0,.7);
+  --glow-blue: 0 0 0 1px rgba(59,130,246,.55), 0 8px 28px -6px rgba(59,130,246,.55);
+  --glow-green: 0 0 0 1px rgba(34,197,94,.5), 0 8px 28px -6px rgba(34,197,94,.5);
+  --radius: 18px; --ease: cubic-bezier(.2,.8,.2,1);
+  color-scheme: dark;
 }
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.45 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+html { -webkit-text-size-adjust: 100%; background: var(--bg); }
+body { margin: 0; min-height: 100vh; background: var(--bg); color: var(--text-2); font: 15px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: -1;
+  background: radial-gradient(900px 500px at 12% -10%, rgba(59,130,246,.10), transparent 60%), radial-gradient(800px 500px at 100% 0%, rgba(34,197,94,.07), transparent 60%); }
 button, input, select, textarea { font: inherit; color: inherit; }
 img { max-width: 100%; display: block; }
 [hidden] { display: none !important; }
 a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+::selection { background: rgba(59,130,246,.35); }
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
 
 /* Kopfzeile + Navigation */
-header.top { position: sticky; top: 0; z-index: 20; background: rgba(245,245,247,.8); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(0,0,0,.06); padding-top: env(safe-area-inset-top); }
-.top-inner { max-width: 1120px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 16px; }
-.brand { font-weight: 600; font-size: 17px; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; white-space: nowrap; }
-.brand-dot { width: 26px; height: 26px; border-radius: 7px; background: linear-gradient(135deg,#0071e3,#7a5cff); display: grid; place-items: center; color: #fff; font-size: 13px; font-weight: 700; }
-nav.tabs { display: flex; gap: 4px; background: rgba(0,0,0,.05); padding: 3px; border-radius: 10px; margin-left: auto; }
-nav.tabs button { border: 0; background: transparent; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 14px; color: var(--muted); font-weight: 500; }
-nav.tabs button[aria-selected="true"] { background: #fff; color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.1); }
-.badge-dot { display: inline-block; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--red); color: #fff; font-size: 11px; line-height: 18px; text-align: center; margin-left: 4px; font-weight: 600; }
+header.top { position: sticky; top: 0; z-index: 20; background: rgba(11,11,12,.72); backdrop-filter: saturate(160%) blur(18px); -webkit-backdrop-filter: saturate(160%) blur(18px); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top); }
+.top-inner { max-width: 1180px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 16px; }
+.brand { font-weight: 650; font-size: 16px; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; white-space: nowrap; color: var(--text); }
+.brand-dot { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg,#3b82f6,#22c55e); display: grid; place-items: center; color: #fff; font-size: 13px; font-weight: 800; box-shadow: 0 0 18px rgba(59,130,246,.45); }
+nav.tabs { display: flex; gap: 2px; background: rgba(255,255,255,.04); border: 1px solid var(--line); padding: 3px; border-radius: 12px; margin-left: auto; }
+nav.tabs button { border: 0; background: transparent; padding: 6px 13px; border-radius: 9px; cursor: pointer; font-size: 13.5px; color: var(--muted); font-weight: 500; transition: color .2s, background-color .2s; display: inline-flex; align-items: center; }
+nav.tabs button:hover { color: var(--text); }
+nav.tabs button[aria-selected="true"] { background: var(--card-3); color: var(--text); box-shadow: 0 0 0 1px var(--line-2) inset; }
+.badge-dot { display: inline-block; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--blue); color: #fff; font-size: 11px; line-height: 18px; text-align: center; margin-left: 6px; font-weight: 700; box-shadow: 0 0 10px rgba(59,130,246,.6); }
 
-main { max-width: 1120px; margin: 0 auto; padding: 24px 20px calc(110px + env(safe-area-inset-bottom)); }
-h1 { font-size: 32px; letter-spacing: -.02em; margin: 4px 0 4px; font-weight: 700; }
-h2 { font-size: 21px; letter-spacing: -.01em; margin: 0 0 12px; font-weight: 600; }
-h3 { font-size: 16px; margin: 0 0 8px; font-weight: 600; }
-.sub { color: var(--muted); margin: 0 0 24px; }
-.card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
+main { max-width: 1180px; margin: 0 auto; padding: 28px 20px calc(110px + env(safe-area-inset-bottom)); }
+h1 { font-size: 32px; letter-spacing: -.025em; margin: 4px 0 4px; font-weight: 700; color: var(--text); }
+h2 { font-size: 17px; letter-spacing: -.01em; margin: 0 0 14px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 8px; }
+h3 { font-size: 15px; margin: 0 0 10px; font-weight: 600; color: var(--text); }
+.sub { color: var(--muted); margin: 0 0 26px; }
+.card { background: linear-gradient(180deg, rgba(255,255,255,.025), rgba(255,255,255,0) 40%), var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; transition: border-color .25s var(--ease), transform .25s var(--ease); }
 .grid { display: grid; gap: 16px; }
 .grid > * { min-width: 0; }
-.kpis { grid-template-columns: repeat(4, 1fr); margin-bottom: 24px; }
-.kpi .label { color: var(--muted); font-size: 13px; font-weight: 500; }
-.kpi .value { font-size: 34px; font-weight: 700; letter-spacing: -.02em; margin-top: 4px; font-variant-numeric: tabular-nums; }
-.kpi .hint { font-size: 12px; color: var(--muted); margin-top: 2px; }
-.kpi.money .value { color: var(--green); }
+.kpis { grid-template-columns: repeat(5, 1fr); margin-bottom: 20px; }
+.kpis.vier { grid-template-columns: repeat(4, 1fr); }
+.kpi { position: relative; overflow: hidden; }
+.kpi:hover { transform: translateY(-2px); border-color: var(--line-2); }
+.kpi .label { color: var(--muted); font-size: 12.5px; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+.kpi .value { font-size: 32px; font-weight: 700; letter-spacing: -.03em; margin-top: 6px; font-variant-numeric: tabular-nums; color: var(--text); }
+.kpi .hint { font-size: 12px; color: var(--muted-2); margin-top: 2px; }
+.kpi.money .value { color: var(--green); text-shadow: 0 0 24px rgba(34,197,94,.35); }
+.kpi.money::after { content: ""; position: absolute; right: -40px; top: -40px; width: 120px; height: 120px; border-radius: 50%; background: radial-gradient(circle, rgba(34,197,94,.18), transparent 70%); }
+.kpi.blue .value { color: var(--blue); text-shadow: 0 0 24px rgba(59,130,246,.35); }
+.kpi.warn .value { color: var(--orange); }
+.live { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 0 rgba(34,197,94,.6); animation: puls 2s infinite; }
+@keyframes puls { 0% { box-shadow: 0 0 0 0 rgba(34,197,94,.55); } 70% { box-shadow: 0 0 0 8px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
 .two { grid-template-columns: 1.4fr 1fr; align-items: start; }
+.halb { grid-template-columns: 1fr 1fr; align-items: start; }
 
 /* Listen */
 .list { display: flex; flex-direction: column; }
-.row { display: flex; align-items: center; gap: 14px; padding: 12px 4px; border-bottom: 1px solid var(--line); cursor: pointer; border-radius: 10px; }
+.row { display: flex; align-items: center; gap: 14px; padding: 11px 8px; border-bottom: 1px solid var(--line); cursor: pointer; border-radius: 12px; transition: background-color .18s, transform .18s var(--ease); }
 .row:last-child { border-bottom: 0; }
-.row:hover { background: #fafafa; }
-.row .thumb { width: 112px; aspect-ratio: 16/9; border-radius: 8px; background: var(--grey-soft); object-fit: cover; flex: none; }
+.row:hover { background: rgba(255,255,255,.035); }
+.row:active { transform: scale(.995); }
+.row .thumb { width: 112px; aspect-ratio: 16/9; border-radius: 8px; background: var(--card-3); object-fit: cover; flex: none; border: 1px solid var(--line); }
 .row .main { flex: 1; min-width: 0; }
-.row .title { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .title { font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .row .meta { color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .row .right { text-align: right; flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-.empty { color: var(--muted); padding: 28px 8px; text-align: center; }
+.row.static { cursor: default; }
+.empty { color: var(--muted-2); padding: 28px 8px; text-align: center; }
+.betrag { font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text); white-space: nowrap; }
+.betrag.gruen { color: var(--green); }
 
-.pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
-.pill.blue { background: var(--blue-soft); color: var(--blue); }
-.pill.green { background: var(--green-soft); color: var(--green); }
-.pill.orange { background: var(--orange-soft); color: var(--orange); }
-.pill.red { background: var(--red-soft); color: var(--red); }
-.pill.grey { background: var(--grey-soft); color: var(--muted); }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; border: 1px solid transparent; }
+.pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.pill.blue { background: var(--blue-soft); color: #93c5fd; border-color: rgba(59,130,246,.25); }
+.pill.green { background: var(--green-soft); color: #86efac; border-color: rgba(34,197,94,.25); }
+.pill.orange { background: var(--orange-soft); color: #fcd34d; border-color: rgba(245,158,11,.25); }
+.pill.red { background: var(--red-soft); color: #fca5a5; border-color: rgba(239,68,68,.25); }
+.pill.violet { background: var(--violet-soft); color: #c4b5fd; border-color: rgba(167,139,250,.25); }
+.pill.grey { background: var(--grey-soft); color: var(--muted); border-color: var(--line); }
 
 /* Knöpfe & Felder */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 0; border-radius: 980px; padding: 9px 18px; font-size: 14px; font-weight: 500; cursor: pointer; background: var(--grey-soft); color: var(--text); transition: transform .12s ease, background-color .15s ease, opacity .15s; white-space: nowrap; }
-.btn:active { transform: scale(.97); }
-.btn.primary { background: var(--blue); color: #fff; }
-.btn.primary:hover { background: #0077ed; }
-.btn.green { background: var(--green); color: #fff; }
-.btn.danger { background: var(--red-soft); color: var(--red); }
-.btn.small { padding: 6px 12px; font-size: 13px; }
-.btn[disabled] { opacity: .5; pointer-events: none; }
-.btns { display: flex; gap: 8px; flex-wrap: wrap; }
-.seg { display: inline-flex; background: rgba(0,0,0,.05); padding: 3px; border-radius: 10px; gap: 2px; flex-wrap: wrap; }
-.seg button { border: 0; background: transparent; padding: 6px 12px; border-radius: 8px; font-size: 13px; cursor: pointer; color: var(--muted); font-weight: 500; }
-.seg button[aria-pressed="true"] { background: #fff; color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid var(--line-2); border-radius: 11px; padding: 8px 16px; font-size: 14px; font-weight: 550; cursor: pointer; background: var(--card-2); color: var(--text); transition: transform .15s var(--ease), background-color .2s, box-shadow .25s var(--ease), border-color .2s, opacity .2s; white-space: nowrap; text-decoration: none !important; }
+.btn:hover { background: var(--card-3); border-color: #52525b; }
+.btn:active { transform: scale(.96); }
+.btn.primary { background: var(--blue); border-color: transparent; color: #fff; }
+.btn.primary:hover { background: #4f8ff7; box-shadow: var(--glow-blue); }
+.btn.green { background: var(--green); border-color: transparent; color: #04140a; }
+.btn.green:hover { background: #2fd36a; box-shadow: var(--glow-green); }
+.btn.danger { background: var(--red-soft); color: #fca5a5; border-color: rgba(239,68,68,.3); }
+.btn.danger:hover { background: rgba(239,68,68,.22); }
+.btn.ghost { background: transparent; }
+.btn.small { padding: 5px 11px; font-size: 13px; border-radius: 9px; }
+.btn[disabled] { opacity: .45; pointer-events: none; }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.seg { display: inline-flex; background: rgba(255,255,255,.04); border: 1px solid var(--line); padding: 3px; border-radius: 11px; gap: 2px; flex-wrap: wrap; }
+.seg button { border: 0; background: transparent; padding: 5px 12px; border-radius: 8px; font-size: 13px; cursor: pointer; color: var(--muted); font-weight: 500; transition: color .2s, background-color .2s; }
+.seg button:hover { color: var(--text); }
+.seg button[aria-pressed="true"] { background: var(--card-3); color: var(--text); box-shadow: 0 0 0 1px var(--line-2) inset; }
 .f { display: block; margin-bottom: 14px; }
-.f > span { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
-.in { width: 100%; border: 1px solid #d2d2d7; background: #fff; border-radius: 10px; padding: 10px 12px; outline: none; transition: border-color .15s, box-shadow .15s; }
-.in:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(0,113,227,.15); }
-textarea.in { resize: vertical; min-height: 80px; }
-.check { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; cursor: pointer; }
-.switch { appearance: none; width: 42px; height: 26px; background: #e5e5ea; border-radius: 13px; position: relative; cursor: pointer; transition: background .2s; flex: none; margin: 0; }
-.switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,.2); transition: transform .2s; }
-.switch:checked { background: #34c759; }
-.switch:checked::after { transform: translateX(16px); }
+.f > span { display: block; font-size: 12.5px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
+.in { width: 100%; border: 1px solid var(--line-2); background: #111113; border-radius: 10px; padding: 9px 12px; outline: none; color: var(--text); transition: border-color .15s, box-shadow .2s; }
+.in::placeholder { color: var(--muted-2); }
+.in:hover { border-color: #52525b; }
+.in:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(59,130,246,.18); }
+select.in { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: calc(100% - 15px) 52%, calc(100% - 10px) 52%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 28px; }
+textarea.in { resize: vertical; min-height: 80px; line-height: 1.5; }
+.in.geaendert { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(245,158,11,.15); }
+.check { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; cursor: pointer; color: var(--text-2); }
+.switch { appearance: none; width: 42px; height: 25px; background: #3f3f46; border-radius: 13px; position: relative; cursor: pointer; transition: background .2s, box-shadow .2s; flex: none; margin: 0; }
+.switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 21px; height: 21px; border-radius: 50%; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,.4); transition: transform .22s var(--ease); }
+.switch:checked { background: var(--green); box-shadow: 0 0 14px rgba(34,197,94,.45); }
+.switch:checked::after { transform: translateX(17px); }
+.switch:disabled { opacity: .4; }
 .hint { font-size: 13px; color: var(--muted); }
 .row-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+.drei { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 0 14px; }
+input[type=checkbox]:not(.switch) { accent-color: var(--blue); width: 16px; height: 16px; }
 
 /* Blatt (Auftrag, Editor) */
-.sheet-bg { position: fixed; inset: 0; background: rgba(0,0,0,.32); z-index: 40; opacity: 0; transition: opacity .2s; }
+.sheet-bg { position: fixed; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 40; opacity: 0; transition: opacity .25s; }
 .sheet-bg.open { opacity: 1; }
-.sheet { position: fixed; z-index: 41; left: 50%; top: 50%; width: min(980px, calc(100vw - 32px)); max-height: calc(100vh - 48px); overflow: auto; background: var(--bg); border-radius: 22px; box-shadow: 0 30px 80px rgba(0,0,0,.25); transform: translate(-50%, -48%) scale(.98); opacity: 0; transition: transform .22s ease, opacity .22s ease; }
+.sheet { position: fixed; z-index: 41; left: 50%; top: 50%; width: min(1000px, calc(100vw - 32px)); max-height: calc(100vh - 48px); overflow: auto; background: #111113; border: 1px solid var(--line-2); border-radius: 22px; box-shadow: 0 40px 100px rgba(0,0,0,.7); transform: translate(-50%, -47%) scale(.98); opacity: 0; transition: transform .28s var(--ease), opacity .22s ease; }
 .sheet.open { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-.sheet-head { position: sticky; top: 0; background: rgba(245,245,247,.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 16px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(0,0,0,.06); z-index: 2; }
+.sheet-head { position: sticky; top: 0; background: rgba(17,17,19,.86); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 14px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--line); z-index: 2; }
 .sheet-head h2 { margin: 0; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sheet-body { padding: 20px; }
-.x { width: 32px; height: 32px; border-radius: 50%; border: 0; background: rgba(0,0,0,.06); cursor: pointer; font-size: 18px; line-height: 1; color: var(--muted); flex: none; }
+.sheet .card { background: var(--card); }
+.x { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line-2); background: var(--card-2); cursor: pointer; font-size: 18px; line-height: 1; color: var(--muted); flex: none; transition: color .2s, background-color .2s; }
+.x:hover { color: var(--text); background: var(--card-3); }
 
 .variants { grid-template-columns: repeat(3, 1fr); }
-.variant { background: #fff; border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; }
-.variant img { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: var(--grey-soft); cursor: zoom-in; }
+.variant { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: transform .25s var(--ease), border-color .25s, box-shadow .25s; }
+.variant:hover { transform: translateY(-3px); border-color: var(--line-2); box-shadow: 0 18px 40px -18px rgba(0,0,0,.9); }
+.variant img { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: var(--card-3); cursor: zoom-in; }
 .variant .vb { padding: 10px 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.variant .vb b { margin-right: auto; }
+.variant .vb b { margin-right: auto; color: var(--text); }
 .chat { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
 .msg { padding: 10px 14px; border-radius: 16px; max-width: 85%; white-space: pre-wrap; word-wrap: break-word; }
-.msg.kunde { background: #fff; box-shadow: var(--shadow); align-self: flex-start; }
+.msg.kunde { background: var(--card-3); border: 1px solid var(--line-2); align-self: flex-start; }
 .msg.du { background: var(--blue); color: #fff; align-self: flex-end; }
 .msg small { display: block; opacity: .65; font-size: 11px; margin-top: 3px; }
 .kv { display: grid; grid-template-columns: 110px 1fr; gap: 6px 12px; font-size: 14px; }
 .kv dt { color: var(--muted); }
-.kv dd { margin: 0; word-break: break-word; }
+.kv dd { margin: 0; word-break: break-word; color: var(--text-2); }
 details.raw summary { cursor: pointer; color: var(--blue); font-size: 13px; margin-top: 10px; }
-details.raw pre { white-space: pre-wrap; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--grey-soft); padding: 12px; border-radius: 10px; max-height: 260px; overflow: auto; }
+details.raw pre { white-space: pre-wrap; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; background: #0d0d0f; border: 1px solid var(--line); padding: 12px; border-radius: 10px; max-height: 260px; overflow: auto; }
+.infobox { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 12px; background: var(--card-2); border: 1px solid var(--line); flex-wrap: wrap; }
+
+/* Mail schreiben */
+.anh { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.anh label { position: relative; border: 1px solid var(--line-2); border-radius: 12px; overflow: hidden; cursor: pointer; background: var(--card-2); transition: border-color .2s, box-shadow .2s, transform .2s var(--ease); }
+.anh label:hover { transform: translateY(-2px); }
+.anh label:has(input:checked) { border-color: var(--blue); box-shadow: var(--glow-blue); }
+.anh img { width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+.anh input { position: absolute; top: 8px; left: 8px; }
+.anh span { display: block; padding: 6px 10px; font-size: 12.5px; color: var(--text-2); }
+.drop { border: 1.5px dashed var(--line-2); border-radius: 12px; padding: 16px; text-align: center; color: var(--muted); cursor: pointer; transition: border-color .2s, background-color .2s; display: block; }
+.drop:hover, .drop.ueber { border-color: var(--blue); background: var(--blue-soft); color: var(--text); }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; background: var(--card-3); border: 1px solid var(--line-2); border-radius: 999px; padding: 3px 4px 3px 10px; font-size: 12.5px; }
+.chip button { border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 15px; line-height: 1; }
 
 /* Editor */
 .editor { display: grid; grid-template-columns: 1.35fr 1fr; gap: 20px; align-items: start; }
 .preview { position: sticky; top: 80px; }
-.frame-wrap { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; background: #000; box-shadow: var(--shadow); }
+.frame-wrap { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; background: #000; border: 1px solid var(--line-2); }
 .frame-wrap iframe { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; border: 0; transform-origin: 0 0; pointer-events: none; }
 .swatches { display: flex; gap: 8px; flex-wrap: wrap; }
-.swatch { width: 34px; height: 34px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 1px #d2d2d7; cursor: pointer; }
-.swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--blue); }
-.emoji-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)); gap: 6px; max-height: 190px; overflow: auto; padding: 6px; background: #fff; border-radius: 12px; border: 1px solid #d2d2d7; }
-.emoji-grid button { border: 0; background: transparent; padding: 4px; border-radius: 8px; cursor: pointer; }
+.swatch { width: 34px; height: 34px; border-radius: 50%; border: 3px solid #111113; box-shadow: 0 0 0 1px var(--line-2); cursor: pointer; transition: transform .15s var(--ease); }
+.swatch:hover { transform: scale(1.08); }
+.swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--blue), 0 0 14px rgba(59,130,246,.6); }
+.emoji-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)); gap: 6px; max-height: 190px; overflow: auto; padding: 6px; background: #111113; border-radius: 12px; border: 1px solid var(--line-2); }
+.emoji-grid button { border: 0; background: transparent; padding: 4px; border-radius: 8px; cursor: pointer; transition: background-color .15s; }
+.emoji-grid button:hover { background: var(--grey-soft); }
 .emoji-grid button[aria-pressed="true"] { background: var(--blue-soft); box-shadow: inset 0 0 0 2px var(--blue); }
 .emoji-grid img { width: 34px; height: 34px; }
 .colors { display: flex; gap: 14px; }
-.colors input[type=color] { width: 44px; height: 34px; border: 1px solid #d2d2d7; border-radius: 8px; padding: 2px; background: #fff; cursor: pointer; }
+.colors input[type=color] { width: 44px; height: 34px; border: 1px solid var(--line-2); border-radius: 8px; padding: 2px; background: #111113; cursor: pointer; }
+input[type=range] { accent-color: var(--blue); }
 .fotos { display: flex; gap: 8px; flex-wrap: wrap; }
-.fotos button { border: 2px solid transparent; padding: 0; border-radius: 10px; overflow: hidden; width: 64px; height: 64px; background: var(--grey-soft); cursor: pointer; font-size: 12px; color: var(--muted); }
+.fotos button { border: 2px solid var(--line-2); padding: 0; border-radius: 10px; overflow: hidden; width: 64px; height: 64px; background: var(--card-3); cursor: pointer; font-size: 12px; color: var(--muted); }
 .fotos button[aria-pressed="true"] { border-color: var(--blue); }
 .fotos img { width: 100%; height: 100%; object-fit: cover; }
 
-.toast { position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(20px); background: rgba(29,29,31,.92); color: #fff; padding: 10px 18px; border-radius: 12px; font-size: 14px; opacity: 0; transition: .25s; z-index: 60; pointer-events: none; max-width: calc(100vw - 32px); text-align: center; }
+/* Website-Editor */
+.bilder { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.bild { background: var(--card-2); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; transition: border-color .2s, transform .2s var(--ease); }
+.bild:hover { transform: translateY(-2px); border-color: var(--line-2); }
+.bild.geaendert { border-color: var(--orange); }
+.bild img { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: var(--card-3); }
+.bild div { padding: 8px 10px; display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.bild div span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.textgruppe { margin-bottom: 18px; }
+.textgruppe h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.speicherleiste { position: sticky; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 15; margin-top: 16px; display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 16px; background: rgba(28,28,31,.88); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid var(--line-2); box-shadow: 0 20px 50px rgba(0,0,0,.6); transform: translateY(12px); opacity: 0; pointer-events: none; transition: transform .3s var(--ease), opacity .25s; }
+.speicherleiste.zeigen { transform: translateY(0); opacity: 1; pointer-events: auto; }
+
+.toast { position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(20px); background: rgba(35,35,39,.95); border: 1px solid var(--line-2); color: #fff; padding: 10px 18px; border-radius: 12px; font-size: 14px; opacity: 0; transition: .3s var(--ease); z-index: 80; pointer-events: none; max-width: calc(100vw - 32px); text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,.5); }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-.spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
-.btn:not(.primary):not(.green) .spinner { border-color: rgba(0,0,0,.15); border-top-color: var(--text); }
+.spinner { width: 15px; height: 15px; border: 2px solid rgba(255,255,255,.35); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.85); z-index: 70; display: grid; place-items: center; padding: 20px; cursor: zoom-out; }
+.lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.9); z-index: 90; display: grid; place-items: center; padding: 20px; cursor: zoom-out; }
 .lightbox img { max-height: 90vh; border-radius: 10px; }
 .status-line { display: flex; align-items: center; gap: 8px; font-size: 14px; }
-.dot { width: 8px; height: 8px; border-radius: 50%; background: #c7c7cc; flex: none; }
-.dot.ok { background: #34c759; } .dot.err { background: var(--red); }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: #52525b; flex: none; }
+.dot.ok { background: var(--green); box-shadow: 0 0 10px rgba(34,197,94,.8); } .dot.err { background: var(--red); box-shadow: 0 0 10px rgba(239,68,68,.8); }
 .feed { font-size: 14px; }
-.feed div { padding: 8px 0; border-bottom: 1px solid var(--line); display: flex; gap: 10px; }
-.feed div:last-child { border-bottom: 0; }
-.feed time { color: var(--muted); font-size: 12px; white-space: nowrap; min-width: 92px; }
+.feed > div { padding: 9px 0; border-bottom: 1px solid var(--line); display: flex; gap: 10px; align-items: center; }
+.feed > div:last-child { border-bottom: 0; }
+.feed time { color: var(--muted-2); font-size: 12px; white-space: nowrap; min-width: 92px; }
 .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
 .toolbar .grow { flex: 1; }
-footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-top: 32px; }
+footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-top: 32px; }
+.fade-in { animation: rein .35s var(--ease) both; }
+@keyframes rein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
+@media (max-width: 1000px) {
+  .kpis { grid-template-columns: repeat(3, 1fr); }
+  .kpis.vier { grid-template-columns: repeat(2, 1fr); }
+}
 @media (max-width: 900px) {
-  .kpis { grid-template-columns: repeat(2, 1fr); }
-  .two, .editor { grid-template-columns: 1fr; }
+  .two, .halb, .editor { grid-template-columns: 1fr; }
   .preview { position: static; }
   .variants { grid-template-columns: 1fr; }
 }
 @media (max-width: 700px) {
-  header.top { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(245,245,247,.97); }
-  nav.tabs { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); margin: 0; justify-content: space-around; background: rgba(255,255,255,.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 8px 30px rgba(0,0,0,.15); border-radius: 16px; padding: 6px; z-index: 30; }
-  nav.tabs button { flex: 1; padding: 8px 4px; font-size: 12px; }
+  .kpis, .kpis.vier { grid-template-columns: repeat(2, 1fr); }
+  .kpis > .kpi:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  header.top { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(11,11,12,.97); }
+  nav.tabs { position: fixed; left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom)); margin: 0; justify-content: space-around; background: rgba(28,28,31,.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,.6); border: 1px solid var(--line-2); border-radius: 16px; padding: 5px; z-index: 30; }
+  nav.tabs button { flex: 1; padding: 8px 2px; font-size: 11.5px; justify-content: center; }
+  .badge-dot { margin-left: 3px; min-width: 16px; height: 16px; line-height: 16px; font-size: 10px; }
   h1 { font-size: 26px; }
-  .kpi .value { font-size: 26px; }
+  .kpi .value { font-size: 25px; }
   .row .thumb { width: 84px; }
   .row .right .pill + .meta { display: none; }
   .sheet { top: auto; bottom: 0; left: 0; width: 100% !important; max-height: 94vh; border-radius: 22px 22px 0 0; transform: translateY(30px); }
   .sheet.open { transform: translateY(0); }
-  .row-fields { grid-template-columns: 1fr; }
+  .row-fields, .drei { grid-template-columns: 1fr; }
   .kv { grid-template-columns: 90px 1fr; }
+  .speicherleiste { bottom: calc(84px + env(safe-area-inset-bottom)); }
+  .toast { bottom: calc(150px + env(safe-area-inset-bottom)); }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
@@ -188,7 +269,8 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
     <nav class="tabs" role="tablist" aria-label="Bereiche">
       <button role="tab" data-tab="uebersicht" aria-selected="true">Übersicht</button>
       <button role="tab" data-tab="auftraege">Aufträge<span id="nav-offen"></span></button>
-      <button role="tab" data-tab="abos">Abos &amp; Geld</button>
+      <button role="tab" data-tab="finanzen">Finanzen<span id="nav-geld"></span></button>
+      <button role="tab" data-tab="website">Website</button>
       <button role="tab" data-tab="einstellungen">Einstellungen</button>
     </nav>
   </div>
@@ -200,9 +282,10 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
     <h1 id="hallo">Hallo</h1>
     <p class="sub" id="hallo-sub">Hier siehst du alles auf einen Blick.</p>
     <div class="grid kpis">
-      <div class="card kpi money"><div class="label">Gesamteinnahmen</div><div class="value" data-count="einnahmen_gesamt" data-euro>0 €</div><div class="hint">alle verbuchten Zahlungen</div></div>
-      <div class="card kpi money"><div class="label">Monatsumsatz</div><div class="value" data-count="einnahmen_monat" data-euro>0 €</div><div class="hint" id="kpi-monat-hint">diesen Monat bezahlt</div></div>
-      <div class="card kpi"><div class="label">Aktive Abos</div><div class="value" data-count="abos_aktiv">0</div><div class="hint" id="kpi-abo-hint"></div></div>
+      <div class="card kpi money"><div class="label"><span class="live"></span>Gesamtumsatz</div><div class="value" data-count="einnahmen_gesamt" data-euro>0 €</div><div class="hint">alle bezahlten Beträge</div></div>
+      <div class="card kpi money"><div class="label">Monatsumsatz</div><div class="value" data-count="einnahmen_monat" data-euro>0 €</div><div class="hint" id="kpi-monat-hint">diesen Monat eingegangen</div></div>
+      <div class="card kpi warn"><div class="label">Offene Beträge</div><div class="value" data-count="offen_betrag" data-euro>0 €</div><div class="hint" id="kpi-offen-betrag-hint"></div></div>
+      <div class="card kpi blue"><div class="label">Aktive Abos</div><div class="value" data-count="abos_aktiv">0</div><div class="hint" id="kpi-abo-hint"></div></div>
       <div class="card kpi"><div class="label">Offene Aufträge</div><div class="value" data-count="offen">0</div><div class="hint" id="kpi-offen-hint"></div></div>
     </div>
     <div class="grid two">
@@ -234,69 +317,146 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
     <div class="toolbar">
       <div class="seg" id="filter">
         <button aria-pressed="true" data-f="offen">Offen</button>
-        <button aria-pressed="false" data-f="geliefert">Geliefert</button>
-        <button aria-pressed="false" data-f="alle">Alle</button>
+        <button aria-pressed="false" data-f="neu">Neu</button>
+        <button aria-pressed="false" data-f="arbeit">In Bearbeitung</button>
+        <button aria-pressed="false" data-f="bereit">Bereit zum Versand</button>
+        <button aria-pressed="false" data-f="fertig">Abgeschlossen</button>
         <button aria-pressed="false" data-f="archiv">Archiv</button>
       </div>
-      <input class="in" id="suche" type="search" placeholder="Suchen" style="max-width:220px">
+      <input class="in" id="suche" type="search" placeholder="Suchen" style="max-width:200px">
       <span class="grow"></span>
       <button class="btn primary" id="neu-btn">+ Neuer Auftrag</button>
     </div>
     <div class="card"><div class="list" id="auftrag-liste"></div></div>
   </section>
 
-  <!-- ABOS & GELD -->
-  <section data-view="abos" hidden>
-    <h1>Abos &amp; Geld</h1>
-    <p class="sub">Laufende Abos, Kunden und alle Zahlungen. Ein Klick auf „Monat bezahlt“ verbucht den Abo-Preis.</p>
-    <div class="grid two">
+  <!-- FINANZEN -->
+  <section data-view="finanzen" hidden>
+    <h1>Finanzen</h1>
+    <p class="sub">Kunden zahlen per Überweisung direkt auf dein Konto. Hier siehst du, was reinkam, was noch offen ist und welche Abos laufen.</p>
+    <div class="grid kpis vier">
+      <div class="card kpi money"><div class="label"><span class="live"></span>Gesamtumsatz</div><div class="value" data-count="einnahmen_gesamt" data-euro>0 €</div><div class="hint">seit Start</div></div>
+      <div class="card kpi money"><div class="label">Diesen Monat</div><div class="value" data-count="einnahmen_monat" data-euro>0 €</div><div class="hint" id="fin-monat-hint"></div></div>
+      <div class="card kpi warn"><div class="label">Noch offen</div><div class="value" data-count="offen_betrag" data-euro>0 €</div><div class="hint" id="fin-offen-hint"></div></div>
+      <div class="card kpi blue"><div class="label">Abo-Einnahmen</div><div class="value" data-count="abo_umsatz" data-euro>0 €</div><div class="hint" id="fin-abo-hint">pro Monat</div></div>
+    </div>
+    <div class="card" id="bank-hinweis" style="margin-bottom:16px" hidden>
+      <div class="infobox" style="background:transparent;border:0;padding:0"><span class="pill orange">Fehlt noch</span><span style="flex:1">Trag deine IBAN ein, dann stehen Bankdaten und Verwendungszweck automatisch auf jeder Rechnung und in der Mail.</span><button class="btn small primary" data-goto="einstellungen">IBAN eintragen</button></div>
+    </div>
+    <div class="grid halb">
       <div class="card">
-        <h2>Kunden &amp; Abos</h2>
-        <div class="list" id="kunden-liste"></div>
+        <h2>Offene Rechnungen</h2>
+        <div class="list" id="rechnungen-offen"></div>
       </div>
       <div class="card">
-        <h2>Zahlungen</h2>
-        <form id="zahlung-form" class="row-fields" style="margin-bottom:8px">
-          <label class="f"><span>Betrag (€)</span><input class="in" name="betrag" type="number" step="0.01" min="0" required></label>
+        <h2>Abos</h2>
+        <div class="list" id="abo-liste"></div>
+      </div>
+      <div class="card">
+        <h2>Zahlungseingänge</h2>
+        <form id="zahlung-form" class="drei" style="margin-bottom:6px;align-items:end">
           <label class="f"><span>Wofür</span><input class="in" name="text" placeholder="z. B. Extra-Wunsch"></label>
-          <div><button class="btn small">Zahlung eintragen</button></div>
+          <label class="f"><span>Betrag (€)</span><input class="in" name="betrag" type="number" step="0.01" min="0" required></label>
+          <div class="f"><button class="btn">Eintragen</button></div>
         </form>
         <div class="feed" id="zahlungen"></div>
       </div>
+      <div class="card">
+        <h2>Alle Rechnungen</h2>
+        <div class="list" id="rechnungen-alle"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEBSITE -->
+  <section data-view="website" hidden>
+    <h1>Website</h1>
+    <p class="sub" id="web-sub">Preise, Texte und Vorher-Nachher-Bilder deiner Seite ändern. Nach dem Speichern ist die Änderung in etwa einer Minute live.</p>
+    <div class="card" id="web-leer">
+      <div class="infobox" style="background:transparent;border:0;padding:0"><span style="flex:1" id="web-leer-text">Die Seite wird von GitHub geladen.</span><button class="btn primary" id="web-laden">Website laden</button></div>
+    </div>
+    <div id="web-inhalt" hidden>
+      <div class="toolbar">
+        <div class="seg" id="web-tabs"><button aria-pressed="true" data-w="angaben">Preise &amp; Angaben</button><button aria-pressed="false" data-w="texte">Texte</button><button aria-pressed="false" data-w="bilder">Bilder</button></div>
+        <span class="grow"></span>
+        <button class="btn small" id="web-neu">Neu laden</button>
+        <a class="btn small" id="web-live" target="_blank" rel="noopener">Live ansehen ↗</a>
+      </div>
+      <div class="card" data-w-view="angaben"><div class="row-fields" id="web-config"></div></div>
+      <div class="card" data-w-view="texte" hidden><input class="in" id="web-suche" type="search" placeholder="Text suchen" style="max-width:280px;margin-bottom:16px"><div id="web-texte"></div></div>
+      <div class="card" data-w-view="bilder" hidden><p class="hint" style="margin-top:0">Neue Bilder werden auf 1280 × 720 zugeschnitten und klein gerechnet, damit die Seite schnell bleibt.</p><div class="bilder" id="web-bilder"></div></div>
+      <div class="speicherleiste" id="web-leiste"><span style="flex:1" id="web-leiste-text"></span><button class="btn ghost small" id="web-verwerfen">Verwerfen</button><button class="btn primary" id="web-speichern">Veröffentlichen</button></div>
     </div>
   </section>
 
   <!-- EINSTELLUNGEN -->
   <section data-view="einstellungen" hidden>
     <h1>Einstellungen</h1>
-    <p class="sub">Alles bleibt auf deinem Server. Die Website sendet nie selbst Mails, sie legt nur Entwürfe in Gmail an.</p>
-    <form id="einst-form" class="grid two">
+    <p class="sub">Alles bleibt auf deinem Server. Automatisch wird nie etwas gesendet, nur wenn du selbst auf „Jetzt senden“ klickst.</p>
+    <form id="einst-form" class="grid halb">
       <div class="card">
         <h2>Gmail verbinden</h2>
         <label class="f"><span>Deine Gmail-Adresse</span><input class="in" name="gmail" type="email" autocomplete="off"></label>
         <label class="f"><span>App-Passwort (16 Zeichen)</span><input class="in" name="app_passwort" type="password" autocomplete="new-password"></label>
-        <p class="hint">So bekommst du es: <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener">myaccount.google.com/apppasswords</a> öffnen (dafür muss die Bestätigung in zwei Schritten an sein), Name „Thumbnail-Zentrale“ eingeben, das angezeigte Passwort hier einfügen. Dein normales Google-Passwort bleibt geheim.</p>
+        <p class="hint">So bekommst du es: <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener">myaccount.google.com/apppasswords</a> öffnen (dafür muss die Bestätigung in zwei Schritten an sein), Name „Thumbnail-Zentrale“ eingeben, das angezeigte Passwort hier einfügen.</p>
         <div class="btns" style="margin:4px 0 18px"><button class="btn small" type="button" id="mail-test">Verbindung testen</button></div>
         <label class="f"><span>Postfach prüfen alle … Minuten</span><input class="in" name="pruefen_minuten" type="number" min="2" max="120"></label>
-        <label class="check"><input class="switch" type="checkbox" name="entwurf_automatisch"> Antwort-Entwurf mit den 3 Bildern sofort in Gmail anlegen</label>
+        <label class="check"><input class="switch" type="checkbox" name="entwurf_automatisch"> Bei neuer Bestellung Antwort-Entwurf mit den 3 Bildern in Gmail anlegen</label>
+        <label class="check"><input class="switch" type="checkbox" name="direkt_senden"> Knopf „Jetzt senden“ zeigen (sonst nur Gmail-Entwurf)</label>
       </div>
       <div class="card">
-        <h2>Antwort an Kunden</h2>
-        <label class="f"><span>Dein Name (unter den Mails)</span><input class="in" name="dein_name"></label>
-        <label class="f"><span>Text des Antwort-Entwurfs</span><textarea class="in" name="antwort_text" rows="9"></textarea></label>
-        <p class="hint">Platzhalter: {vorname}, {name}, {kanal}, {thema_satz}, {dein_name}</p>
-      </div>
-      <div class="card">
-        <h2>Preise</h2>
+        <h2>Bankverbindung &amp; Rechnung</h2>
+        <label class="f"><span>Kontoinhaber</span><input class="in" name="kontoinhaber" autocomplete="off"></label>
         <div class="row-fields">
-          <label class="f"><span>Einzel-Thumbnail (€)</span><input class="in" name="preis_einzel" type="number" step="0.01" min="0"></label>
-          <label class="f"><span>Monats-Abo (€)</span><input class="in" name="preis_abo" type="number" step="0.01" min="0"></label>
+          <label class="f"><span>IBAN</span><input class="in" name="iban" autocomplete="off" placeholder="DE00 0000 0000 0000 0000 00"></label>
+          <label class="f"><span>BIC (optional)</span><input class="in" name="bic" autocomplete="off"></label>
         </div>
+        <div class="row-fields">
+          <label class="f"><span>Zahlungsziel (Tage)</span><input class="in" name="zahlungsziel_tage" type="number" min="0" max="60"></label>
+          <label class="f"><span>Erste Rechnungsnummer im Jahr</span><input class="in" name="rechnung_start" type="number" min="1"></label>
+        </div>
+        <label class="f"><span>Name auf der Rechnung</span><input class="in" name="absender_name"></label>
+        <div class="row-fields">
+          <label class="f"><span>Straße</span><input class="in" name="absender_strasse"></label>
+          <label class="f"><span>PLZ und Ort</span><input class="in" name="absender_ort"></label>
+        </div>
+        <label class="check"><input class="switch" type="checkbox" name="kleinunternehmer"> Kleinunternehmer (§ 19 UStG, keine Umsatzsteuer)</label>
+        <p class="hint">Die IBAN steht nur auf Rechnungen und in Mails an Kunden, nie auf der Website.</p>
       </div>
       <div class="card">
-        <h2>Änderungen in eigenen Worten (optional)</h2>
-        <label class="f"><span>Anthropic-API-Schlüssel</span><input class="in" name="ki_schluessel" type="password" autocomplete="off" placeholder="sk-ant-…"></label>
-        <p class="hint">Damit kannst du im Editor schreiben „Text größer, Hintergrund rot, Pfeil weg“ und Claude setzt es um. Ohne Schlüssel funktioniert alles andere genauso. Schlüssel gibt es auf console.anthropic.com, eine Änderung kostet unter einem Cent.</p>
+        <h2>Mail-Vorlagen</h2>
+        <label class="f"><span>Dein Name (unter den Mails)</span><input class="in" name="dein_name"></label>
+        <label class="f"><span>Erste Antwort mit den 3 Entwürfen</span><textarea class="in" name="antwort_text" rows="7"></textarea></label>
+        <label class="f"><span>Lieferung des fertigen Thumbnails</span><textarea class="in" name="liefer_text" rows="7"></textarea></label>
+        <label class="f"><span>Monatsrechnung fürs Abo</span><textarea class="in" name="abo_rechnung_text" rows="5"></textarea></label>
+        <p class="hint">Platzhalter: {vorname}, {name}, {kanal}, {thema_satz}, {dein_name}, {monat}. {zahlung} wird zu Betrag, Frist, IBAN und Rechnungsnummer.</p>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <h2>Preise</h2>
+          <div class="row-fields">
+            <label class="f"><span>Einzel-Thumbnail (€)</span><input class="in" name="preis_einzel" type="number" step="0.01" min="0"></label>
+            <label class="f"><span>Monats-Abo (€)</span><input class="in" name="preis_abo" type="number" step="0.01" min="0"></label>
+          </div>
+          <p class="hint" style="margin:0">Änderst du die Preise im Website-Editor, werden sie hier automatisch übernommen.</p>
+        </div>
+        <div class="card">
+          <h2>Website-Editor</h2>
+          <label class="f"><span>GitHub-Token</span><input class="in" name="github_token" type="password" autocomplete="off" placeholder="github_pat_…"></label>
+          <p class="hint">Auf <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a>: Name „Thumbnail-Zentrale“, bei „Repository access“ nur dein Website-Repo wählen, unter „Permissions“ bei „Contents“ Read and write einstellen, erstellen und hier einfügen.</p>
+          <details class="raw"><summary>Repository ändern</summary>
+            <div style="margin-top:12px">
+              <label class="f"><span>Repository</span><input class="in" name="github_repo"></label>
+              <div class="row-fields"><label class="f"><span>Branch</span><input class="in" name="github_branch"></label><label class="f"><span>Datei</span><input class="in" name="github_datei"></label></div>
+              <label class="f"><span>Adresse der Website</span><input class="in" name="website_url"></label>
+            </div>
+          </details>
+        </div>
+        <div class="card">
+          <h2>Änderungen in eigenen Worten (optional)</h2>
+          <label class="f"><span>Anthropic-API-Schlüssel</span><input class="in" name="ki_schluessel" type="password" autocomplete="off" placeholder="sk-ant-…"></label>
+          <p class="hint" style="margin:0">Damit kannst du im Editor schreiben „Text größer, Hintergrund rot, Pfeil weg“. Schlüssel gibt es auf console.anthropic.com, eine Änderung kostet unter einem Cent.</p>
+        </div>
       </div>
       <div style="grid-column:1/-1"><button class="btn primary">Speichern</button></div>
     </form>
@@ -311,6 +471,31 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
 <section class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-title">
   <div class="sheet-head"><h2 id="sheet-title">Auftrag</h2><span id="sheet-pill"></span><button class="x" data-close aria-label="Schließen">×</button></div>
   <div class="sheet-body" id="sheet-body"></div>
+</section>
+
+<!-- Mail schreiben -->
+<div class="sheet-bg" id="mail-bg" hidden style="z-index:50"></div>
+<section class="sheet" id="mailblatt" hidden role="dialog" aria-modal="true" aria-labelledby="mail-title" style="z-index:51;width:min(760px,calc(100vw - 32px))">
+  <div class="sheet-head"><h2 id="mail-title">Per Mail senden</h2><button class="x" data-mail-close aria-label="Schließen">×</button></div>
+  <div class="sheet-body">
+    <div class="row-fields">
+      <label class="f"><span>An</span><input class="in" id="m-an" readonly></label>
+      <label class="f"><span>Betreff</span><input class="in" id="m-betreff"></label>
+    </div>
+    <div class="f"><span>Vorlage</span><div class="seg" id="m-vorlage"><button type="button" data-v="erste" aria-pressed="false">Erste Entwürfe</button><button type="button" data-v="fertig" aria-pressed="true">Fertiges Thumbnail</button></div></div>
+    <label class="f"><span>Text</span><textarea class="in" id="m-text" rows="9"></textarea></label>
+    <div class="f"><span>Bilder anhängen</span><div class="anh" id="m-bilder"></div></div>
+    <label class="check" id="m-rechnung-zeile"><input class="switch" type="checkbox" id="m-rechnung"> <span id="m-rechnung-text">Rechnung als PDF anhängen</span></label>
+    <div class="f"><span>Weitere Anhänge</span>
+      <label class="drop" id="m-drop">Dateien hierher ziehen oder <u>auswählen</u><input type="file" id="m-dateien" multiple hidden></label>
+      <div class="chips" id="m-chips"></div>
+    </div>
+    <div class="btns" style="justify-content:flex-end;margin-top:6px">
+      <button class="btn" id="m-entwurf">Als Gmail-Entwurf</button>
+      <button class="btn primary" id="m-senden">Jetzt senden</button>
+    </div>
+    <p class="hint" id="m-hint" style="text-align:right;margin:10px 0 0"></p>
+  </div>
 </section>
 
 <!-- Editor-Blatt -->
@@ -373,11 +558,23 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
   var D = null;               // aktueller Stand vom Server
   var offenerAuftrag = null;  // id im Blatt
   var filter = "offen";
-  var STATUS = {
-    neu: ["Wird gebaut", "grey"], bereit: ["Entwürfe fertig", "blue"], in_gmail: ["Entwurf in Gmail", "blue"],
-    aenderung: ["Änderung gewünscht", "orange"], geliefert: ["Geliefert", "green"], archiv: ["Archiv", "grey"]
+  // Anzeige-Status: Neu, In Bearbeitung, Bereit zum Versand, Abgeschlossen (plus Änderungswunsch und Archiv)
+  function statusVon(a) {
+    if (a.status === "archiv") return ["Archiv", "grey", "archiv"];
+    if (a.status === "geliefert") return ["Abgeschlossen", "green", "fertig"];
+    if (a.status === "aenderung") return ["Änderung gewünscht", "orange", "arbeit"];
+    if (a.status === "neu" && !(a.entwuerfe[0] || {}).stand) return ["Wird gebaut", "grey", "neu"];
+    if (!a.geoeffnet) return ["Neu", "blue", "neu"];
+    if (a.status === "in_gmail") return ["Bereit zum Versand", "violet", "bereit"];
+    return ["In Bearbeitung", "orange", "arbeit"];
+  }
+  var STATUS_SETZEN = {
+    neu: { status: "bereit", geoeffnet: false }, arbeit: { status: "bereit", geoeffnet: true },
+    bereit: { status: "in_gmail", geoeffnet: true }, fertig: { status: "geliefert", geoeffnet: true }
   };
   var ABO = { angefragt: ["Abo angefragt", "orange"], aktiv: ["Abo aktiv", "green"], pausiert: ["Pausiert", "grey"], "gekündigt": ["Gekündigt", "red"] };
+  function tag(iso) { return iso ? new Date(iso + (iso.length === 10 ? "T12:00:00" : "")).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" }) : ""; }
+  function heuteIso() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
   var STIL_FARBE = { finanzen: "#00a650", fitness: "#ff5a2d", gaming: "#8a2be2", tech: "#0a6cff", allgemein: "#e0201b" };
   var VORLAGE_NAME = { strahlen: "Strahlen", split: "Split", spot: "Spot", vergleich: "Vergleich" };
 
@@ -415,17 +612,19 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
     var alt = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>' + alt;
     return p.finally(function () { btn.disabled = false; btn.innerHTML = alt; });
   }
-  function neuerStand(d) { if (d && d.auftraege) { D = d; zeichnen(); } return d; }
+  function neuerStand(d) { if (d && d.auftraege) { D = d; zeichnen(); webAuto(); } return d; }
   function fehler(e) { toast(e.message || String(e)); }
   function holen() { return api("/api/stand").then(neuerStand).catch(function () {}); }
 
   /* ---------------- Navigation ---------------- */
   function zeigeTab(name) {
+    if (!$('[data-view="' + name + '"]')) name = "uebersicht";
     $$("nav.tabs button").forEach(function (b) { b.setAttribute("aria-selected", b.dataset.tab === name ? "true" : "false"); });
     $$("[data-view]").forEach(function (v) { v.hidden = v.dataset.view !== name; });
     try { localStorage.setItem("tz-tab", name); } catch (e) {}
     window.scrollTo(0, 0);
-    if (name === "uebersicht") zaehlen();
+    if (name === "uebersicht" || name === "finanzen") zaehlen(true);
+    if (name === "website") webAuto();
   }
   $$("nav.tabs button").forEach(function (b) { b.addEventListener("click", function () { zeigeTab(b.dataset.tab); }); });
   document.addEventListener("click", function (ev) { var g = ev.target.closest("[data-goto]"); if (g) zeigeTab(g.dataset.goto); });
@@ -436,9 +635,9 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
   function zeilenHtml(liste) {
     if (!liste.length) return '<div class="empty">Nichts da.</div>';
     return liste.map(function (a) {
-      var st = STATUS[a.status] || [a.status, "grey"];
+      var st = statusVon(a);
       var bild = vorschauBild(a);
-      return '<div class="row" data-auftrag="' + a.id + '">' +
+      return '<div class="row fade-in" data-auftrag="' + a.id + '">' +
         (bild ? '<img class="thumb" loading="lazy" alt="" src="' + bild + '">' : '<div class="thumb"></div>') +
         '<div class="main"><div class="title">' + esc(a.kanal || a.name || a.email || "Ohne Namen") + '</div>' +
         '<div class="meta">' + esc(a.thema || "–") + '</div></div>' +
@@ -447,16 +646,18 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
   }
 
   var gezaehlt = false;
-  function zaehlen() {
+  function zaehlen(neu) {
     if (!D) return;
     var k = D.kennzahlen;
     $$("[data-count]").forEach(function (el) {
-      var ziel = Number(k[el.dataset.count]) || 0, start = gezaehlt ? Number(el.dataset.ist || 0) : 0, t0 = performance.now();
+      if (el.offsetParent === null) return;  // nur sichtbare Zähler animieren
+      var ziel = Number(k[el.dataset.count]) || 0, start = neu ? 0 : Number(el.dataset.ist || 0), t0 = performance.now();
       var istEuro = el.hasAttribute("data-euro");
       el.dataset.ist = ziel;
       if (matchMedia("(prefers-reduced-motion: reduce)").matches || start === ziel) { el.textContent = istEuro ? euro(ziel) : ziel; return; }
+      var dauer = neu ? 1100 : 700;
       (function schritt(t) {
-        var p = Math.min(1, (t - t0) / 900), w = start + (ziel - start) * (1 - Math.pow(1 - p, 3));
+        var p = Math.min(1, (t - t0) / dauer), w = start + (ziel - start) * (1 - Math.pow(1 - p, 3));
         el.textContent = istEuro ? euro(Math.round(w * 100) / 100) : Math.round(w);
         if (p < 1) requestAnimationFrame(schritt);
       })(t0);
@@ -469,17 +670,27 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
     var h = new Date().getHours();
     $("#hallo").textContent = (h < 11 ? "Guten Morgen" : h < 18 ? "Hallo" : "Guten Abend") + (e.dein_name ? ", " + e.dein_name : "");
     $("#hallo-sub").textContent = k.aenderungen ? (k.aenderungen === 1 ? "1 Kunde wartet" : k.aenderungen + " Kunden warten") + " auf eine Änderung." : k.offen ? (k.offen === 1 ? "1 offener Auftrag." : k.offen + " offene Aufträge.") : "Alles erledigt. Neue Bestellungen kommen automatisch rein.";
-    $("#kpi-abo-hint").textContent = k.abos_angefragt ? k.abos_angefragt + " angefragt" : "à " + euro(e.preis_abo) + " pro Monat";
+    $("#kpi-abo-hint").textContent = k.abos_angefragt ? k.abos_angefragt + " angefragt" : euro(k.abo_umsatz) + " pro Monat";
     $("#kpi-offen-hint").textContent = k.aenderungen ? k.aenderungen + " mit Änderungswunsch" : k.geliefert_monat + " diesen Monat geliefert";
+    var offenText = k.offen_rechnungen ? k.offen_rechnungen + (k.offen_rechnungen === 1 ? " Rechnung" : " Rechnungen") + (k.ueberfaellig ? ", " + k.ueberfaellig + " überfällig" : "") : "keine offenen Rechnungen";
+    $("#kpi-offen-betrag-hint").textContent = offenText;
+    $("#fin-offen-hint").textContent = offenText;
+    $("#fin-monat-hint").textContent = new Date().toLocaleDateString("de-DE", { month: "long", year: "numeric" });
+    $("#fin-abo-hint").textContent = k.abos_aktiv + (k.abos_aktiv === 1 ? " aktives Abo" : " aktive Abos") + (k.abos_kuendigen ? ", " + k.abos_kuendigen + " gekündigt zum Laufzeitende" : "");
     $("#nav-offen").innerHTML = k.offen ? '<span class="badge-dot">' + k.offen + "</span>" : "";
+    var geldAlarm = k.ueberfaellig + k.abos_faellig;
+    $("#nav-geld").innerHTML = geldAlarm ? '<span class="badge-dot" style="background:var(--orange);box-shadow:0 0 10px rgba(245,158,11,.6)">' + geldAlarm + "</span>" : "";
     zaehlen();
 
     // Zu tun
     var prio = { aenderung: 0, bereit: 1, neu: 2, in_gmail: 3 };
     var todo = D.auftraege.filter(function (a) { return a.status in prio; }).sort(function (a, b) { return prio[a.status] - prio[b.status]; }).slice(0, 8);
-    var unbezahlt = D.auftraege.filter(function (a) { return a.status === "geliefert" && !a.bezahlt && a.paket !== "Monats-Abo"; });
+    var hinweise = [];
+    if (k.ueberfaellig) hinweise.push(k.ueberfaellig + (k.ueberfaellig === 1 ? " Rechnung ist" : " Rechnungen sind") + " überfällig.");
+    if (k.abos_faellig) hinweise.push(k.abos_faellig + (k.abos_faellig === 1 ? " Abo wird" : " Abos werden") + " in den nächsten Tagen fällig.");
+    if (k.unbezahlt) hinweise.push(k.unbezahlt + " gelieferte Einzel-Thumbnails noch nicht bezahlt.");
     $("#todo").innerHTML = (todo.length ? zeilenHtml(todo) : '<div class="empty">Keine offenen Aufträge.</div>') +
-      (unbezahlt.length ? '<div class="hint" style="padding:10px 4px">' + unbezahlt.length + " geliefertes Einzel-Thumbnail noch nicht als bezahlt markiert.</div>" : "");
+      (hinweise.length ? '<div class="infobox" style="margin-top:10px"><span class="pill orange">Geld</span><span style="flex:1">' + esc(hinweise.join(" ")) + '</span><button class="btn small" data-goto="finanzen">Ansehen</button></div>' : "");
 
     // Gmail
     var m = D.mail, eingerichtet = !!(e.gmail && e.app_passwort);
@@ -494,30 +705,52 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
     // Aufträge
     var q = ($("#suche").value || "").toLowerCase();
     var liste = D.auftraege.filter(function (a) {
-      if (filter === "offen" && ["neu", "bereit", "in_gmail", "aenderung"].indexOf(a.status) < 0) return false;
-      if (filter === "geliefert" && a.status !== "geliefert") return false;
-      if (filter === "archiv" && a.status !== "archiv") return false;
-      if (filter === "alle" && a.status === "archiv") return false;
+      var gruppe = statusVon(a)[2];
+      if (filter === "offen" && ["neu", "arbeit", "bereit"].indexOf(gruppe) < 0) return false;
+      if (filter !== "offen" && gruppe !== filter) return false;
       return !q || [a.kanal, a.name, a.email, a.thema].join(" ").toLowerCase().indexOf(q) >= 0;
     });
     $("#auftrag-liste").innerHTML = zeilenHtml(liste);
 
-    // Kunden
-    var monat = new Date().toISOString().slice(0, 7);
-    $("#kunden-liste").innerHTML = D.kunden.slice().sort(function (a, b) { return (b.abo_status === "aktiv") - (a.abo_status === "aktiv"); }).map(function (kd) {
-      var anzahl = D.auftraege.filter(function (a) { return a.email === kd.email; }).length;
-      var monatAnz = D.auftraege.filter(function (a) { return a.email === kd.email && (a.geliefert || "").slice(0, 7) === monat; }).length;
-      var ab = ABO[kd.abo_status];
-      var ueberfaellig = kd.abo_status === "aktiv" && kd.bezahlt_bis && kd.bezahlt_bis < new Date().toISOString().slice(0, 10);
-      return '<div class="row" style="cursor:default;flex-wrap:wrap"><div class="main"><div class="title">' + esc(kd.kanal || kd.name || kd.email) + '</div><div class="meta">' + esc(kd.email) +
-        " · " + anzahl + (anzahl === 1 ? " Auftrag, " : " Aufträge, ") + monatAnz + " diesen Monat" + (kd.bezahlt_bis ? " · bezahlt bis " + esc(new Date(kd.bezahlt_bis).toLocaleDateString("de-DE")) : "") + "</div></div>" +
-        '<div class="right" style="flex-direction:row;align-items:center;gap:8px">' + (ueberfaellig ? pill(["Zahlung fällig", "red"]) : "") + (ab ? pill(ab) : pill(["Einzel", "grey"])) +
-        '<select class="in" style="width:auto;padding:5px 8px" data-abo-status="' + esc(kd.email) + '">' +
-        ["", "angefragt", "aktiv", "pausiert", "gekündigt"].map(function (s) { return '<option value="' + s + '"' + (kd.abo_status === s ? " selected" : "") + ">" + (s ? (ABO[s] || [s])[0] : "Kein Abo") + "</option>"; }).join("") +
-        '</select><button class="btn small green" data-abo-zahlung="' + esc(kd.email) + '">Monat bezahlt</button></div></div>';
-    }).join("") || '<div class="empty">Kunden erscheinen hier mit der ersten Bestellung.</div>';
+    // Finanzen
+    $("#bank-hinweis").hidden = !!e.iban;
+    var heute = heuteIso();
+    function rechnungZeile(r) {
+      var st = r.storniert ? ["Storniert", "grey"] : r.bezahlt ? ["Bezahlt " + tag(r.bezahlt), "green"] : r.faellig < heute ? ["Überfällig", "red"] : ["Offen bis " + tag(r.faellig), "orange"];
+      return '<div class="row static fade-in"><div class="main"><div class="title">' + esc(r.nr) + " · " + esc(r.kanal || r.name || r.email) + '</div><div class="meta">' + esc(r.posten) + "</div></div>" +
+        '<div class="right"><span class="betrag' + (r.bezahlt ? " gruen" : "") + '">' + euro(r.betrag) + "</span>" + pill(st) + "</div>" +
+        '<div class="btns" style="flex:none">' + (r.datei ? '<a class="btn small" href="/rechnungen/' + esc(r.datei) + '" target="_blank" title="PDF öffnen">PDF</a>' : "") +
+        (!r.bezahlt && !r.storniert ? '<button class="btn small green" data-rechnung-bezahlt="' + r.id + '">Bezahlt</button>' : "") +
+        (r.bezahlt ? '<button class="btn small ghost" data-rechnung-zurueck="' + r.id + '" title="Doch nicht bezahlt">↺</button>' : "") +
+        (!r.bezahlt && !r.storniert ? '<button class="btn small ghost" data-rechnung-storno="' + r.id + '" title="Stornieren">×</button>' : "") + "</div></div>";
+    }
+    var offeneR = D.rechnungen.filter(function (r) { return !r.bezahlt && !r.storniert; }).sort(function (a, b) { return a.faellig < b.faellig ? -1 : 1; });
+    $("#rechnungen-offen").innerHTML = offeneR.map(rechnungZeile).join("") || '<div class="empty">Alles bezahlt. 🎉</div>';
+    $("#rechnungen-alle").innerHTML = D.rechnungen.slice(0, 60).map(rechnungZeile).join("") || '<div class="empty">Rechnungen entstehen, wenn du beim Senden „Rechnung anhängen“ wählst oder ein Abo abrechnest.</div>';
+
+    var abos = D.kunden.filter(function (kd) { return kd.abo_status; }).sort(function (a, b) { return (b.abo_status === "aktiv") - (a.abo_status === "aktiv") || (a.bezahlt_bis || "z") < (b.bezahlt_bis || "z") ? -1 : 1; });
+    var monat = heute.slice(0, 7);
+    $("#abo-liste").innerHTML = abos.map(function (kd) {
+      var monatAnz = D.auftraege.filter(function (a) { return a.email === kd.email && (a.eingang || "").slice(0, 7) === monat; }).length;
+      var faellig = kd.abo_status === "aktiv" && (!kd.bezahlt_bis || kd.bezahlt_bis <= heute);
+      var bald = kd.abo_status === "aktiv" && !faellig && kd.bezahlt_bis && new Date(kd.bezahlt_bis) - new Date() < 4 * 864e5;
+      var offeneAbo = D.rechnungen.filter(function (r) { return r.abo && r.email === kd.email && !r.bezahlt && !r.storniert; })[0];
+      var infos = [esc(kd.email), monatAnz + " Thumbnail" + (monatAnz === 1 ? "" : "s") + " diesen Monat"];
+      if (kd.bezahlt_bis) infos.push((kd.kuendigt_zum ? "läuft bis " : "verlängert sich am ") + tag(kd.kuendigt_zum || kd.bezahlt_bis));
+      if (offeneAbo) infos.push("Rechnung " + esc(offeneAbo.nr) + " offen");
+      return '<div class="row static fade-in" style="flex-wrap:wrap"><div class="main"><div class="title">' + esc(kd.kanal || kd.name || kd.email) + '</div><div class="meta">' + infos.join(" · ") + "</div></div>" +
+        '<div class="right" style="flex-direction:row;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end">' +
+        (faellig ? pill(["Zahlung fällig", "red"]) : bald ? pill(["Bald fällig", "orange"]) : "") + (kd.kuendigt_zum && kd.abo_status === "aktiv" ? pill(["Gekündigt zum " + tag(kd.kuendigt_zum), "grey"]) : pill(ABO[kd.abo_status] || [kd.abo_status, "grey"])) +
+        "</div>" +
+        '<div class="btns" style="width:100%;justify-content:flex-end;margin-top:4px">' +
+        '<select class="in" style="width:auto;padding:5px 30px 5px 10px;font-size:13px" data-abo-status="' + esc(kd.email) + '">' +
+        ["angefragt", "aktiv", "pausiert", "gekündigt", ""].map(function (st) { return '<option value="' + st + '"' + (kd.abo_status === st ? " selected" : "") + ">" + (st ? (ABO[st] || [st])[0] : "Kein Abo") + "</option>"; }).join("") + "</select>" +
+        (kd.abo_status === "aktiv" ? '<button class="btn small" data-abo-kuendigen="' + esc(kd.email) + '">' + (kd.kuendigt_zum ? "Kündigung zurücknehmen" : "Kündigung eintragen") + "</button>" : "") +
+        (kd.abo_status === "aktiv" || kd.abo_status === "angefragt" ? '<button class="btn small" data-abo-rechnung="' + esc(kd.email) + '">Rechnung senden</button>' : "") +
+        '<button class="btn small green" data-abo-zahlung="' + esc(kd.email) + '">Monat bezahlt</button></div></div>';
+    }).join("") || '<div class="empty">Abos erscheinen hier, sobald jemand das Monats-Abo bestellt.</div>';
     $("#zahlungen").innerHTML = D.zahlungen.slice(0, 40).map(function (z) {
-      return "<div><time>" + datum(z.zeit) + '</time><span style="flex:1">' + esc(z.text) + '</span><b style="color:var(--green);white-space:nowrap">' + euro(z.betrag) +
+      return '<div class="fade-in"><time>' + datum(z.zeit) + '</time><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(z.text) + '</span><b class="betrag gruen">+ ' + euro(z.betrag) +
         '</b><button class="x" style="width:24px;height:24px;font-size:14px" title="Löschen" data-zahlung-weg="' + z.id + '">×</button></div>';
     }).join("") || '<div class="empty">Noch keine Zahlungen.</div>';
 
@@ -559,6 +792,7 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
   document.addEventListener("keydown", function (ev) {
     if (ev.key !== "Escape") return;
     if ($("#ed").classList.contains("open")) return edZu();
+    if ($("#mailblatt").classList.contains("open")) return mailZu();
     if ($("#neu").classList.contains("open")) return blattZu($("#neu"), $("#neu-bg"));
     if ($("#sheet").classList.contains("open")) auftragZu();
   });
@@ -578,7 +812,11 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
     var a = aktuell();
     if (!a) { auftragZu(); return; }
     $("#sheet-title").textContent = a.kanal || a.name || a.email || "Auftrag";
-    $("#sheet-pill").innerHTML = pill(STATUS[a.status] || [a.status, "grey"]);
+    var st = statusVon(a);
+    $("#sheet-pill").innerHTML = '<select class="in" id="a-status" style="width:auto;padding:5px 30px 5px 10px;font-size:13px" aria-label="Status">' +
+      [["neu", "Neu"], ["arbeit", "In Bearbeitung"], ["bereit", "Bereit zum Versand"], ["fertig", "Abgeschlossen"]].map(function (o) {
+        return '<option value="' + o[0] + '"' + (st[2] === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") +
+      (st[2] === "archiv" ? '<option selected value="">Archiv</option>' : "") + "</select>";
     var body = $("#sheet-body");
     var auswahl = body.dataset.auftrag === a.id ? $$("[data-mit]", body).filter(function (c) { return c.checked; }).map(function (c) { return +c.dataset.mit; }) : [0, 1, 2];
     var notiz = body.dataset.auftrag === a.id && $("#notiz-text") ? $("#notiz-text").value : "";
@@ -589,7 +827,7 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
         '<div class="vb"><b>' + "ABC"[n] + " · " + esc(VORLAGE_NAME[en.entwurf.vorlage] || "") + '</b>' +
         '<label class="hint" style="display:flex;align-items:center;gap:4px"><input type="checkbox" data-mit="' + n + '"' + (auswahl.indexOf(n) >= 0 ? " checked" : "") + "> in Mail</label>" +
         '<button class="btn small" data-bearbeiten="' + n + '">Bearbeiten</button>' +
-        (bild ? '<a class="btn small" href="/dateien/' + a.id + "/" + "abc"[n] + '.png?download=1" download>Laden</a>' : "") + "</div></div>";
+        (bild ? '<a class="btn small" title="PNG herunterladen" aria-label="PNG herunterladen" href="/dateien/' + a.id + "/" + "abc"[n] + '.png?download=1" download>↓</a>' : "") + "</div></div>";
     }).join("");
     var chat = a.aenderungen.map(function (c) {
       return '<div class="msg ' + (c.von === "du" ? "du" : "kunde") + '">' + esc(c.text) +
@@ -598,12 +836,19 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
     }).join("");
     body.innerHTML =
       '<div class="grid variants">' + varianten + "</div>" +
-      '<div class="btns" style="margin:16px 0 22px">' +
-        '<button class="btn primary" id="a-mail">Fertiges Thumbnail per Mail senden</button>' +
-        (a.status !== "geliefert" ? '<button class="btn green" id="a-geliefert">Als geliefert markieren</button>' : '<button class="btn" id="a-wieder">Wieder öffnen</button>') +
+      '<div class="btns" style="margin:16px 0 14px">' +
+        '<button class="btn primary" id="a-mail">✉ Fertiges Thumbnail per Mail senden</button>' +
+        (a.status !== "geliefert" ? '<button class="btn" id="a-geliefert">Abschließen</button>' : '<button class="btn" id="a-wieder">Wieder öffnen</button>') +
         '<label class="check" style="margin:0 6px"><input class="switch" type="checkbox" id="a-bezahlt"' + (a.bezahlt ? " checked" : "") + (a.paket === "Monats-Abo" ? " disabled" : "") + "> " + (a.paket === "Monats-Abo" ? "über Abo" : "Bezahlt") + "</label>" +
       "</div>" +
-      '<p class="hint" style="margin:-12px 0 20px">„Per Mail senden“ legt einen Antwort-Entwurf mit den angehakten Bildern in Gmail an' + (a.gmail_entwurf ? " (zuletzt " + datum(a.gmail_entwurf, true) + ")" : "") + ". Du schickst ihn dort selbst ab.</p>" +
+      (function () {
+        var r = D.rechnungen.filter(function (x) { return x.auftrag === a.id && !x.storniert; })[0];
+        var teile = [];
+        if (a.gesendet) teile.push("Gesendet " + datum(a.gesendet, true));
+        else if (a.gmail_entwurf) teile.push("Gmail-Entwurf " + datum(a.gmail_entwurf, true));
+        if (r) teile.push('Rechnung <a href="/rechnungen/' + esc(r.datei) + '" target="_blank">' + esc(r.nr) + "</a> " + (r.bezahlt ? "bezahlt" : "offen bis " + tag(r.faellig)));
+        return teile.length ? '<p class="hint" style="margin:0 0 20px">' + teile.join(" · ") + "</p>" : '<div style="height:6px"></div>';
+      })() +
       '<div class="grid two">' +
         '<div class="card"><h3>Änderungswünsche &amp; Notizen</h3><div class="chat">' + (chat || '<div class="hint">Antwortet der Kunde auf deine Mail, erscheint es hier automatisch.</div>') + "</div>" +
           '<div style="display:flex;gap:8px"><input class="in" id="notiz-text" placeholder="Notiz hinzufügen"><button class="btn" id="notiz-los">+</button></div></div>' +
@@ -631,11 +876,7 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
     if (t.closest("[data-zoom]")) { var lb = document.createElement("div"); lb.className = "lightbox"; lb.innerHTML = '<img src="' + t.src + '" alt="">'; lb.onclick = function () { lb.remove(); }; document.body.appendChild(lb); return; }
     var b = t.closest("button"); if (!b) return;
     if (b.dataset.bearbeiten) return edOeffnen(+b.dataset.bearbeiten);
-    if (b.id === "a-mail") {
-      var nr = $$("[data-mit]").filter(function (c) { return c.checked; }).map(function (c) { return +c.dataset.mit; });
-      if (!nr.length) return toast("Hake mindestens einen Entwurf an.");
-      return aktion("gmail", { varianten: nr }, b, "Entwurf liegt in Gmail. Dort prüfen und senden.");
-    }
+    if (b.id === "a-mail") return mailOeffnen(b);
     if (b.id === "a-geliefert") return aktion("status", { status: "geliefert" }, b, "Als geliefert markiert.");
     if (b.id === "a-wieder") return aktion("status", { status: "bereit" }, b);
     if (b.id === "a-archiv") return aktion("status", { status: "archiv" }, b, "Archiviert.").then(auftragZu);
@@ -651,6 +892,9 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
       var f = t.files[0];
       api("/api/auftrag/" + offenerAuftrag + "/foto?name=" + encodeURIComponent(f.name), f).then(neuerStand).then(function () { toast("Foto hinzugefügt. Im Editor kannst du es einsetzen."); }).catch(fehler);
     }
+  });
+  $("#sheet-pill").addEventListener("change", function (ev) {
+    if (ev.target.id === "a-status" && STATUS_SETZEN[ev.target.value]) aktion("status", STATUS_SETZEN[ev.target.value], null, "Status geändert.");
   });
   $("#sheet-body").addEventListener("keydown", function (ev) { if (ev.key === "Enter" && ev.target.id === "notiz-text") $("#notiz-los").click(); });
 
@@ -751,6 +995,218 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
   $("#ki-wunsch").addEventListener("keydown", function (ev) { if (ev.key === "Enter") $("#ki-los").click(); });
   document.addEventListener("click", function (ev) { if (ev.target.id === "ki-einst") { ev.preventDefault(); edZu(); auftragZu(); } });
 
+  /* ---------------- Mail schreiben ---------------- */
+  var M = { vorschlag: null, dateien: [] };
+  function mailOeffnen(btn) {
+    var a = aktuell();
+    if (!a.email) return toast("Trag zuerst die E-Mail-Adresse des Kunden ein.");
+    laden(btn, api("/api/auftrag/" + a.id + "/mailvorschlag", {})).then(function (v) {
+      M.vorschlag = v; M.dateien = [];
+      var e = D.einstellungen;
+      $("#m-an").value = a.email;
+      $("#m-betreff").value = v.betreff.match(/^\s*(re|aw)\s*:/i) ? v.betreff : "Re: " + v.betreff;
+      var fertig = ["in_gmail", "aenderung", "geliefert"].indexOf(a.status) >= 0 || a.geoeffnet;
+      mailVorlage(fertig ? "fertig" : "erste");
+      var gewaehlt = $$("[data-mit]").filter(function (c) { return c.checked; }).map(function (c) { return +c.dataset.mit; });
+      if (fertig && gewaehlt.length === 3) gewaehlt = [];  // beim fertigen Thumbnail eher nur eins
+      $("#m-bilder").innerHTML = a.entwuerfe.map(function (en, n) {
+        var bild = vorschauBild(a, n);
+        return bild ? '<label><input type="checkbox" data-m-bild="' + n + '"' + (gewaehlt.length ? (gewaehlt.indexOf(n) >= 0 ? " checked" : "") : (!fertig || n === 0 ? " checked" : "")) + '><img alt="" src="' + bild + '"><span>Entwurf ' + "ABC"[n] + "</span></label>" : "";
+      }).join("");
+      $("#m-rechnung-zeile").hidden = a.paket === "Monats-Abo";
+      $("#m-rechnung").checked = v.rechnung && fertig;
+      $("#m-rechnung-text").innerHTML = "Rechnung " + esc(v.rechnung_nr) + " über " + euro(v.rechnung_betrag) + " als PDF anhängen" + (v.rechnung_vorhanden ? " (schon erstellt)" : "") + (!v.rechnung ? " (Auftrag ist bezahlt)" : "") +
+        (v.iban ? "" : ' <span class="hint">(ohne IBAN, <a href="#" data-goto="einstellungen" data-mail-zu>eintragen</a>)</span>');
+      $("#m-senden").hidden = !v.direkt;
+      $("#m-hint").textContent = v.direkt ? "„Jetzt senden“ schickt die Mail sofort über dein Gmail. Sie erscheint dort unter „Gesendet“." : "Die Mail landet als Entwurf in Gmail. Du schickst sie dort selbst ab.";
+      chipsZeichnen();
+      blattAuf($("#mailblatt"), $("#mail-bg"));
+    }).catch(fehler);
+  }
+  function mailVorlage(welche) {
+    $$("#m-vorlage button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.v === welche ? "true" : "false"); });
+    $("#m-text").value = M.vorschlag.vorlagen[welche];
+  }
+  function mailZu() { blattZu($("#mailblatt"), $("#mail-bg")); }
+  $("[data-mail-close]").addEventListener("click", mailZu);
+  $("#mail-bg").addEventListener("click", mailZu);
+  $("#m-vorlage").addEventListener("click", function (ev) {
+    var b = ev.target.closest("button"); if (!b) return;
+    if ($("#m-text").value !== M.vorschlag.vorlagen[$('#m-vorlage [aria-pressed="true"]').dataset.v] && !confirm("Deinen geänderten Text durch die Vorlage ersetzen?")) return;
+    mailVorlage(b.dataset.v);
+  });
+  document.addEventListener("click", function (ev) { if (ev.target.closest("[data-mail-zu]")) { ev.preventDefault(); mailZu(); auftragZu(); } });
+  function chipsZeichnen() {
+    $("#m-chips").innerHTML = M.dateien.map(function (f, i) {
+      return '<span class="chip">📎 ' + esc(f.name) + ' <span class="hint">' + Math.max(1, Math.round(f.size / 1024)) + ' KB</span><button type="button" data-chip-weg="' + i + '" aria-label="Entfernen">×</button></span>';
+    }).join("");
+  }
+  function dateienDazu(liste) {
+    Array.prototype.forEach.call(liste, function (f) {
+      if (f.size > 20e6) return toast(f.name + " ist größer als 20 MB.");
+      M.dateien.push(f);
+    });
+    chipsZeichnen();
+  }
+  $("#m-dateien").addEventListener("change", function () { dateienDazu(this.files); this.value = ""; });
+  $("#m-chips").addEventListener("click", function (ev) { var b = ev.target.closest("[data-chip-weg]"); if (b) { M.dateien.splice(+b.dataset.chipWeg, 1); chipsZeichnen(); } });
+  ["dragenter", "dragover"].forEach(function (n) { $("#m-drop").addEventListener(n, function (ev) { ev.preventDefault(); this.classList.add("ueber"); }); });
+  ["dragleave", "drop"].forEach(function (n) { $("#m-drop").addEventListener(n, function (ev) { ev.preventDefault(); this.classList.remove("ueber"); }); });
+  $("#m-drop").addEventListener("drop", function (ev) { dateienDazu(ev.dataTransfer.files); });
+  function alsDataUrl(f) { return new Promise(function (ok, nein) { var r = new FileReader(); r.onload = function () { ok(r.result); }; r.onerror = nein; r.readAsDataURL(f); }); }
+  function mailAbschicken(modus, btn) {
+    var a = aktuell();
+    var bilder = $$("[data-m-bild]").filter(function (c) { return c.checked; }).map(function (c) { return +c.dataset.mBild; });
+    var rechnungDran = !$("#m-rechnung-zeile").hidden && $("#m-rechnung").checked;
+    if (!bilder.length && !M.dateien.length && !rechnungDran) return toast("Wähle mindestens einen Anhang.");
+    if (modus === "senden" && !confirm("Mail jetzt an " + a.email + " senden?")) return;
+    laden(btn, Promise.all(M.dateien.map(alsDataUrl)).then(function (urls) {
+      return api("/api/auftrag/" + a.id + "/versand", {
+        modus: modus, varianten: bilder, betreff: $("#m-betreff").value, text: $("#m-text").value, rechnung: rechnungDran,
+        extra: M.dateien.map(function (f, i) { return { name: f.name, daten: urls[i] }; })
+      });
+    }).then(neuerStand)).then(function () {
+      mailZu();
+      toast(modus === "senden" ? "Gesendet an " + a.email + "." : "Entwurf liegt in Gmail. Dort prüfen und senden.");
+    }).catch(fehler);
+  }
+  $("#m-entwurf").addEventListener("click", function () { mailAbschicken("entwurf", this); });
+  $("#m-senden").addEventListener("click", function () { mailAbschicken("senden", this); });
+
+  /* ---------------- Website-Editor ---------------- */
+  var W = { daten: null, config: {}, texte: {}, bilder: {}, ansicht: "angaben" };
+  var CFG_NAMEN = {
+    marke: "Name im Logo", markeZusatz: "Zusatz im Logo", email: "E-Mail für Bestellungen", preisEinzel: "Preis Einzel-Thumbnail (€)",
+    preisAbo: "Preis Monats-Abo (€)", lieferzeit: "Lieferzeit", antwortzeit: "Antwortzeit", korrekturEinzel: "Korrekturen beim Einzel-Thumbnail",
+    zahlung: "Text zur Bezahlung", kleinunternehmer: "Kleinunternehmer-Hinweis zeigen", "impressum.name": "Impressum: Name",
+    "impressum.strasse": "Impressum: Straße", "impressum.ort": "Impressum: PLZ und Ort", "impressum.telefon": "Impressum: Telefon", hoster: "Hoster (Datenschutz)"
+  };
+  var BILD_NAMEN = {
+    fitness_before: "Fitness · Vorher", fitness_after: "Fitness · Nachher", finance_before: "Finanzen · Vorher", finance_after: "Finanzen · Nachher",
+    gaming_before: "Gaming · Vorher", gaming_after: "Gaming · Nachher", g_fitness_fehler: "Galerie · Fitness-Fehler", g_fitness_abnehmen: "Galerie · Abnehmen",
+    g_etf_fehler: "Galerie · ETF-Fehler", g_nebenbei: "Galerie · Nebenbei", g_tech: "Galerie · Tech"
+  };
+  var BEREICHE = { "": "Oben", "hero-title": "Start", ablauf: "So einfach geht’s", beispiele: "Vorher / Nachher", preise: "Preise", faq: "Fragen", kontakt: "Kontakt & Rechtliches" };
+  function webAuto() {  // beim ersten Öffnen des Tabs automatisch laden
+    if (!D || W.daten || W.versucht || $('[data-view="website"]').hidden) return;
+    if (!D.einstellungen.github_token) { $("#web-leer-text").innerHTML = 'Damit die App deine Website ändern darf, trag zuerst in den <a href="#" data-goto="einstellungen">Einstellungen</a> einen GitHub-Token ein.'; return; }
+    W.versucht = true; webLaden();
+  }
+  function webLaden(btn) {
+    $("#web-leer-text").textContent = "Wird von GitHub geladen …";
+    return laden(btn || $("#web-laden"), api("/api/website", {})).then(function (d) {
+      W.daten = d; W.config = {}; W.texte = {}; W.bilder = {};
+      webZeichnen();
+    }).catch(function (e) {
+      $("#web-leer").hidden = false; $("#web-inhalt").hidden = true;
+      $("#web-leer-text").innerHTML = esc(e.message) + (/Token/.test(e.message) ? ' <a href="#" data-goto="einstellungen">Zu den Einstellungen</a>' : "");
+    });
+  }
+  function webZeichnen() {
+    var d = W.daten;
+    $("#web-leer").hidden = true; $("#web-inhalt").hidden = false;
+    $("#web-live").href = d.url;
+    $("#web-config").innerHTML = d.config.map(function (f) {
+      var name = CFG_NAMEN[f.schluessel] || f.schluessel, id = "cfg-" + f.schluessel.replace(/\./g, "-");
+      var hinweis = f.hinweis && !CFG_NAMEN[f.schluessel] ? '<p class="hint" style="margin:4px 0 0">' + esc(f.hinweis) + "</p>" : "";
+      if (typeof f.wert === "boolean") return '<label class="check" style="grid-column:1/-1"><input class="switch" type="checkbox" id="' + id + '" data-cfg="' + esc(f.schluessel) + '"' + (f.wert ? " checked" : "") + "> " + esc(name) + "</label>";
+      var lang = String(f.wert).length > 60;
+      return '<label class="f"' + (lang ? ' style="grid-column:1/-1"' : "") + "><span>" + esc(name) + "</span>" +
+        (lang ? '<textarea class="in" rows="2" id="' + id + '" data-cfg="' + esc(f.schluessel) + '">' + esc(f.wert) + "</textarea>"
+              : '<input class="in" id="' + id + '" data-cfg="' + esc(f.schluessel) + '"' + (typeof f.wert === "number" ? ' type="number" step="0.01"' : "") + ' value="' + esc(f.wert) + '">') + hinweis + "</label>";
+    }).join("");
+    webTexte();
+    $("#web-bilder").innerHTML = d.bilder.filter(function (n) { return BILD_NAMEN[n]; }).map(function (n) {
+      return '<div class="bild" data-bild="' + n + '"><img alt="" loading="lazy" src="/api/website/bild/' + n + "?v=" + d.sha.slice(0, 7) + '"><div><span>' + esc(BILD_NAMEN[n]) +
+        '</span><label class="btn small">Ersetzen<input type="file" accept="image/*" data-bild-neu="' + n + '" hidden></label></div></div>';
+    }).join("");
+    webLeiste();
+  }
+  function webTexte() {
+    var q = ($("#web-suche").value || "").toLowerCase(), gruppen = {}, reihenfolge = [];
+    W.daten.texte.forEach(function (t) {
+      if (q && t.text.toLowerCase().indexOf(q) < 0) return;
+      if (!gruppen[t.bereich]) { gruppen[t.bereich] = []; reihenfolge.push(t.bereich); }
+      gruppen[t.bereich].push(t);
+    });
+    $("#web-texte").innerHTML = reihenfolge.map(function (b) {
+      return '<div class="textgruppe"><h3>' + esc(BEREICHE[b] || b) + "</h3>" + gruppen[b].map(function (t) {
+        var wert = W.texte[t.nr] ? W.texte[t.nr].neu : t.text;
+        return '<label class="f"><span>' + ({ h1: "Große Überschrift", h2: "Überschrift", h3: "Zwischenüberschrift", li: "Listenpunkt", summary: "Aufklapp-Titel" }[t.tag] || "Text") +
+          '</span><textarea class="in' + (W.texte[t.nr] ? " geaendert" : "") + '" rows="' + Math.min(5, Math.ceil(wert.length / 80)) + '" data-text="' + t.nr + '"' +
+          (t.tag === "h1" || t.tag === "h2" ? ' style="font-weight:600;color:var(--text)"' : "") + ">" + esc(wert) + "</textarea></label>";
+      }).join("") + "</div>";
+    }).join("") || '<div class="empty">Kein Text gefunden.</div>';
+  }
+  function webAnzahl() { return Object.keys(W.config).length + Object.keys(W.texte).length + Object.keys(W.bilder).length; }
+  function webLeiste() {
+    var n = webAnzahl();
+    $("#web-leiste").classList.toggle("zeigen", n > 0);
+    $("#web-leiste-text").textContent = n === 1 ? "1 Änderung offen" : n + " Änderungen offen";
+  }
+  $("#web-laden").addEventListener("click", function () { webLaden(this); });
+  $("#web-neu").addEventListener("click", function () { if (!webAnzahl() || confirm("Deine ungespeicherten Änderungen gehen verloren.")) webLaden(this); });
+  $("#web-verwerfen").addEventListener("click", function () { W.config = {}; W.texte = {}; W.bilder = {}; webZeichnen(); });
+  $("#web-suche").addEventListener("input", webTexte);
+  $("#web-tabs").addEventListener("click", function (ev) {
+    var b = ev.target.closest("button"); if (!b) return;
+    $$("#web-tabs button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    $$("[data-w-view]").forEach(function (v) { v.hidden = v.dataset.wView !== b.dataset.w; });
+  });
+  $("#web-inhalt").addEventListener("input", function (ev) {
+    var t = ev.target;
+    if (t.dataset.cfg) {
+      var f = W.daten.config.filter(function (x) { return x.schluessel === t.dataset.cfg; })[0];
+      var wert = t.type === "checkbox" ? t.checked : t.value;
+      if (String(wert) === String(f.wert)) delete W.config[f.schluessel]; else W.config[f.schluessel] = wert;
+      t.classList.toggle("geaendert", f.schluessel in W.config);
+    } else if (t.dataset.text) {
+      var tx = W.daten.texte.filter(function (x) { return String(x.nr) === t.dataset.text; })[0];
+      var neu = t.value.replace(/\s+/g, " ").trim();
+      if (neu === tx.text) delete W.texte[tx.nr]; else W.texte[tx.nr] = { alt: tx.text, neu: neu };
+      t.classList.toggle("geaendert", tx.nr in W.texte);
+    } else return;
+    webLeiste();
+  });
+  $("#web-inhalt").addEventListener("change", function (ev) {
+    var t = ev.target;
+    if (t.dataset.cfg && t.type === "checkbox") return t.dispatchEvent(new Event("input", { bubbles: true }));
+    if (!t.dataset.bildNeu || !t.files[0]) return;
+    var name = t.dataset.bildNeu, f = t.files[0];
+    bildVerkleinern(f).then(function (url) {
+      W.bilder[name] = url;
+      var kachel = $('[data-bild="' + name + '"]');
+      $("img", kachel).src = url; kachel.classList.add("geaendert");
+      webLeiste();
+      toast("Bild ersetzt (" + Math.round(url.length * 0.75 / 1024) + " KB). Noch veröffentlichen.");
+    }).catch(fehler);
+  });
+  // Auf 1280 × 720 zuschneiden (wie ein Thumbnail) und als WebP speichern
+  function bildVerkleinern(f) {
+    return new Promise(function (ok, nein) {
+      var img = new Image();
+      img.onload = function () {
+        var c = document.createElement("canvas"); c.width = 1280; c.height = 720;
+        var z = Math.max(1280 / img.width, 720 / img.height), w = img.width * z, h = img.height * z;
+        c.getContext("2d").drawImage(img, (1280 - w) / 2, (720 - h) / 2, w, h);
+        var url = c.toDataURL("image/webp", 0.82);
+        if (url.indexOf("data:image/webp") !== 0) url = c.toDataURL("image/jpeg", 0.85);
+        URL.revokeObjectURL(img.src); ok(url);
+      };
+      img.onerror = function () { nein(new Error("Das Bild konnte nicht gelesen werden.")); };
+      img.src = URL.createObjectURL(f);
+    });
+  }
+  $("#web-speichern").addEventListener("click", function () {
+    var n = webAnzahl();
+    if (!confirm(n + (n === 1 ? " Änderung" : " Änderungen") + " jetzt auf der öffentlichen Website veröffentlichen?")) return;
+    laden(this, api("/api/website/speichern", { config: W.config, texte: W.texte, bilder: W.bilder })).then(function (d) {
+      W.daten = d; W.config = {}; W.texte = {}; W.bilder = {};
+      neuerStand(d.stand); webZeichnen();
+      toast("Veröffentlicht. In etwa einer Minute ist es live.");
+    }).catch(fehler);
+  });
+
   /* ---------------- Neuer Auftrag ---------------- */
   var neuPaket = "Einzel-Thumbnail";
   $("#neu-btn").addEventListener("click", function () { $("#neu-form").reset(); blattAuf($("#neu"), $("#neu-bg")); });
@@ -773,11 +1229,30 @@ footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-to
   /* ---------------- Abos & Zahlungen ---------------- */
   document.addEventListener("change", function (ev) {
     var s = ev.target.dataset && ev.target.dataset.aboStatus;
-    if (s !== undefined && ev.target.dataset.aboStatus) api("/api/kunde", { email: ev.target.dataset.aboStatus, abo_status: ev.target.value, paket: ev.target.value ? "Abo" : "Einzel" }).then(neuerStand).catch(fehler);
+    if (s !== undefined && ev.target.dataset.aboStatus) api("/api/kunde", { email: ev.target.dataset.aboStatus, abo_status: ev.target.value, paket: ev.target.value ? "Abo" : "Einzel" }).then(neuerStand).then(function () { toast("Abo-Status geändert."); }).catch(fehler);
+  });
+  document.addEventListener("click", function (ev) {
+    var t = ev.target.closest("button"); if (!t) return;
+    var d = t.dataset;
+    if (d.rechnungBezahlt) laden(t, api("/api/rechnung", { id: d.rechnungBezahlt, bezahlt: true })).then(neuerStand).then(function () { toast("Als bezahlt verbucht."); }).catch(fehler);
+    if (d.rechnungZurueck && confirm("Zahlung zurücknehmen? Die Rechnung ist dann wieder offen.")) api("/api/rechnung", { id: d.rechnungZurueck, bezahlt: false }).then(neuerStand).catch(fehler);
+    if (d.rechnungStorno && confirm("Rechnung stornieren? Die Nummer bleibt vergeben, die Rechnung zählt nicht mehr als offen.")) api("/api/rechnung", { id: d.rechnungStorno, storniert: true }).then(neuerStand).catch(fehler);
+    if (d.aboRechnung) {
+      var direkt = D.einstellungen.direkt_senden && confirm("Rechnung für den nächsten Abo-Monat jetzt an " + d.aboRechnung + " senden?\n\nAbbrechen = nur als Gmail-Entwurf anlegen.");
+      laden(t, api("/api/rechnung", { abo_email: d.aboRechnung, modus: direkt ? "senden" : "entwurf" })).then(neuerStand)
+        .then(function () { toast(direkt ? "Rechnung gesendet." : "Rechnung erstellt und als Gmail-Entwurf angelegt."); }).catch(fehler);
+    }
+    if (d.aboKuendigen) {
+      var kd = D.kunden.filter(function (x) { return x.email === d.aboKuendigen; })[0];
+      if (kd.kuendigt_zum) return api("/api/kunde", { email: kd.email, kuendigt_zum: "" }).then(neuerStand).then(function () { toast("Kündigung zurückgenommen."); }).catch(fehler);
+      var vorschlag = kd.bezahlt_bis || heuteIso();
+      var bis = prompt("Abo endet am (JJJJ-MM-TT). Bis dahin ist es bezahlt:", vorschlag);
+      if (bis && /^\d{4}-\d{2}-\d{2}$/.test(bis)) api("/api/kunde", { email: kd.email, kuendigt_zum: bis }).then(neuerStand).then(function () { toast("Kündigung eingetragen."); }).catch(fehler);
+    }
   });
   document.addEventListener("click", function (ev) {
     var b = ev.target.closest("[data-abo-zahlung]");
-    if (b) laden(b, api("/api/abo-zahlung", { email: b.dataset.aboZahlung })).then(neuerStand).then(function () { toast("Abo-Monat verbucht."); }).catch(fehler);
+    if (b) laden(b, api("/api/abo-zahlung", { email: b.dataset.aboZahlung })).then(neuerStand).then(function () { toast("Abo-Monat als bezahlt verbucht."); }).catch(fehler);
     var z = ev.target.closest("[data-zahlung-weg]");
     if (z && confirm("Zahlung löschen?")) api("/api/zahlung", { loeschen: z.dataset.zahlungWeg }).then(neuerStand).catch(fehler);
   });
