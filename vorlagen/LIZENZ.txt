@@ -1,0 +1,5 @@
+Bausteine für den Thumbnail-Autopiloten (Google Apps Script).
+
+emoji/: Microsoft Fluent Emoji (3D), MIT-Lizenz, Copyright (c) Microsoft Corporation.
+https://github.com/microsoft/fluentui-emoji
+bg-*.jpg: eigene Hintergründe.
