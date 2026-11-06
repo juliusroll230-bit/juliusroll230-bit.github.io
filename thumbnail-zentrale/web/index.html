@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f5f7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Thumbnails">
+<link rel="icon" href="/web/icon.png">
+<link rel="apple-touch-icon" href="/web/icon.png">
+<title>Thumbnail-Zentrale</title>
+<style>
+:root {
+  --bg: #f5f5f7; --card: #ffffff; --text: #1d1d1f; --muted: #6e6e73; --line: #e5e5ea;
+  --blue: #0071e3; --blue-soft: #e8f1fc; --green: #1d9a4a; --green-soft: #e6f6ea;
+  --orange: #c25e00; --orange-soft: #fff1e0; --red: #d70015; --red-soft: #fde8ea; --grey-soft: #f0f0f2;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 6px 24px rgba(0,0,0,.06);
+  --radius: 18px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.45 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+button, input, select, textarea { font: inherit; color: inherit; }
+img { max-width: 100%; display: block; }
+[hidden] { display: none !important; }
+a { color: var(--blue); text-decoration: none; }
+
+/* Kopfzeile + Navigation */
+header.top { position: sticky; top: 0; z-index: 20; background: rgba(245,245,247,.8); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(0,0,0,.06); padding-top: env(safe-area-inset-top); }
+.top-inner { max-width: 1120px; margin: 0 auto; padding: 12px 20px; display: flex; align-items: center; gap: 16px; }
+.brand { font-weight: 600; font-size: 17px; letter-spacing: -.01em; display: flex; align-items: center; gap: 10px; white-space: nowrap; }
+.brand-dot { width: 26px; height: 26px; border-radius: 7px; background: linear-gradient(135deg,#0071e3,#7a5cff); display: grid; place-items: center; color: #fff; font-size: 13px; font-weight: 700; }
+nav.tabs { display: flex; gap: 4px; background: rgba(0,0,0,.05); padding: 3px; border-radius: 10px; margin-left: auto; }
+nav.tabs button { border: 0; background: transparent; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 14px; color: var(--muted); font-weight: 500; }
+nav.tabs button[aria-selected="true"] { background: #fff; color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+.badge-dot { display: inline-block; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--red); color: #fff; font-size: 11px; line-height: 18px; text-align: center; margin-left: 4px; font-weight: 600; }
+
+main { max-width: 1120px; margin: 0 auto; padding: 24px 20px calc(110px + env(safe-area-inset-bottom)); }
+h1 { font-size: 32px; letter-spacing: -.02em; margin: 4px 0 4px; font-weight: 700; }
+h2 { font-size: 21px; letter-spacing: -.01em; margin: 0 0 12px; font-weight: 600; }
+h3 { font-size: 16px; margin: 0 0 8px; font-weight: 600; }
+.sub { color: var(--muted); margin: 0 0 24px; }
+.card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
+.grid { display: grid; gap: 16px; }
+.grid > * { min-width: 0; }
+.kpis { grid-template-columns: repeat(4, 1fr); margin-bottom: 24px; }
+.kpi .label { color: var(--muted); font-size: 13px; font-weight: 500; }
+.kpi .value { font-size: 34px; font-weight: 700; letter-spacing: -.02em; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.kpi .hint { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.kpi.money .value { color: var(--green); }
+.two { grid-template-columns: 1.4fr 1fr; align-items: start; }
+
+/* Listen */
+.list { display: flex; flex-direction: column; }
+.row { display: flex; align-items: center; gap: 14px; padding: 12px 4px; border-bottom: 1px solid var(--line); cursor: pointer; border-radius: 10px; }
+.row:last-child { border-bottom: 0; }
+.row:hover { background: #fafafa; }
+.row .thumb { width: 112px; aspect-ratio: 16/9; border-radius: 8px; background: var(--grey-soft); object-fit: cover; flex: none; }
+.row .main { flex: 1; min-width: 0; }
+.row .title { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .meta { color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .right { text-align: right; flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.empty { color: var(--muted); padding: 28px 8px; text-align: center; }
+
+.pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.pill.blue { background: var(--blue-soft); color: var(--blue); }
+.pill.green { background: var(--green-soft); color: var(--green); }
+.pill.orange { background: var(--orange-soft); color: var(--orange); }
+.pill.red { background: var(--red-soft); color: var(--red); }
+.pill.grey { background: var(--grey-soft); color: var(--muted); }
+
+/* Knöpfe & Felder */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 0; border-radius: 980px; padding: 9px 18px; font-size: 14px; font-weight: 500; cursor: pointer; background: var(--grey-soft); color: var(--text); transition: transform .12s ease, background-color .15s ease, opacity .15s; white-space: nowrap; }
+.btn:active { transform: scale(.97); }
+.btn.primary { background: var(--blue); color: #fff; }
+.btn.primary:hover { background: #0077ed; }
+.btn.green { background: var(--green); color: #fff; }
+.btn.danger { background: var(--red-soft); color: var(--red); }
+.btn.small { padding: 6px 12px; font-size: 13px; }
+.btn[disabled] { opacity: .5; pointer-events: none; }
+.btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.seg { display: inline-flex; background: rgba(0,0,0,.05); padding: 3px; border-radius: 10px; gap: 2px; flex-wrap: wrap; }
+.seg button { border: 0; background: transparent; padding: 6px 12px; border-radius: 8px; font-size: 13px; cursor: pointer; color: var(--muted); font-weight: 500; }
+.seg button[aria-pressed="true"] { background: #fff; color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+.f { display: block; margin-bottom: 14px; }
+.f > span { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
+.in { width: 100%; border: 1px solid #d2d2d7; background: #fff; border-radius: 10px; padding: 10px 12px; outline: none; transition: border-color .15s, box-shadow .15s; }
+.in:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(0,113,227,.15); }
+textarea.in { resize: vertical; min-height: 80px; }
+.check { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; cursor: pointer; }
+.switch { appearance: none; width: 42px; height: 26px; background: #e5e5ea; border-radius: 13px; position: relative; cursor: pointer; transition: background .2s; flex: none; margin: 0; }
+.switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,.2); transition: transform .2s; }
+.switch:checked { background: #34c759; }
+.switch:checked::after { transform: translateX(16px); }
+.hint { font-size: 13px; color: var(--muted); }
+.row-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+
+/* Blatt (Auftrag, Editor) */
+.sheet-bg { position: fixed; inset: 0; background: rgba(0,0,0,.32); z-index: 40; opacity: 0; transition: opacity .2s; }
+.sheet-bg.open { opacity: 1; }
+.sheet { position: fixed; z-index: 41; left: 50%; top: 50%; width: min(980px, calc(100vw - 32px)); max-height: calc(100vh - 48px); overflow: auto; background: var(--bg); border-radius: 22px; box-shadow: 0 30px 80px rgba(0,0,0,.25); transform: translate(-50%, -48%) scale(.98); opacity: 0; transition: transform .22s ease, opacity .22s ease; }
+.sheet.open { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+.sheet-head { position: sticky; top: 0; background: rgba(245,245,247,.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 16px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(0,0,0,.06); z-index: 2; }
+.sheet-head h2 { margin: 0; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sheet-body { padding: 20px; }
+.x { width: 32px; height: 32px; border-radius: 50%; border: 0; background: rgba(0,0,0,.06); cursor: pointer; font-size: 18px; line-height: 1; color: var(--muted); flex: none; }
+
+.variants { grid-template-columns: repeat(3, 1fr); }
+.variant { background: #fff; border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; }
+.variant img { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: var(--grey-soft); cursor: zoom-in; }
+.variant .vb { padding: 10px 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.variant .vb b { margin-right: auto; }
+.chat { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.msg { padding: 10px 14px; border-radius: 16px; max-width: 85%; white-space: pre-wrap; word-wrap: break-word; }
+.msg.kunde { background: #fff; box-shadow: var(--shadow); align-self: flex-start; }
+.msg.du { background: var(--blue); color: #fff; align-self: flex-end; }
+.msg small { display: block; opacity: .65; font-size: 11px; margin-top: 3px; }
+.kv { display: grid; grid-template-columns: 110px 1fr; gap: 6px 12px; font-size: 14px; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; word-break: break-word; }
+details.raw summary { cursor: pointer; color: var(--blue); font-size: 13px; margin-top: 10px; }
+details.raw pre { white-space: pre-wrap; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--grey-soft); padding: 12px; border-radius: 10px; max-height: 260px; overflow: auto; }
+
+/* Editor */
+.editor { display: grid; grid-template-columns: 1.35fr 1fr; gap: 20px; align-items: start; }
+.preview { position: sticky; top: 80px; }
+.frame-wrap { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; background: #000; box-shadow: var(--shadow); }
+.frame-wrap iframe { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; border: 0; transform-origin: 0 0; pointer-events: none; }
+.swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+.swatch { width: 34px; height: 34px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 1px #d2d2d7; cursor: pointer; }
+.swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--blue); }
+.emoji-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)); gap: 6px; max-height: 190px; overflow: auto; padding: 6px; background: #fff; border-radius: 12px; border: 1px solid #d2d2d7; }
+.emoji-grid button { border: 0; background: transparent; padding: 4px; border-radius: 8px; cursor: pointer; }
+.emoji-grid button[aria-pressed="true"] { background: var(--blue-soft); box-shadow: inset 0 0 0 2px var(--blue); }
+.emoji-grid img { width: 34px; height: 34px; }
+.colors { display: flex; gap: 14px; }
+.colors input[type=color] { width: 44px; height: 34px; border: 1px solid #d2d2d7; border-radius: 8px; padding: 2px; background: #fff; cursor: pointer; }
+.fotos { display: flex; gap: 8px; flex-wrap: wrap; }
+.fotos button { border: 2px solid transparent; padding: 0; border-radius: 10px; overflow: hidden; width: 64px; height: 64px; background: var(--grey-soft); cursor: pointer; font-size: 12px; color: var(--muted); }
+.fotos button[aria-pressed="true"] { border-color: var(--blue); }
+.fotos img { width: 100%; height: 100%; object-fit: cover; }
+
+.toast { position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(20px); background: rgba(29,29,31,.92); color: #fff; padding: 10px 18px; border-radius: 12px; font-size: 14px; opacity: 0; transition: .25s; z-index: 60; pointer-events: none; max-width: calc(100vw - 32px); text-align: center; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
+.btn:not(.primary):not(.green) .spinner { border-color: rgba(0,0,0,.15); border-top-color: var(--text); }
+@keyframes spin { to { transform: rotate(360deg); } }
+.lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.85); z-index: 70; display: grid; place-items: center; padding: 20px; cursor: zoom-out; }
+.lightbox img { max-height: 90vh; border-radius: 10px; }
+.status-line { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: #c7c7cc; flex: none; }
+.dot.ok { background: #34c759; } .dot.err { background: var(--red); }
+.feed { font-size: 14px; }
+.feed div { padding: 8px 0; border-bottom: 1px solid var(--line); display: flex; gap: 10px; }
+.feed div:last-child { border-bottom: 0; }
+.feed time { color: var(--muted); font-size: 12px; white-space: nowrap; min-width: 92px; }
+.toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.toolbar .grow { flex: 1; }
+footer.ver { text-align: center; color: var(--muted); font-size: 12px; margin-top: 32px; }
+
+@media (max-width: 900px) {
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+  .two, .editor { grid-template-columns: 1fr; }
+  .preview { position: static; }
+  .variants { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+  header.top { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(245,245,247,.97); }
+  nav.tabs { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); margin: 0; justify-content: space-around; background: rgba(255,255,255,.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 8px 30px rgba(0,0,0,.15); border-radius: 16px; padding: 6px; z-index: 30; }
+  nav.tabs button { flex: 1; padding: 8px 4px; font-size: 12px; }
+  h1 { font-size: 26px; }
+  .kpi .value { font-size: 26px; }
+  .row .thumb { width: 84px; }
+  .row .right .pill + .meta { display: none; }
+  .sheet { top: auto; bottom: 0; left: 0; width: 100% !important; max-height: 94vh; border-radius: 22px 22px 0 0; transform: translateY(30px); }
+  .sheet.open { transform: translateY(0); }
+  .row-fields { grid-template-columns: 1fr; }
+  .kv { grid-template-columns: 90px 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><span class="brand-dot">T</span>Thumbnail-Zentrale</div>
+    <nav class="tabs" role="tablist" aria-label="Bereiche">
+      <button role="tab" data-tab="uebersicht" aria-selected="true">Übersicht</button>
+      <button role="tab" data-tab="auftraege">Aufträge<span id="nav-offen"></span></button>
+      <button role="tab" data-tab="abos">Abos &amp; Geld</button>
+      <button role="tab" data-tab="einstellungen">Einstellungen</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- ÜBERSICHT -->
+  <section data-view="uebersicht">
+    <h1 id="hallo">Hallo</h1>
+    <p class="sub" id="hallo-sub">Hier siehst du alles auf einen Blick.</p>
+    <div class="grid kpis">
+      <div class="card kpi money"><div class="label">Gesamteinnahmen</div><div class="value" data-count="einnahmen_gesamt" data-euro>0 €</div><div class="hint">alle verbuchten Zahlungen</div></div>
+      <div class="card kpi money"><div class="label">Monatsumsatz</div><div class="value" data-count="einnahmen_monat" data-euro>0 €</div><div class="hint" id="kpi-monat-hint">diesen Monat bezahlt</div></div>
+      <div class="card kpi"><div class="label">Aktive Abos</div><div class="value" data-count="abos_aktiv">0</div><div class="hint" id="kpi-abo-hint"></div></div>
+      <div class="card kpi"><div class="label">Offene Aufträge</div><div class="value" data-count="offen">0</div><div class="hint" id="kpi-offen-hint"></div></div>
+    </div>
+    <div class="grid two">
+      <div class="card">
+        <h2>Zu tun</h2>
+        <div class="list" id="todo"></div>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <h2>Gmail</h2>
+          <div class="status-line"><span class="dot" id="mail-dot"></span><span id="mail-status">–</span></div>
+          <div class="btns" style="margin-top:14px">
+            <button class="btn small" id="mail-jetzt">Jetzt prüfen</button>
+            <button class="btn small" data-goto="einstellungen" id="mail-einrichten" hidden>Einrichten</button>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Verlauf</h2>
+          <div class="feed" id="feed"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUFTRÄGE -->
+  <section data-view="auftraege" hidden>
+    <h1>Aufträge</h1>
+    <p class="sub">Neue Bestellungen aus Gmail landen hier automatisch, mit drei fertigen Entwürfen.</p>
+    <div class="toolbar">
+      <div class="seg" id="filter">
+        <button aria-pressed="true" data-f="offen">Offen</button>
+        <button aria-pressed="false" data-f="geliefert">Geliefert</button>
+        <button aria-pressed="false" data-f="alle">Alle</button>
+        <button aria-pressed="false" data-f="archiv">Archiv</button>
+      </div>
+      <input class="in" id="suche" type="search" placeholder="Suchen" style="max-width:220px">
+      <span class="grow"></span>
+      <button class="btn primary" id="neu-btn">+ Neuer Auftrag</button>
+    </div>
+    <div class="card"><div class="list" id="auftrag-liste"></div></div>
+  </section>
+
+  <!-- ABOS & GELD -->
+  <section data-view="abos" hidden>
+    <h1>Abos &amp; Geld</h1>
+    <p class="sub">Laufende Abos, Kunden und alle Zahlungen. Ein Klick auf „Monat bezahlt“ verbucht den Abo-Preis.</p>
+    <div class="grid two">
+      <div class="card">
+        <h2>Kunden &amp; Abos</h2>
+        <div class="list" id="kunden-liste"></div>
+      </div>
+      <div class="card">
+        <h2>Zahlungen</h2>
+        <form id="zahlung-form" class="row-fields" style="margin-bottom:8px">
+          <label class="f"><span>Betrag (€)</span><input class="in" name="betrag" type="number" step="0.01" min="0" required></label>
+          <label class="f"><span>Wofür</span><input class="in" name="text" placeholder="z. B. Extra-Wunsch"></label>
+          <div><button class="btn small">Zahlung eintragen</button></div>
+        </form>
+        <div class="feed" id="zahlungen"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EINSTELLUNGEN -->
+  <section data-view="einstellungen" hidden>
+    <h1>Einstellungen</h1>
+    <p class="sub">Alles bleibt auf deinem Server. Die Website sendet nie selbst Mails, sie legt nur Entwürfe in Gmail an.</p>
+    <form id="einst-form" class="grid two">
+      <div class="card">
+        <h2>Gmail verbinden</h2>
+        <label class="f"><span>Deine Gmail-Adresse</span><input class="in" name="gmail" type="email" autocomplete="off"></label>
+        <label class="f"><span>App-Passwort (16 Zeichen)</span><input class="in" name="app_passwort" type="password" autocomplete="new-password"></label>
+        <p class="hint">So bekommst du es: <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener">myaccount.google.com/apppasswords</a> öffnen (dafür muss die Bestätigung in zwei Schritten an sein), Name „Thumbnail-Zentrale“ eingeben, das angezeigte Passwort hier einfügen. Dein normales Google-Passwort bleibt geheim.</p>
+        <div class="btns" style="margin:4px 0 18px"><button class="btn small" type="button" id="mail-test">Verbindung testen</button></div>
+        <label class="f"><span>Postfach prüfen alle … Minuten</span><input class="in" name="pruefen_minuten" type="number" min="2" max="120"></label>
+        <label class="check"><input class="switch" type="checkbox" name="entwurf_automatisch"> Antwort-Entwurf mit den 3 Bildern sofort in Gmail anlegen</label>
+      </div>
+      <div class="card">
+        <h2>Antwort an Kunden</h2>
+        <label class="f"><span>Dein Name (unter den Mails)</span><input class="in" name="dein_name"></label>
+        <label class="f"><span>Text des Antwort-Entwurfs</span><textarea class="in" name="antwort_text" rows="9"></textarea></label>
+        <p class="hint">Platzhalter: {vorname}, {name}, {kanal}, {thema_satz}, {dein_name}</p>
+      </div>
+      <div class="card">
+        <h2>Preise</h2>
+        <div class="row-fields">
+          <label class="f"><span>Einzel-Thumbnail (€)</span><input class="in" name="preis_einzel" type="number" step="0.01" min="0"></label>
+          <label class="f"><span>Monats-Abo (€)</span><input class="in" name="preis_abo" type="number" step="0.01" min="0"></label>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Änderungen in eigenen Worten (optional)</h2>
+        <label class="f"><span>Anthropic-API-Schlüssel</span><input class="in" name="ki_schluessel" type="password" autocomplete="off" placeholder="sk-ant-…"></label>
+        <p class="hint">Damit kannst du im Editor schreiben „Text größer, Hintergrund rot, Pfeil weg“ und Claude setzt es um. Ohne Schlüssel funktioniert alles andere genauso. Schlüssel gibt es auf console.anthropic.com, eine Änderung kostet unter einem Cent.</p>
+      </div>
+      <div style="grid-column:1/-1"><button class="btn primary">Speichern</button></div>
+    </form>
+  </section>
+  <footer class="ver" id="version"></footer>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Auftrag-Blatt -->
+<div class="sheet-bg" id="sheet-bg" hidden></div>
+<section class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+  <div class="sheet-head"><h2 id="sheet-title">Auftrag</h2><span id="sheet-pill"></span><button class="x" data-close aria-label="Schließen">×</button></div>
+  <div class="sheet-body" id="sheet-body"></div>
+</section>
+
+<!-- Editor-Blatt -->
+<div class="sheet-bg" id="ed-bg" hidden style="z-index:50"></div>
+<section class="sheet" id="ed" hidden role="dialog" aria-modal="true" aria-labelledby="ed-title" style="z-index:51;width:min(1120px,calc(100vw - 32px))">
+  <div class="sheet-head"><h2 id="ed-title">Entwurf bearbeiten</h2>
+    <button class="btn small" data-ed-close>Abbrechen</button>
+    <button class="btn small primary" id="ed-save">Speichern</button></div>
+  <div class="sheet-body">
+    <div class="editor">
+      <div class="preview">
+        <div class="frame-wrap" id="frame-wrap"><iframe id="frame" title="Vorschau" sandbox="allow-scripts allow-same-origin"></iframe></div>
+        <div class="card" style="margin-top:14px" id="ki-card">
+          <h3>In eigenen Worten ändern</h3>
+          <div style="display:flex;gap:8px"><input class="in" id="ki-wunsch" placeholder="z. B. Text größer, Hintergrund rot, Pfeil weg"><button class="btn primary" id="ki-los">Ändern</button></div>
+          <p class="hint" id="ki-hint" style="margin:8px 0 0"></p>
+        </div>
+      </div>
+      <div>
+        <div class="f"><span>Vorlage</span><div class="seg" id="ed-vorlage"></div></div>
+        <div class="f"><span>Farbwelt</span><div class="swatches" id="ed-stil"></div></div>
+        <label class="f"><span>Text (eine Zeile pro Zeile, höchstens 3)</span><textarea class="in" id="ed-zeilen" rows="3"></textarea></label>
+        <div class="row-fields">
+          <div class="f"><span>Textfarben</span><div class="colors"><input type="color" id="ed-farbe1" aria-label="Farbe Zeile 1"><input type="color" id="ed-farbe2" aria-label="Farbe ab Zeile 2"></div></div>
+          <label class="f"><span>Schrift</span><select class="in" id="ed-schrift"></select></label>
+        </div>
+        <label class="f"><span>Textgröße <b id="ed-gross-wert"></b></span><input type="range" id="ed-gross" min="60" max="140" step="5" style="width:100%"></label>
+        <label class="f"><span>Zusatz-Band (optional)</span><input class="in" id="ed-banner" maxlength="40" placeholder="z. B. NEU, GRATIS, 2026"></label>
+        <label class="check"><input class="switch" type="checkbox" id="ed-pfeil"> Pfeil zeigen</label>
+        <div class="f"><span>Kundenfoto statt Emoji</span><div class="fotos" id="ed-fotos"></div></div>
+        <div class="f"><span>Emoji 1 (groß) <button type="button" class="btn small" id="ed-emoji-switch" style="margin-left:6px">1 ↔ 2</button></span><div class="emoji-grid" id="ed-emoji1"></div></div>
+        <div class="f"><span>Emoji 2 (klein)</span><div class="emoji-grid" id="ed-emoji2"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Neuer Auftrag -->
+<div class="sheet-bg" id="neu-bg" hidden></div>
+<section class="sheet" id="neu" hidden role="dialog" aria-modal="true" aria-labelledby="neu-title" style="width:min(560px,calc(100vw - 32px))">
+  <div class="sheet-head"><h2 id="neu-title">Neuer Auftrag</h2><button class="x" data-neu-close aria-label="Schließen">×</button></div>
+  <form class="sheet-body" id="neu-form">
+    <div class="seg" style="margin-bottom:16px" id="neu-paket"><button type="button" aria-pressed="true" data-p="Einzel-Thumbnail">Einzel-Thumbnail</button><button type="button" aria-pressed="false" data-p="Monats-Abo">Monats-Abo</button></div>
+    <div class="row-fields">
+      <label class="f"><span>Name</span><input class="in" name="name"></label>
+      <label class="f"><span>Kanal</span><input class="in" name="kanal"></label>
+    </div>
+    <label class="f"><span>E-Mail</span><input class="in" name="email" type="email"></label>
+    <label class="f"><span>Videotitel oder Thema</span><input class="in" name="thema" required></label>
+    <label class="f"><span>Wünsche</span><textarea class="in" name="wuensche" rows="3" placeholder='z. B. Text: "100 TAGE", lila, mit Pfeil'></textarea></label>
+    <button class="btn primary">Anlegen und Entwürfe bauen</button>
+  </form>
+</section>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var D = null;               // aktueller Stand vom Server
+  var offenerAuftrag = null;  // id im Blatt
+  var filter = "offen";
+  var STATUS = {
+    neu: ["Wird gebaut", "grey"], bereit: ["Entwürfe fertig", "blue"], in_gmail: ["Entwurf in Gmail", "blue"],
+    aenderung: ["Änderung gewünscht", "orange"], geliefert: ["Geliefert", "green"], archiv: ["Archiv", "grey"]
+  };
+  var ABO = { angefragt: ["Abo angefragt", "orange"], aktiv: ["Abo aktiv", "green"], pausiert: ["Pausiert", "grey"], "gekündigt": ["Gekündigt", "red"] };
+  var STIL_FARBE = { finanzen: "#00a650", fitness: "#ff5a2d", gaming: "#8a2be2", tech: "#0a6cff", allgemein: "#e0201b" };
+  var VORLAGE_NAME = { strahlen: "Strahlen", split: "Split", spot: "Spot", vergleich: "Vergleich" };
+
+  function esc(t) { return String(t == null ? "" : t).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function euro(n) { return (Number(n) || 0).toLocaleString("de-DE", { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 }) + " €"; }
+  function datum(t, mitZeit) {
+    if (!t) return "";
+    var d = new Date(t); if (isNaN(d)) return t;
+    var heute = new Date(); var gestern = new Date(Date.now() - 864e5);
+    var z = d.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
+    if (d.toDateString() === heute.toDateString()) return "Heute " + z;
+    if (d.toDateString() === gestern.toDateString()) return "Gestern " + z;
+    return d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "2-digit" }) + (mitZeit ? " " + z : "");
+  }
+  function pill(paar) { return '<span class="pill ' + paar[1] + '">' + esc(paar[0]) + "</span>"; }
+  function toast(t) { var el = $("#toast"); el.textContent = t; el.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(function () { el.classList.remove("show"); }, 3200); }
+
+  function api(pfad, daten, opt) {
+    opt = opt || {};
+    var init = { method: daten === undefined ? "GET" : "POST", headers: {} };
+    if (daten !== undefined) {
+      if (daten instanceof Blob) { init.body = daten; init.headers["Content-Type"] = daten.type || "application/octet-stream"; }
+      else { init.body = JSON.stringify(daten); init.headers["Content-Type"] = "application/json"; }
+    }
+    return fetch(pfad, init).then(function (r) {
+      if (opt.text) return r.text();
+      return r.json().then(function (j) {
+        if (!r.ok) throw new Error(j.fehler || "Fehler");
+        return j;
+      });
+    });
+  }
+  function laden(btn, p) {  // Knopf zeigt einen Kreisel, solange p läuft
+    if (!btn) return p;
+    var alt = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>' + alt;
+    return p.finally(function () { btn.disabled = false; btn.innerHTML = alt; });
+  }
+  function neuerStand(d) { if (d && d.auftraege) { D = d; zeichnen(); } return d; }
+  function fehler(e) { toast(e.message || String(e)); }
+  function holen() { return api("/api/stand").then(neuerStand).catch(function () {}); }
+
+  /* ---------------- Navigation ---------------- */
+  function zeigeTab(name) {
+    $$("nav.tabs button").forEach(function (b) { b.setAttribute("aria-selected", b.dataset.tab === name ? "true" : "false"); });
+    $$("[data-view]").forEach(function (v) { v.hidden = v.dataset.view !== name; });
+    try { localStorage.setItem("tz-tab", name); } catch (e) {}
+    window.scrollTo(0, 0);
+    if (name === "uebersicht") zaehlen();
+  }
+  $$("nav.tabs button").forEach(function (b) { b.addEventListener("click", function () { zeigeTab(b.dataset.tab); }); });
+  document.addEventListener("click", function (ev) { var g = ev.target.closest("[data-goto]"); if (g) zeigeTab(g.dataset.goto); });
+
+  /* ---------------- Zeichnen ---------------- */
+  function vorschauBild(a, n) { var e = a.entwuerfe[n || 0]; return e && e.stand ? "/dateien/" + a.id + "/" + "abc"[n || 0] + ".png?v=" + e.stand : ""; }
+
+  function zeilenHtml(liste) {
+    if (!liste.length) return '<div class="empty">Nichts da.</div>';
+    return liste.map(function (a) {
+      var st = STATUS[a.status] || [a.status, "grey"];
+      var bild = vorschauBild(a);
+      return '<div class="row" data-auftrag="' + a.id + '">' +
+        (bild ? '<img class="thumb" loading="lazy" alt="" src="' + bild + '">' : '<div class="thumb"></div>') +
+        '<div class="main"><div class="title">' + esc(a.kanal || a.name || a.email || "Ohne Namen") + '</div>' +
+        '<div class="meta">' + esc(a.thema || "–") + '</div></div>' +
+        '<div class="right">' + pill(st) + '<div class="meta">' + esc(a.paket === "Monats-Abo" ? "Abo" : "Einzel") + " · " + datum(a.eingang) + "</div></div></div>";
+    }).join("");
+  }
+
+  var gezaehlt = false;
+  function zaehlen() {
+    if (!D) return;
+    var k = D.kennzahlen;
+    $$("[data-count]").forEach(function (el) {
+      var ziel = Number(k[el.dataset.count]) || 0, start = gezaehlt ? Number(el.dataset.ist || 0) : 0, t0 = performance.now();
+      var istEuro = el.hasAttribute("data-euro");
+      el.dataset.ist = ziel;
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches || start === ziel) { el.textContent = istEuro ? euro(ziel) : ziel; return; }
+      (function schritt(t) {
+        var p = Math.min(1, (t - t0) / 900), w = start + (ziel - start) * (1 - Math.pow(1 - p, 3));
+        el.textContent = istEuro ? euro(Math.round(w * 100) / 100) : Math.round(w);
+        if (p < 1) requestAnimationFrame(schritt);
+      })(t0);
+    });
+    gezaehlt = true;
+  }
+
+  function zeichnen() {
+    var k = D.kennzahlen, e = D.einstellungen;
+    var h = new Date().getHours();
+    $("#hallo").textContent = (h < 11 ? "Guten Morgen" : h < 18 ? "Hallo" : "Guten Abend") + (e.dein_name ? ", " + e.dein_name : "");
+    $("#hallo-sub").textContent = k.aenderungen ? (k.aenderungen === 1 ? "1 Kunde wartet" : k.aenderungen + " Kunden warten") + " auf eine Änderung." : k.offen ? (k.offen === 1 ? "1 offener Auftrag." : k.offen + " offene Aufträge.") : "Alles erledigt. Neue Bestellungen kommen automatisch rein.";
+    $("#kpi-abo-hint").textContent = k.abos_angefragt ? k.abos_angefragt + " angefragt" : "à " + euro(e.preis_abo) + " pro Monat";
+    $("#kpi-offen-hint").textContent = k.aenderungen ? k.aenderungen + " mit Änderungswunsch" : k.geliefert_monat + " diesen Monat geliefert";
+    $("#nav-offen").innerHTML = k.offen ? '<span class="badge-dot">' + k.offen + "</span>" : "";
+    zaehlen();
+
+    // Zu tun
+    var prio = { aenderung: 0, bereit: 1, neu: 2, in_gmail: 3 };
+    var todo = D.auftraege.filter(function (a) { return a.status in prio; }).sort(function (a, b) { return prio[a.status] - prio[b.status]; }).slice(0, 8);
+    var unbezahlt = D.auftraege.filter(function (a) { return a.status === "geliefert" && !a.bezahlt && a.paket !== "Monats-Abo"; });
+    $("#todo").innerHTML = (todo.length ? zeilenHtml(todo) : '<div class="empty">Keine offenen Aufträge.</div>') +
+      (unbezahlt.length ? '<div class="hint" style="padding:10px 4px">' + unbezahlt.length + " geliefertes Einzel-Thumbnail noch nicht als bezahlt markiert.</div>" : "");
+
+    // Gmail
+    var m = D.mail, eingerichtet = !!(e.gmail && e.app_passwort);
+    $("#mail-dot").className = "dot " + (!eingerichtet ? "" : m.fehler ? "err" : "ok");
+    $("#mail-status").textContent = !eingerichtet ? "Noch nicht verbunden." : m.fehler ? m.fehler : m.laeuft ? "Prüft gerade …" : "Verbunden mit " + e.gmail + (m.letzte_pruefung ? ", zuletzt geprüft " + datum(m.letzte_pruefung, true) : "");
+    $("#mail-einrichten").hidden = eingerichtet;
+    $("#mail-jetzt").hidden = !eingerichtet;
+    $("#feed").innerHTML = D.verlauf.slice(0, 12).map(function (v) {
+      return "<div><time>" + datum(v.zeit, true) + "</time><span" + (v.auftrag ? ' style="cursor:pointer" data-auftrag="' + v.auftrag + '"' : "") + ">" + esc(v.text) + "</span></div>";
+    }).join("") || '<div class="empty">Noch nichts passiert.</div>';
+
+    // Aufträge
+    var q = ($("#suche").value || "").toLowerCase();
+    var liste = D.auftraege.filter(function (a) {
+      if (filter === "offen" && ["neu", "bereit", "in_gmail", "aenderung"].indexOf(a.status) < 0) return false;
+      if (filter === "geliefert" && a.status !== "geliefert") return false;
+      if (filter === "archiv" && a.status !== "archiv") return false;
+      if (filter === "alle" && a.status === "archiv") return false;
+      return !q || [a.kanal, a.name, a.email, a.thema].join(" ").toLowerCase().indexOf(q) >= 0;
+    });
+    $("#auftrag-liste").innerHTML = zeilenHtml(liste);
+
+    // Kunden
+    var monat = new Date().toISOString().slice(0, 7);
+    $("#kunden-liste").innerHTML = D.kunden.slice().sort(function (a, b) { return (b.abo_status === "aktiv") - (a.abo_status === "aktiv"); }).map(function (kd) {
+      var anzahl = D.auftraege.filter(function (a) { return a.email === kd.email; }).length;
+      var monatAnz = D.auftraege.filter(function (a) { return a.email === kd.email && (a.geliefert || "").slice(0, 7) === monat; }).length;
+      var ab = ABO[kd.abo_status];
+      var ueberfaellig = kd.abo_status === "aktiv" && kd.bezahlt_bis && kd.bezahlt_bis < new Date().toISOString().slice(0, 10);
+      return '<div class="row" style="cursor:default;flex-wrap:wrap"><div class="main"><div class="title">' + esc(kd.kanal || kd.name || kd.email) + '</div><div class="meta">' + esc(kd.email) +
+        " · " + anzahl + (anzahl === 1 ? " Auftrag, " : " Aufträge, ") + monatAnz + " diesen Monat" + (kd.bezahlt_bis ? " · bezahlt bis " + esc(new Date(kd.bezahlt_bis).toLocaleDateString("de-DE")) : "") + "</div></div>" +
+        '<div class="right" style="flex-direction:row;align-items:center;gap:8px">' + (ueberfaellig ? pill(["Zahlung fällig", "red"]) : "") + (ab ? pill(ab) : pill(["Einzel", "grey"])) +
+        '<select class="in" style="width:auto;padding:5px 8px" data-abo-status="' + esc(kd.email) + '">' +
+        ["", "angefragt", "aktiv", "pausiert", "gekündigt"].map(function (s) { return '<option value="' + s + '"' + (kd.abo_status === s ? " selected" : "") + ">" + (s ? (ABO[s] || [s])[0] : "Kein Abo") + "</option>"; }).join("") +
+        '</select><button class="btn small green" data-abo-zahlung="' + esc(kd.email) + '">Monat bezahlt</button></div></div>';
+    }).join("") || '<div class="empty">Kunden erscheinen hier mit der ersten Bestellung.</div>';
+    $("#zahlungen").innerHTML = D.zahlungen.slice(0, 40).map(function (z) {
+      return "<div><time>" + datum(z.zeit) + '</time><span style="flex:1">' + esc(z.text) + '</span><b style="color:var(--green);white-space:nowrap">' + euro(z.betrag) +
+        '</b><button class="x" style="width:24px;height:24px;font-size:14px" title="Löschen" data-zahlung-weg="' + z.id + '">×</button></div>';
+    }).join("") || '<div class="empty">Noch keine Zahlungen.</div>';
+
+    // Einstellungen nur füllen, wenn nicht gerade bearbeitet
+    var f = $("#einst-form");
+    if (!f.contains(document.activeElement)) {
+      $$("[name]", f).forEach(function (el) {
+        if (!(el.name in e)) return;
+        if (el.type === "checkbox") el.checked = !!e[el.name]; else el.value = e[el.name];
+      });
+    }
+    $("#version").textContent = "Thumbnail-Zentrale " + (D.version.sha || "") + (D.version.built ? " · gebaut " + datum(D.version.built, true) : "");
+    if (offenerAuftrag) blattZeichnen();
+  }
+
+  /* ---------------- Aufträge-Liste ---------------- */
+  $("#filter").addEventListener("click", function (ev) {
+    var b = ev.target.closest("button"); if (!b) return;
+    filter = b.dataset.f;
+    $$("#filter button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    zeichnen();
+  });
+  $("#suche").addEventListener("input", zeichnen);
+  document.addEventListener("click", function (ev) {
+    var r = ev.target.closest("[data-auftrag]");
+    if (r && !ev.target.closest(".sheet")) oeffneAuftrag(r.dataset.auftrag);
+  });
+
+  /* ---------------- Blätter ---------------- */
+  function blattAuf(sheet, bg) {
+    sheet.hidden = false; bg.hidden = false;
+    requestAnimationFrame(function () { sheet.classList.add("open"); bg.classList.add("open"); });
+    document.body.style.overflow = "hidden";
+  }
+  function blattZu(sheet, bg) {
+    sheet.classList.remove("open"); bg.classList.remove("open");
+    setTimeout(function () { sheet.hidden = true; bg.hidden = true; if ($$(".sheet.open").length === 0) document.body.style.overflow = ""; }, 200);
+  }
+  document.addEventListener("keydown", function (ev) {
+    if (ev.key !== "Escape") return;
+    if ($("#ed").classList.contains("open")) return edZu();
+    if ($("#neu").classList.contains("open")) return blattZu($("#neu"), $("#neu-bg"));
+    if ($("#sheet").classList.contains("open")) auftragZu();
+  });
+
+  function auftragZu() { offenerAuftrag = null; blattZu($("#sheet"), $("#sheet-bg")); }
+  $("#sheet-bg").addEventListener("click", auftragZu);
+  $("[data-close]").addEventListener("click", auftragZu);
+
+  function oeffneAuftrag(id) {
+    offenerAuftrag = id;
+    blattZeichnen();
+    blattAuf($("#sheet"), $("#sheet-bg"));
+  }
+  function aktuell() { return D.auftraege.filter(function (a) { return a.id === offenerAuftrag; })[0]; }
+
+  function blattZeichnen() {
+    var a = aktuell();
+    if (!a) { auftragZu(); return; }
+    $("#sheet-title").textContent = a.kanal || a.name || a.email || "Auftrag";
+    $("#sheet-pill").innerHTML = pill(STATUS[a.status] || [a.status, "grey"]);
+    var body = $("#sheet-body");
+    var auswahl = body.dataset.auftrag === a.id ? $$("[data-mit]", body).filter(function (c) { return c.checked; }).map(function (c) { return +c.dataset.mit; }) : [0, 1, 2];
+    var notiz = body.dataset.auftrag === a.id && $("#notiz-text") ? $("#notiz-text").value : "";
+    body.dataset.auftrag = a.id;
+    var varianten = a.entwuerfe.map(function (en, n) {
+      var bild = vorschauBild(a, n);
+      return '<div class="variant">' + (bild ? '<img alt="Entwurf ' + "ABC"[n] + '" src="' + bild + '" data-zoom>' : '<div style="aspect-ratio:16/9;display:grid;place-items:center" class="hint">wird gebaut …</div>') +
+        '<div class="vb"><b>' + "ABC"[n] + " · " + esc(VORLAGE_NAME[en.entwurf.vorlage] || "") + '</b>' +
+        '<label class="hint" style="display:flex;align-items:center;gap:4px"><input type="checkbox" data-mit="' + n + '"' + (auswahl.indexOf(n) >= 0 ? " checked" : "") + "> in Mail</label>" +
+        '<button class="btn small" data-bearbeiten="' + n + '">Bearbeiten</button>' +
+        (bild ? '<a class="btn small" href="/dateien/' + a.id + "/" + "abc"[n] + '.png?download=1" download>Laden</a>' : "") + "</div></div>";
+    }).join("");
+    var chat = a.aenderungen.map(function (c) {
+      return '<div class="msg ' + (c.von === "du" ? "du" : "kunde") + '">' + esc(c.text) +
+        (c.fotos && c.fotos.length ? "<br>" + c.fotos.map(function (f) { return '<a href="/dateien/' + a.id + "/" + esc(f) + '" target="_blank">📎 ' + esc(f) + "</a>"; }).join(" ") : "") +
+        "<small>" + (c.von === "du" ? "Notiz" : "Kunde") + " · " + datum(c.zeit, true) + "</small></div>";
+    }).join("");
+    body.innerHTML =
+      '<div class="grid variants">' + varianten + "</div>" +
+      '<div class="btns" style="margin:16px 0 22px">' +
+        '<button class="btn primary" id="a-mail">Fertiges Thumbnail per Mail senden</button>' +
+        (a.status !== "geliefert" ? '<button class="btn green" id="a-geliefert">Als geliefert markieren</button>' : '<button class="btn" id="a-wieder">Wieder öffnen</button>') +
+        '<label class="check" style="margin:0 6px"><input class="switch" type="checkbox" id="a-bezahlt"' + (a.bezahlt ? " checked" : "") + (a.paket === "Monats-Abo" ? " disabled" : "") + "> " + (a.paket === "Monats-Abo" ? "über Abo" : "Bezahlt") + "</label>" +
+      "</div>" +
+      '<p class="hint" style="margin:-12px 0 20px">„Per Mail senden“ legt einen Antwort-Entwurf mit den angehakten Bildern in Gmail an' + (a.gmail_entwurf ? " (zuletzt " + datum(a.gmail_entwurf, true) + ")" : "") + ". Du schickst ihn dort selbst ab.</p>" +
+      '<div class="grid two">' +
+        '<div class="card"><h3>Änderungswünsche &amp; Notizen</h3><div class="chat">' + (chat || '<div class="hint">Antwortet der Kunde auf deine Mail, erscheint es hier automatisch.</div>') + "</div>" +
+          '<div style="display:flex;gap:8px"><input class="in" id="notiz-text" placeholder="Notiz hinzufügen"><button class="btn" id="notiz-los">+</button></div></div>' +
+        '<div class="card"><h3>Bestellung</h3><dl class="kv">' +
+          "<dt>Kanal</dt><dd>" + esc(a.kanal || "–") + "</dd><dt>Name</dt><dd>" + esc(a.name || "–") + "</dd>" +
+          '<dt>E-Mail</dt><dd><input class="in" id="a-email" value="' + esc(a.email) + '" style="padding:5px 8px"></dd>' +
+          "<dt>Paket</dt><dd>" + esc(a.paket) + "</dd><dt>Thema</dt><dd>" + esc(a.thema || "–") + "</dd><dt>Wünsche</dt><dd>" + esc(a.wuensche || "–") + "</dd>" +
+          "<dt>Eingang</dt><dd>" + datum(a.eingang, true) + "</dd>" +
+          (a.fotos.length ? "<dt>Fotos</dt><dd>" + a.fotos.map(function (f) { return '<a href="/dateien/' + a.id + "/" + esc(f) + '" target="_blank">' + esc(f) + "</a>"; }).join("<br>") + "</dd>" : "") +
+        "</dl>" + (a.mail && a.mail.text ? '<details class="raw"><summary>Original-Mail</summary><pre>' + esc(a.mail.text) + "</pre></details>" : "") +
+        '<div class="btns" style="margin-top:16px"><label class="btn small">Foto hinzufügen<input type="file" accept="image/*" id="a-foto" hidden></label>' +
+        '<button class="btn small" id="a-neu">Entwürfe neu planen</button>' +
+        (a.status !== "archiv" ? '<button class="btn small" id="a-archiv">Archivieren</button>' : "") +
+        '<button class="btn small danger" id="a-weg">Löschen</button></div></div>' +
+      "</div>";
+    if (notiz) $("#notiz-text").value = notiz;
+  }
+
+  function aktion(pfad, daten, btn, meldung) {
+    return laden(btn, api("/api/auftrag/" + offenerAuftrag + "/" + pfad, daten).then(neuerStand).then(function (d) { if (meldung) toast(meldung); return d; })).catch(fehler);
+  }
+
+  $("#sheet-body").addEventListener("click", function (ev) {
+    var t = ev.target, a = aktuell();
+    if (t.closest("[data-zoom]")) { var lb = document.createElement("div"); lb.className = "lightbox"; lb.innerHTML = '<img src="' + t.src + '" alt="">'; lb.onclick = function () { lb.remove(); }; document.body.appendChild(lb); return; }
+    var b = t.closest("button"); if (!b) return;
+    if (b.dataset.bearbeiten) return edOeffnen(+b.dataset.bearbeiten);
+    if (b.id === "a-mail") {
+      var nr = $$("[data-mit]").filter(function (c) { return c.checked; }).map(function (c) { return +c.dataset.mit; });
+      if (!nr.length) return toast("Hake mindestens einen Entwurf an.");
+      return aktion("gmail", { varianten: nr }, b, "Entwurf liegt in Gmail. Dort prüfen und senden.");
+    }
+    if (b.id === "a-geliefert") return aktion("status", { status: "geliefert" }, b, "Als geliefert markiert.");
+    if (b.id === "a-wieder") return aktion("status", { status: "bereit" }, b);
+    if (b.id === "a-archiv") return aktion("status", { status: "archiv" }, b, "Archiviert.").then(auftragZu);
+    if (b.id === "a-neu") { if (confirm("Alle drei Entwürfe neu aus Thema und Wünschen bauen? Deine Änderungen daran gehen verloren.")) aktion("neuplanen", {}, b, "Neu gebaut."); return; }
+    if (b.id === "a-weg") { if (confirm("Auftrag endgültig löschen?")) aktion("loeschen", {}, b, "Gelöscht.").then(auftragZu); return; }
+    if (b.id === "notiz-los") { var v = $("#notiz-text").value.trim(); if (v) aktion("notiz", { text: v }, b).then(function () { $("#notiz-text").value = ""; }); }
+  });
+  $("#sheet-body").addEventListener("change", function (ev) {
+    var t = ev.target;
+    if (t.id === "a-bezahlt") aktion("status", { bezahlt: t.checked }, null, t.checked ? "Zahlung verbucht." : "Zahlung zurückgenommen.");
+    if (t.id === "a-email") aktion("status", { email: t.value }, null, "E-Mail gespeichert.");
+    if (t.id === "a-foto" && t.files[0]) {
+      var f = t.files[0];
+      api("/api/auftrag/" + offenerAuftrag + "/foto?name=" + encodeURIComponent(f.name), f).then(neuerStand).then(function () { toast("Foto hinzugefügt. Im Editor kannst du es einsetzen."); }).catch(fehler);
+    }
+  });
+  $("#sheet-body").addEventListener("keydown", function (ev) { if (ev.key === "Enter" && ev.target.id === "notiz-text") $("#notiz-los").click(); });
+
+  /* ---------------- Editor ---------------- */
+  var ed = null, edNr = 0, edTimer = null;
+  function edOeffnen(n) {
+    var a = aktuell(); edNr = n;
+    ed = JSON.parse(JSON.stringify(a.entwuerfe[n].entwurf));
+    $("#ed-title").textContent = "Entwurf " + "ABC"[n] + " bearbeiten";
+    var o = D.optionen;
+    $("#ed-vorlage").innerHTML = o.vorlagen.map(function (v) { return '<button type="button" data-v="' + v + '">' + VORLAGE_NAME[v] + "</button>"; }).join("");
+    $("#ed-stil").innerHTML = o.stile.map(function (s) { return '<button type="button" class="swatch" title="' + s + '" data-s="' + s + '" style="background:' + STIL_FARBE[s] + '"></button>'; }).join("");
+    $("#ed-schrift").innerHTML = o.schriften.map(function (s) { return '<option value="' + s + '">' + { Anton: "Anton (schmal, fett)", Bebas: "Bebas (schmal)", Mont: "Montserrat (breit)", Lucky: "Luckiest Guy (Comic)", Archivo: "Archivo Black" }[s] + "</option>"; }).join("");
+    ["#ed-emoji1", "#ed-emoji2"].forEach(function (sel, i) {
+      $(sel).innerHTML = o.emojis.map(function (e) { return '<button type="button" title="' + e + '" data-e="' + e + '" data-i="' + i + '"><img loading="lazy" alt="' + e + '" src="/assets/emoji/' + e + '.png"></button>'; }).join("");
+    });
+    $("#ed-fotos").innerHTML = '<button type="button" data-foto="">Emoji</button>' + a.fotos.map(function (f) { return '<button type="button" data-foto="' + esc(f) + '"><img alt="" src="/dateien/' + a.id + "/" + esc(f) + '"></button>'; }).join("") +
+      '<label class="btn small" style="height:64px;border-radius:10px">+ Foto<input type="file" accept="image/*" id="ed-foto-neu" hidden></label>';
+    var kiDa = D.einstellungen.ki_schluessel;
+    $("#ki-wunsch").disabled = !kiDa; $("#ki-los").disabled = !kiDa;
+    $("#ki-hint").innerHTML = kiDa ? "Beispiele: „mach den Text gelb“, „nimm das Foto“, „schreib GRATIS aufs Band“." : 'Dafür in den <a href="#" data-goto="einstellungen" id="ki-einst">Einstellungen</a> einen KI-Schlüssel eintragen. Alles andere geht auch ohne.';
+    var letzterWunsch = a.aenderungen.filter(function (c) { return c.von === "kunde"; }).pop();
+    $("#ki-wunsch").value = letzterWunsch && kiDa ? letzterWunsch.text.slice(0, 200) : "";
+    edFuellen();
+    blattAuf($("#ed"), $("#ed-bg"));
+    requestAnimationFrame(skalieren);
+  }
+  function edFuellen() {
+    $$("#ed-vorlage button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.v === ed.vorlage ? "true" : "false"); });
+    $$("#ed-stil button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.s === ed.stil ? "true" : "false"); });
+    $("#ed-zeilen").value = ed.zeilen.join("\n");
+    $("#ed-farbe1").value = ed.farbe1; $("#ed-farbe2").value = ed.farbe2;
+    $("#ed-schrift").value = ed.schrift;
+    $("#ed-gross").value = ed.gross; $("#ed-gross-wert").textContent = ed.gross + " %";
+    $("#ed-banner").value = ed.banner;
+    $("#ed-pfeil").checked = ed.pfeil;
+    $$("#ed-fotos [data-foto]").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.foto === (ed.foto || "") ? "true" : "false"); });
+    $$("#ed-emoji1 button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.e === ed.emoji[0] ? "true" : "false"); });
+    $$("#ed-emoji2 button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.e === (ed.emoji[1] || ed.emoji[0]) ? "true" : "false"); });
+    vorschau();
+  }
+  function vorschau() {
+    clearTimeout(edTimer);
+    edTimer = setTimeout(function () {
+      api("/api/vorschau", { entwurf: ed, auftrag: offenerAuftrag }, { text: true }).then(function (html) { $("#frame").srcdoc = html; });
+    }, 120);
+  }
+  function skalieren() { var w = $("#frame-wrap").clientWidth; $("#frame").style.transform = "scale(" + (w / 1280) + ")"; }
+  window.addEventListener("resize", skalieren);
+  function edZu() { blattZu($("#ed"), $("#ed-bg")); }
+  $("[data-ed-close]").addEventListener("click", edZu);
+  $("#ed-bg").addEventListener("click", edZu);
+
+  $("#ed").addEventListener("click", function (ev) {
+    var b = ev.target.closest("button"); if (!b) return;
+    if (b.dataset.v) { ed.vorlage = b.dataset.v; edFuellen(); }
+    else if (b.dataset.s) {
+      ed.stil = b.dataset.s;
+      ed.farbe2 = { finanzen: "#ffd400", fitness: "#fff200", gaming: "#00f0ff", tech: "#fff200", allgemein: "#fff200" }[ed.stil] || ed.farbe2;
+      edFuellen();
+    }
+    else if (b.dataset.e) { var i = +b.dataset.i; if (ed.emoji.length < 2) ed.emoji.push(ed.emoji[0]); ed.emoji[i] = b.dataset.e; edFuellen(); }
+    else if (b.dataset.foto !== undefined) { ed.foto = b.dataset.foto; edFuellen(); }
+    else if (b.id === "ed-emoji-switch") { ev.preventDefault(); if (ed.emoji.length > 1) ed.emoji.reverse(); edFuellen(); }
+  });
+  $("#ed").addEventListener("input", function (ev) {
+    var t = ev.target;
+    if (t.id === "ed-zeilen") ed.zeilen = t.value.split("\n").map(function (z) { return z.trim().toUpperCase(); }).filter(Boolean).slice(0, 3);
+    else if (t.id === "ed-farbe1") ed.farbe1 = t.value;
+    else if (t.id === "ed-farbe2") ed.farbe2 = t.value;
+    else if (t.id === "ed-schrift") ed.schrift = t.value;
+    else if (t.id === "ed-gross") { ed.gross = +t.value; $("#ed-gross-wert").textContent = ed.gross + " %"; }
+    else if (t.id === "ed-banner") ed.banner = t.value;
+    else if (t.id === "ed-pfeil") ed.pfeil = t.checked;
+    else return;
+    vorschau();
+  });
+  $("#ed").addEventListener("change", function (ev) {
+    if (ev.target.id !== "ed-foto-neu" || !ev.target.files[0]) return;
+    var f = ev.target.files[0], vorher = aktuell().fotos.slice();
+    api("/api/auftrag/" + offenerAuftrag + "/foto?name=" + encodeURIComponent(f.name), f).then(neuerStand).then(function () {
+      var neu = aktuell().fotos.filter(function (x) { return vorher.indexOf(x) < 0; })[0];
+      var merk = JSON.parse(JSON.stringify(ed)); edOeffnen(edNr); ed = merk; if (neu) ed.foto = neu; edFuellen();
+    }).catch(fehler);
+  });
+  $("#ed-save").addEventListener("click", function () {
+    var b = this;
+    laden(b, api("/api/auftrag/" + offenerAuftrag + "/entwurf/" + edNr, { entwurf: ed }).then(neuerStand)).then(function () { toast("Gespeichert. Das PNG ist neu gebaut."); edZu(); }).catch(fehler);
+  });
+  $("#ki-los").addEventListener("click", function () {
+    var w = $("#ki-wunsch").value.trim(); if (!w) return;
+    var b = this;
+    // erst den Stand aus dem Editor speichern, dann die KI darauf ansetzen
+    laden(b, api("/api/auftrag/" + offenerAuftrag + "/entwurf/" + edNr, { entwurf: ed })
+      .then(function () { return api("/api/auftrag/" + offenerAuftrag + "/ki/" + edNr, { wunsch: w }); })
+      .then(neuerStand)).then(function () { ed = JSON.parse(JSON.stringify(aktuell().entwuerfe[edNr].entwurf)); edFuellen(); toast("Umgesetzt. Prüf die Vorschau und speichere."); }).catch(fehler);
+  });
+  $("#ki-wunsch").addEventListener("keydown", function (ev) { if (ev.key === "Enter") $("#ki-los").click(); });
+  document.addEventListener("click", function (ev) { if (ev.target.id === "ki-einst") { ev.preventDefault(); edZu(); auftragZu(); } });
+
+  /* ---------------- Neuer Auftrag ---------------- */
+  var neuPaket = "Einzel-Thumbnail";
+  $("#neu-btn").addEventListener("click", function () { $("#neu-form").reset(); blattAuf($("#neu"), $("#neu-bg")); });
+  $("[data-neu-close]").addEventListener("click", function () { blattZu($("#neu"), $("#neu-bg")); });
+  $("#neu-bg").addEventListener("click", function () { blattZu($("#neu"), $("#neu-bg")); });
+  $("#neu-paket").addEventListener("click", function (ev) {
+    var b = ev.target.closest("button"); if (!b) return; neuPaket = b.dataset.p;
+    $$("#neu-paket button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+  });
+  $("#neu-form").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var f = new FormData(this), d = { paket: neuPaket };
+    f.forEach(function (v, k) { d[k] = v; });
+    laden($("button:not([type])", this), api("/api/auftrag", d)).then(function (r) {
+      blattZu($("#neu"), $("#neu-bg"));
+      return holen().then(function () { zeigeTab("auftraege"); oeffneAuftrag(r.id); });
+    }).catch(fehler);
+  });
+
+  /* ---------------- Abos & Zahlungen ---------------- */
+  document.addEventListener("change", function (ev) {
+    var s = ev.target.dataset && ev.target.dataset.aboStatus;
+    if (s !== undefined && ev.target.dataset.aboStatus) api("/api/kunde", { email: ev.target.dataset.aboStatus, abo_status: ev.target.value, paket: ev.target.value ? "Abo" : "Einzel" }).then(neuerStand).catch(fehler);
+  });
+  document.addEventListener("click", function (ev) {
+    var b = ev.target.closest("[data-abo-zahlung]");
+    if (b) laden(b, api("/api/abo-zahlung", { email: b.dataset.aboZahlung })).then(neuerStand).then(function () { toast("Abo-Monat verbucht."); }).catch(fehler);
+    var z = ev.target.closest("[data-zahlung-weg]");
+    if (z && confirm("Zahlung löschen?")) api("/api/zahlung", { loeschen: z.dataset.zahlungWeg }).then(neuerStand).catch(fehler);
+  });
+  $("#zahlung-form").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var f = this;
+    api("/api/zahlung", { betrag: f.betrag.value, text: f.text.value || "Zahlung" }).then(neuerStand).then(function () { f.reset(); toast("Zahlung eingetragen."); }).catch(fehler);
+  });
+
+  /* ---------------- Einstellungen & Gmail ---------------- */
+  $("#einst-form").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var d = {};
+    $$("[name]", this).forEach(function (el) { d[el.name] = el.type === "checkbox" ? el.checked : el.value; });
+    laden($("button.primary", this), api("/api/einstellungen", d)).then(neuerStand).then(function () { toast("Gespeichert."); }).catch(fehler);
+  });
+  $("#mail-test").addEventListener("click", function () {
+    var b = this, f = $("#einst-form"), d = {};
+    $$("[name]", f).forEach(function (el) { d[el.name] = el.type === "checkbox" ? el.checked : el.value; });
+    laden(b, api("/api/einstellungen", d).then(neuerStand).then(function () { return api("/api/mail/test", {}); }))
+      .then(function (r) { toast("Verbindung klappt. Entwürfe-Ordner: " + r.entwuerfe); }).catch(function (e) { toast("Klappt nicht: " + e.message); });
+  });
+  $("#mail-jetzt").addEventListener("click", function () {
+    laden(this, api("/api/mail/pruefen", {})).then(function (d) { neuerStand(d); toast("Postfach geprüft: " + d.ergebnis); }).catch(fehler);
+  });
+
+  /* ---------------- Start ---------------- */
+  var start = "uebersicht";
+  try { start = localStorage.getItem("tz-tab") || start; } catch (e) {}
+  zeigeTab(start);
+  holen();
+  setInterval(function () { var fokus = document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+    if (document.visibilityState === "visible" && $("#ed").hidden && !fokus) holen(); }, 15000);
+})();
+</script>
+</body>
+</html>

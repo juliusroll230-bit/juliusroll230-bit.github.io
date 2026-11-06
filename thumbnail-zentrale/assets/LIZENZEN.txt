@@ -1,0 +1,2 @@
+emoji/  Microsoft Fluent Emoji (3D), MIT-Lizenz, Copyright (c) Microsoft Corporation. https://github.com/microsoft/fluentui-emoji
+fonts/  Anton, Bebas Neue, Montserrat, Luckiest Guy, Archivo Black: SIL Open Font License 1.1 (über fontsource.org)

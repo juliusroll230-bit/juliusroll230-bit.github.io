@@ -1,0 +1,29 @@
+# Thumbnail-Zentrale für ZimaOS / CasaOS
+# Installation: App Store -> "+" (Benutzerdefinierte App) -> Importieren -> diese Datei einfügen.
+name: thumbnail-zentrale
+services:
+  thumbnail-zentrale:
+    image: ghcr.io/juliusroll230-bit/thumbnail-zentrale:latest
+    container_name: thumbnail-zentrale
+    restart: unless-stopped
+    ports:
+      - "8091:8080"
+    volumes:
+      - /DATA/AppData/thumbnail-zentrale:/data
+    environment:
+      TZ: Europe/Berlin
+      # PASSWORD: hier-ein-passwort     # optional: Website mit Passwort schützen (Benutzer: admin)
+x-casaos:
+  architectures:
+    - amd64
+  main: thumbnail-zentrale
+  author: Julius
+  category: Utilities
+  description:
+    en_us: Macht aus Bestell-Mails fertige YouTube-Thumbnails und zeigt Aufträge, Abos und Einnahmen.
+  title:
+    en_us: Thumbnail-Zentrale
+  icon: https://raw.githubusercontent.com/juliusroll230-bit/juliusroll230-bit.github.io/main/thumbnail-zentrale/web/icon.png
+  port_map: "8091"
+  index: /
+  scheme: http
