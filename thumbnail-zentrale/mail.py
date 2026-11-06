@@ -1,6 +1,6 @@
-"""Gmail über IMAP: Bestellungen und Kunden-Antworten lesen, Antwort-Entwürfe mit Bildern anlegen.
+"""Gmail: Bestellungen und Kunden-Antworten lesen (IMAP), Antworten als Entwurf anlegen oder auf Knopfdruck senden (SMTP).
 
-Es wird nie etwas gesendet. Entwürfe landen im Gmail-Ordner "Entwürfe", du schickst sie selbst ab.
+Automatisch wird nie etwas gesendet. Gesendet wird nur, wenn du beim Auftrag auf "Jetzt senden" klickst.
 Anmeldung mit einem Google-App-Passwort (Google-Konto > Sicherheit > 2-Faktor > App-Passwörter).
 """
 import datetime as dt
@@ -8,17 +8,32 @@ import email
 import email.utils
 import html
 import imaplib
+import mimetypes
 import re
+import smtplib
 import time
 from email.message import EmailMessage
 from email.policy import default as POLICY
 
 IMAP_HOST = "imap.gmail.com"
+SMTP_HOST = "smtp.gmail.com"
+
+
+def passwort_pruefen(app_passwort):
+    """Google-App-Passwörter sind 16 Buchstaben, oft mit Leerzeichen angezeigt. Alles andere gleich klar melden."""
+    pw = re.sub(r"\s+", "", app_passwort or "")
+    if not pw:
+        raise ValueError("Es ist noch kein App-Passwort gespeichert.")
+    if not pw.isascii() or not re.fullmatch(r"[A-Za-z]{16}", pw):
+        raise ValueError("Das App-Passwort stimmt nicht. Es sind genau 16 Buchstaben von Google. "
+                         "Bitte das Feld ganz leeren, das Passwort neu einfügen und speichern.")
+    return pw
 
 
 def verbinden(adresse, app_passwort):
+    pw = passwort_pruefen(app_passwort)
     imap = imaplib.IMAP4_SSL(IMAP_HOST, timeout=60)
-    imap.login(adresse, app_passwort.replace(" ", ""))
+    imap.login(adresse.strip(), pw)
     return imap
 
 
@@ -120,9 +135,24 @@ def neue_mails(imap, ich, ist_relevant, gesehen, tage=14):
     return out
 
 
-def entwurf_bauen(ich, an, betreff, text, antwort_auf="", references="", anhaenge=()):
+def html_mail(text, absender_name=""):
+    """Schlichte, gut lesbare HTML-Version des Textes (funktioniert in Gmail, Outlook und auf dem Handy)."""
+    absaetze = "".join(
+        f'<p style="margin:0 0 16px">{html.escape(a).replace(chr(10), "<br>")}</p>'
+        for a in re.split(r"\n\s*\n", text.strip()) if a.strip())
+    return f"""<!doctype html><html><body style="margin:0;padding:0;background:#f4f4f5">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:24px 12px"><tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:14px;border:1px solid #e4e4e7">
+<tr><td style="background:#0b0b0c;border-radius:14px 14px 0 0;padding:18px 28px;color:#ffffff;font:600 15px/1.4 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;letter-spacing:.02em">
+{html.escape(absender_name or "Thumbnails")} <span style="color:#22c55e">&#9679;</span></td></tr>
+<tr><td style="padding:28px;color:#18181b;font:15px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">{absaetze}</td></tr>
+<tr><td style="padding:0 28px 24px;color:#71717a;font:12px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">Die Bilder hängen als PNG-Dateien an dieser Mail (1280 &times; 720 px).</td></tr>
+</table></td></tr></table></body></html>"""
+
+
+def entwurf_bauen(ich, an, betreff, text, antwort_auf="", references="", anhaenge=(), html_text=None, absender_name=""):
     msg = EmailMessage()
-    msg["From"] = ich
+    msg["From"] = email.utils.formataddr((absender_name, ich)) if absender_name else ich
     msg["To"] = an
     msg["Subject"] = betreff if re.match(r"^\s*(re|aw)\s*:", betreff, re.I) else "Re: " + betreff
     msg["Date"] = email.utils.formatdate(localtime=True)
@@ -131,9 +161,19 @@ def entwurf_bauen(ich, an, betreff, text, antwort_auf="", references="", anhaeng
         msg["In-Reply-To"] = antwort_auf
         msg["References"] = (references + " " + antwort_auf).strip()
     msg.set_content(text)
+    if html_text:
+        msg.add_alternative(html_text, subtype="html")
     for name, daten in anhaenge:
-        msg.add_attachment(daten, maintype="image", subtype="png", filename=name)
+        typ = (mimetypes.guess_type(name)[0] or "application/octet-stream").split("/", 1)
+        msg.add_attachment(daten, maintype=typ[0], subtype=typ[1], filename=name)
     return msg
+
+
+def senden(adresse, app_passwort, msg):
+    """Schickt die Mail über Gmail ab. Gmail legt sie automatisch unter "Gesendet" ab."""
+    with smtplib.SMTP_SSL(SMTP_HOST, 465, timeout=60) as smtp:
+        smtp.login(adresse.strip(), passwort_pruefen(app_passwort))
+        smtp.send_message(msg)
 
 
 def entwurf_anlegen(imap, msg):

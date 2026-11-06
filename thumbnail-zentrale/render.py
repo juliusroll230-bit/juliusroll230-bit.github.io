@@ -193,3 +193,17 @@ def als_png(auftraege):
                 page.screenshot(path=ziel, type="png")
         finally:
             browser.close()
+
+
+def als_pdf(html_text, ziel):
+    """HTML (z. B. eine Rechnung) als A4-PDF speichern."""
+    from playwright.sync_api import sync_playwright
+    with _lock, sync_playwright() as p:
+        browser = p.chromium.launch(executable_path=CHROMIUM or None, args=["--no-sandbox"])
+        try:
+            page = browser.new_page()
+            page.set_content(html_text, wait_until="load")
+            os.makedirs(os.path.dirname(ziel), exist_ok=True)
+            page.pdf(path=ziel, format="A4", print_background=True, margin={"top": "0", "bottom": "0", "left": "0", "right": "0"})
+        finally:
+            browser.close()
