@@ -31,10 +31,6 @@ const CONFIG = {
   zahlung: "Du bekommst eine Rechnung und zahlst bequem per PayPal oder Überweisung.",
   kleinunternehmer: true,             // true = Hinweis „keine Umsatzsteuer nach § 19 UStG“
 
-  stripeLinkEinzel: "",               // Stripe-Zahlungslink für 1 Thumbnail (leer = kein Button)
-  stripeLinkAbo: "",                  // Stripe-Zahlungslink für das Monats-Abo (leer = kein Button)
-  paypalLink: "",                     // PayPal.me-Link für Einzel-Thumbnails, z. B. https://paypal.me/deinname
-
   impressum: {                        // Pflicht in Deutschland, bitte ausfüllen
     name: "Julius Roll",
     strasse: "Adalbert-Stifter-Straße 7 1/2",
@@ -639,9 +635,6 @@ dialog { color: var(--fg); }
 }
 .dlg-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .dlg-actions .btn { flex: 1 1 auto; }
-.dlg-pay { display: grid; gap: 10px; padding-top: 16px; border-top: 1px solid var(--line); }
-.dlg-pay[hidden], .dlg-pay [hidden] { display: none; }
-.dlg-pay-title { margin: 0; font-size: 14px; color: var(--muted-2); }
 .dlg-note { margin: 0; font-size: 14px; color: var(--muted); }
 .dlg-note a { color: #ddd; overflow-wrap: anywhere; }
 .dlg-status { min-height: 1.4em; margin: 0; font-size: 14px; color: var(--accent); }
@@ -1393,13 +1386,6 @@ dialog { color: var(--fg); }
       <a class="btn btn--ghost" id="o-mailto" href="#">Mail-Programm öffnen</a>
       <button class="btn btn--ghost" type="button" id="o-copy">Text kopieren</button>
     </div>
-    <div class="dlg-pay" id="o-pay" hidden>
-      <p class="dlg-pay-title">Direkt bezahlen <span class="opt">(optional, nach deiner Mail)</span></p>
-      <div class="dlg-actions">
-        <a class="btn btn--ghost" id="o-stripe" href="#" target="_blank" rel="noopener" hidden>Mit Karte zahlen</a>
-        <a class="btn btn--ghost" id="o-paypal" href="#" target="_blank" rel="noopener" hidden>Mit PayPal zahlen</a>
-      </div>
-    </div>
     <p class="dlg-note">Fotos und Screenshots hängst du einfach an die Mail an. Du kannst auch direkt an <a data-cfg="email" data-cfg-href="mailto" href="#kontakt">meine E-Mail-Adresse</a> schreiben (<button class="link-btn" type="button" data-copy-email>Adresse kopieren</button>).</p>
     <p class="dlg-status" role="status" aria-live="polite"></p>
   </form>
@@ -1687,25 +1673,11 @@ dialog { color: var(--fg); }
       ].join("\n").replace(/\n+$/, "");
       return { subject: subject, body: body };
     }
-    function httpsUrl(v) { v = String(v || "").trim(); return /^https:\/\/[^\s"<>]+$/.test(v) ? v : ""; }
-    function updatePay() {
-      var pay = $("#o-pay"), stripe = $("#o-stripe"), paypal = $("#o-paypal");
-      if (!pay) return;
-      var abo = form.elements.paket.value === "abo";
-      var s = httpsUrl(abo ? CONFIG.stripeLinkAbo : CONFIG.stripeLinkEinzel);
-      var p = abo ? "" : httpsUrl(CONFIG.paypalLink);
-      if (p && /paypal\.me\//i.test(p)) p = p.replace(/\/+$/, "") + "/" + Number(CONFIG.preisEinzel) + "EUR";
-      stripe.hidden = !s; if (s) stripe.href = s;
-      paypal.hidden = !p; if (p) paypal.href = p;
-      stripe.textContent = abo ? "Abo mit Karte abschließen" : "Mit Karte zahlen";
-      pay.hidden = !s && !p;
-    }
     function update() {
       var m = build();
       preview.textContent = "Betreff: " + m.subject + "\n\n" + m.body;
       gmail.href = gmailUrl(CONFIG.email, m.subject, m.body);
       mailto.href = mailtoUrl(CONFIG.email, m.subject, m.body);
-      updatePay();
     }
     form.addEventListener("input", update);
     form.addEventListener("change", update);
