@@ -26,6 +26,18 @@ import store  # noqa: E402
 ICH = "julius@example.com"
 
 
+def test_png(w, h, farbe=(200, 160, 120)):
+    """Kleines einfarbiges PNG ohne Zusatz-Bibliotheken."""
+    import struct
+    import zlib
+    roh = b"".join(b"\x00" + bytes(farbe) * w for _ in range(h))
+
+    def block(typ, daten):
+        return struct.pack(">I", len(daten)) + typ + daten + struct.pack(">I", zlib.crc32(typ + daten) & 0xFFFFFFFF)
+    return (b"\x89PNG\r\n\x1a\n" + block(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 2, 0, 0, 0))
+            + block(b"IDAT", zlib.compress(roh)) + block(b"IEND", b""))
+
+
 def bestellung_mail():
     m = EmailMessage()
     m["From"] = "Max Mustermann <max@example.com>"
@@ -36,11 +48,7 @@ def bestellung_mail():
     m.set_content("Hallo Julius,\n\nich möchte gerne ein Einzel-Thumbnail (5 €) bestellen.\n\nName: Max Mustermann\n"
                   "Kanal: Max Money\nVideo / Thema: Die 3 größten ETF-Fehler, die dich Tausende Euro kosten\n"
                   "Wünsche: grün, seriös\n\nMeine Fotos hänge ich an.\n\nViele Grüße\nMax")
-    from PIL import Image
-    import io
-    buf = io.BytesIO()
-    Image.new("RGB", (400, 500), (200, 160, 120)).save(buf, "JPEG")
-    m.add_attachment(buf.getvalue(), maintype="image", subtype="jpeg", filename="ich.jpg")
+    m.add_attachment(test_png(400, 500), maintype="image", subtype="png", filename="ich.png")
     return m.as_bytes()
 
 
@@ -113,7 +121,7 @@ def main():
     assert len(d["auftraege"]) == 1, d["auftraege"]
     a = d["auftraege"][0]
     print("Auftrag:", a["kanal"], "|", a["thema"], "|", a["status"], "| Fotos:", a["fotos"])
-    assert a["kanal"] == "Max Money" and a["email"] == "max@example.com" and a["fotos"] == ["ich.jpg"]
+    assert a["kanal"] == "Max Money" and a["email"] == "max@example.com" and a["fotos"] == ["ich.png"]
     assert a["status"] == "in_gmail", a["status"]
     for n in "abc":
         png = get(f"/dateien/{a['id']}/{n}.png")
