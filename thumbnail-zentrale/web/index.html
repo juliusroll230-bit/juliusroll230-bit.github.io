@@ -442,7 +442,7 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
         </div>
         <div class="card">
           <h2>Website-Editor</h2>
-          <label class="f"><span>GitHub-Token</span><input class="in" name="github_token" type="password" autocomplete="off" placeholder="github_pat_…"></label>
+          <label class="f"><span>GitHub-Token</span><input class="in" name="github_token" type="password" autocomplete="off" placeholder="github_pat_…" data-ph="github_pat_…"></label>
           <p class="hint">Auf <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a>: Name „Thumbnail-Zentrale“, bei „Repository access“ nur dein Website-Repo wählen, unter „Permissions“ bei „Contents“ Read and write einstellen, erstellen und hier einfügen.</p>
           <details class="raw"><summary>Repository ändern</summary>
             <div style="margin-top:12px">
@@ -454,7 +454,7 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
         </div>
         <div class="card">
           <h2>Änderungen in eigenen Worten (optional)</h2>
-          <label class="f"><span>Anthropic-API-Schlüssel</span><input class="in" name="ki_schluessel" type="password" autocomplete="off" placeholder="sk-ant-…"></label>
+          <label class="f"><span>Anthropic-API-Schlüssel</span><input class="in" name="ki_schluessel" type="password" autocomplete="off" placeholder="sk-ant-…" data-ph="sk-ant-…"></label>
           <p class="hint" style="margin:0">Damit kannst du im Editor schreiben „Text größer, Hintergrund rot, Pfeil weg“. Schlüssel gibt es auf console.anthropic.com, eine Änderung kostet unter einem Cent.</p>
         </div>
       </div>
@@ -759,7 +759,9 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
     if (!f.contains(document.activeElement)) {
       $$("[name]", f).forEach(function (el) {
         if (!(el.name in e)) return;
-        if (el.type === "checkbox") el.checked = !!e[el.name]; else el.value = e[el.name];
+        if (el.type === "checkbox") el.checked = !!e[el.name];
+        else if (el.type === "password") { el.value = ""; el.placeholder = e[el.name] ? "gespeichert ✓ (zum Ändern neu einfügen)" : (el.dataset.ph || el.placeholder); }
+        else el.value = e[el.name];
       });
     }
     $("#version").textContent = "Thumbnail-Zentrale " + (D.version.sha || "") + (D.version.built ? " · gebaut " + datum(D.version.built, true) : "");

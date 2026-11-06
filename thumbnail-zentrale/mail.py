@@ -19,9 +19,21 @@ IMAP_HOST = "imap.gmail.com"
 SMTP_HOST = "smtp.gmail.com"
 
 
+def passwort_pruefen(app_passwort):
+    """Google-App-Passwörter sind 16 Buchstaben, oft mit Leerzeichen angezeigt. Alles andere gleich klar melden."""
+    pw = re.sub(r"\s+", "", app_passwort or "")
+    if not pw:
+        raise ValueError("Es ist noch kein App-Passwort gespeichert.")
+    if not pw.isascii() or not re.fullmatch(r"[A-Za-z]{16}", pw):
+        raise ValueError("Das App-Passwort stimmt nicht. Es sind genau 16 Buchstaben von Google. "
+                         "Bitte das Feld ganz leeren, das Passwort neu einfügen und speichern.")
+    return pw
+
+
 def verbinden(adresse, app_passwort):
+    pw = passwort_pruefen(app_passwort)
     imap = imaplib.IMAP4_SSL(IMAP_HOST, timeout=60)
-    imap.login(adresse, app_passwort.replace(" ", ""))
+    imap.login(adresse.strip(), pw)
     return imap
 
 
@@ -160,7 +172,7 @@ def entwurf_bauen(ich, an, betreff, text, antwort_auf="", references="", anhaeng
 def senden(adresse, app_passwort, msg):
     """Schickt die Mail über Gmail ab. Gmail legt sie automatisch unter "Gesendet" ab."""
     with smtplib.SMTP_SSL(SMTP_HOST, 465, timeout=60) as smtp:
-        smtp.login(adresse, app_passwort.replace(" ", ""))
+        smtp.login(adresse.strip(), passwort_pruefen(app_passwort))
         smtp.send_message(msg)
 
 

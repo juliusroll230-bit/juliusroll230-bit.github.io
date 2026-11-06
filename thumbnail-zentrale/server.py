@@ -647,7 +647,7 @@ class Handler(BaseHTTPRequestHandler):
             with store.aendern() as s:
                 e = s["einstellungen"]
                 for k, v in d.items():
-                    if k not in e or (k in GEHEIM and v == "••••"):
+                    if k not in e or (k in GEHEIM and v in ("", "••••")):  # leer = unverändert
                         continue
                     if isinstance(e[k], bool):
                         v = bool(v)
@@ -655,6 +655,8 @@ class Handler(BaseHTTPRequestHandler):
                         v = float(v) if "." in str(v) else int(v or 0)
                     else:
                         v = str(v).strip() if k not in ("antwort_text", "liefer_text", "abo_rechnung_text") else str(v)
+                    if k == "app_passwort":
+                        v = mail.passwort_pruefen(v)
                     if k == "iban" and v:
                         if not rechnung.iban_gueltig(v):
                             raise ValueError("Die IBAN stimmt nicht. Bitte nochmal prüfen.")

@@ -180,6 +180,14 @@ def main():
 
     # 1. Gmail einrichten und eine Bestellung ins Postfach legen
     post("/api/einstellungen", {"gmail": ICH, "app_passwort": "abcd efgh ijkl mnop", "dein_name": "Julius"})
+    post("/api/einstellungen", {"app_passwort": "••••"})  # Platzhalter überschreibt nichts
+    for falsch in ("x••••", "abc"):
+        try:
+            post("/api/einstellungen", {"app_passwort": falsch})
+            raise AssertionError("falsches App-Passwort angenommen: " + falsch)
+        except urllib.error.HTTPError as ex:
+            assert ex.code == 400 and "16 Buchstaben" in json.loads(ex.read())["fehler"]
+    assert store.lesen()["einstellungen"]["app_passwort"] == "abcdefghijklmnop"
     FakeImap.postfach = {"1": bestellung_mail()}
     d = post("/api/mail/pruefen", {})
     assert d["ergebnis"] == "1 neue Mail(s)", d["ergebnis"]
