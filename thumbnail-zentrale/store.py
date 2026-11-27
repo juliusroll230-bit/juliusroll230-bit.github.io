@@ -20,12 +20,38 @@ STANDARD = {
         "dein_name": "Julius",
         "preis_einzel": 5,
         "preis_abo": 35,
-        "ki_schluessel": "",          # optional: Anthropic-API-Schlüssel für Änderungen in eigenen Worten
+        "ki_schluessel": "",          # optional: Anthropic-API-Schlüssel (KI plant Thumbnails, setzt Änderungen um, schreibt Akquise-Mails)
+        "ki_aenderungen_auto": True,  # Änderungswunsch des Kunden per KI umsetzen, danach wieder zur Freigabe
+        "freisteller": True,          # Personen auf Fotos automatisch freistellen
+        # Akquise (nur Gmail-Entwürfe, nie automatisch senden)
+        "akquise_text": (
+            "{anrede},\n\n"
+            "ich hab dein Video „{videotitel}“ gesehen und aus Spaß mal ein neues Thumbnail dafür gebaut. "
+            "Vorher und nachher hängen an, du darfst es gern kostenlos nutzen.\n\n"
+            "Ich mache Thumbnails für kleinere Kanäle: einzeln für {preis_einzel} € oder im Monats-Abo für {preis_abo} € unbegrenzt. "
+            "Mehr Beispiele: {website}\n\n"
+            "Wenn du kein Interesse hast, reicht ein kurzes „nein danke“, dann melde ich mich nicht mehr.\n\n"
+            "Viele Grüße\n{dein_name}"
+        ),
+        "nachfass_text": (
+            "{anrede},\n\n"
+            "kurze Nachfrage zu meiner Mail mit der Thumbnail-Idee für „{videotitel}“: Hat sie dir gefallen? "
+            "Wenn du magst, baue ich dir für dein nächstes Video eins zum Testen.\n\n"
+            "Falls nicht, alles gut, dann war das meine letzte Mail.\n\n"
+            "Viele Grüße\n{dein_name}"
+        ),
+        "nachfassen_tage": 6,
         "antwort_text": (
             "Hallo {vorname},\n\n"
             "danke für deine Bestellung{thema_satz}! Im Anhang findest du drei erste Entwürfe (A, B und C).\n\n"
             "Sag mir einfach, welcher dir am besten gefällt und was ich noch ändern soll, zum Beispiel Text, Farben oder Bild. "
             "Fotos von dir oder Screenshots aus dem Video kannst du direkt an deine Antwort hängen.\n\n"
+            "Viele Grüße\n{dein_name}"
+        ),
+        "korrektur_text": (
+            "Hallo {vorname},\n\n"
+            "danke für dein Feedback! Ich hab es umgesetzt, die neue Version hängt an.\n\n"
+            "Passt es so, oder soll ich noch etwas ändern?\n\n"
             "Viele Grüße\n{dein_name}"
         ),
         # Lieferung per Mail
@@ -66,6 +92,8 @@ STANDARD = {
     "zahlungen": [],
     "mail": {"letzte_pruefung": "", "fehler": "", "gesehen": []},
     "rechnungen": [],
+    "ausgaben": [],
+    "leads": [],
 }
 
 _lock = threading.RLock()

@@ -150,11 +150,11 @@ def html_mail(text, absender_name=""):
 </table></td></tr></table></body></html>"""
 
 
-def entwurf_bauen(ich, an, betreff, text, antwort_auf="", references="", anhaenge=(), html_text=None, absender_name=""):
+def entwurf_bauen(ich, an, betreff, text, antwort_auf="", references="", anhaenge=(), html_text=None, absender_name="", als_antwort=True):
     msg = EmailMessage()
     msg["From"] = email.utils.formataddr((absender_name, ich)) if absender_name else ich
     msg["To"] = an
-    msg["Subject"] = betreff if re.match(r"^\s*(re|aw)\s*:", betreff, re.I) else "Re: " + betreff
+    msg["Subject"] = betreff if (not als_antwort or re.match(r"^\s*(re|aw)\s*:", betreff, re.I)) else "Re: " + betreff
     msg["Date"] = email.utils.formatdate(localtime=True)
     msg["Message-ID"] = email.utils.make_msgid(domain="thumbnail-zentrale.local")
     if antwort_auf:  # damit Gmail den Entwurf in denselben Verlauf einsortiert

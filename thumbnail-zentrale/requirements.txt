@@ -1,1 +1,6 @@
 playwright==1.49.1
+anthropic>=2.14,<3
+onnxruntime>=1.20
+numpy>=2.0
+pillow>=11
+openpyxl>=3.1

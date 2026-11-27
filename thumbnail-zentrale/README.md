@@ -3,12 +3,14 @@
 Deine Thumbnail-App für den Zima-Server, gebaut wie die Shorts-Zentrale.
 
 - Schaut alle paar Minuten in dein Gmail. Jede Bestellung von deiner Website (Betreff „Anfrage: Einzel-Thumbnail …“ oder „Anfrage: Monats-Abo …“) wird zum Auftrag.
-- Baut sofort **3 Thumbnail-Entwürfe** (PNG, 1280 × 720) aus Videothema und Wünschen. Hängt der Kunde ein Foto an, kommt es mit aufs Bild.
-- Legt einen **Antwort-Entwurf in Gmail** an, die Bilder hängen schon dran. Automatisch gesendet wird nie etwas.
-- Antwortet der Kunde („B gefällt mir, Text bitte rot“), steht das als Änderungswunsch beim Auftrag.
+- Baut sofort **3 Thumbnail-Entwürfe** (PNG, 1280 × 720). Mit KI-Schlüssel liest die KI die Bestellung, schaut sich Foto oder Original-Thumbnail an und plant drei klar unterschiedliche Ideen. Ohne Schlüssel planen feste Regeln, kostenlos.
+- **Echtes Material statt KI-Look:** Steht ein YouTube-Link in der Bestellung, holt die App das Original-Thumbnail. Personen auf Fotos werden automatisch freigestellt und kommen groß mit weißem Rand aufs Bild.
+- **Freigabe:** Die fertigen Entwürfe warten in der Übersicht auf dein OK. Erst wenn du freigibst, geht die Mail raus (oder als Gmail-Entwurf).
+- Antwortet der Kunde („B gefällt mir, Text bitte rot“), setzt die KI den Wunsch um und legt dir das Ergebnis wieder zur Freigabe vor.
 - Im **Editor** änderst du Text, Farben, Schrift, Emoji, Foto, Pfeil und Vorlage mit Live-Vorschau. Optional mit KI: einfach hinschreiben, was anders sein soll.
 - **Per Mail senden:** Fertiges Thumbnail mit HTML-Mail, eigenen Anhängen und Rechnung (PDF) an den Kunden, entweder sofort oder als Gmail-Entwurf.
-- **Finanzen:** Rechnungen mit fortlaufender Nummer, IBAN und Verwendungszweck. Kunden zahlen per Überweisung, du klickst „Bezahlt“. Gesamtumsatz, Monatsumsatz, offene Beträge, Abos mit Verlängerung und Kündigung, monatliche Abo-Rechnung.
+- **Finanzen:** Einnahmen und Ausgaben selbst eintragen, Gewinn pro Monat und Jahr, Diagramm der letzten 12 Monate, Export als CSV für Excel. Rechnungen mit fortlaufender Nummer, IBAN und Verwendungszweck. Kunden zahlen per Überweisung, du klickst „Bezahlt“. Gesamtumsatz, Monatsumsatz, offene Beträge, Abos mit Verlängerung und Kündigung, monatliche Abo-Rechnung.
+- **Akquise:** Lead-Liste (Excel/CSV) importieren. Für jeden Creator holt die App das neueste Video, baut ein besseres Thumbnail und ein Vorher/Nachher-Bild und schreibt eine kurze, persönliche Mail. Die Mail landet **nur als Gmail-Entwurf**, du sendest selbst. Mit Status, Nachfass-Erinnerung und Antwort-Erkennung.
 - **Website:** Preise, Texte und Vorher-Nachher-Bilder der öffentlichen Seite ändern, ohne Code. Die App speichert die Änderung über GitHub, nach etwa einer Minute ist sie live.
 - Dunkles Design, läuft auf Handy, Tablet und Computer.
 
@@ -53,7 +55,8 @@ Wenn du den Shorts-Updater schon installiert hast: In ZimaOS beim **shorts-updat
 ## Optional
 
 - **Passwort:** In der docker-compose-Datei die Zeile `PASSWORD:` aktivieren. Benutzername ist `admin`.
-- **Änderungen in eigenen Worten (KI):** Unter Einstellungen einen Anthropic-API-Schlüssel eintragen (console.anthropic.com). Eine Änderung kostet weniger als einen Cent.
+- **KI:** Unter Einstellungen einen Anthropic-API-Schlüssel eintragen (console.anthropic.com). Kostet ein paar Cent pro Bestellung. Ohne Schlüssel läuft alles mit festen Regeln.
+- **Freistellen:** Beim ersten Mal lädt die App einmalig ein Modell herunter (ca. 170 MB). Das läuft lokal auf deinem Server und kostet nichts.
 
 ## Für Entwickler
 
@@ -65,7 +68,10 @@ Wenn du den Shorts-Updater schon installiert hast: In ZimaOS beim **shorts-updat
 | `mail.py` | Gmail: lesen und Entwürfe (IMAP), Senden nur auf Knopfdruck (SMTP), HTML-Mail |
 | `rechnung.py` | Rechnungsnummern, Rechnung als PDF, Zahlungshinweis mit IBAN |
 | `website.py` | Website-Editor: CONFIG, Texte und Bilder in index.html über die GitHub-API ändern |
-| `ki.py` | Optional: Änderungswunsch in Worten -> geänderter Entwurf |
+| `ki.py` | Optional (Claude): plant 3 Konzepte aus Bestellung und Bild, setzt Änderungswünsche um, schreibt Akquise-Mails |
+| `freisteller.py` | Stellt Personen frei (u2net_human_seg über onnxruntime, lokal) |
+| `youtube.py` | Videotitel, Original-Thumbnail und neuestes Video eines Kanals, ohne API-Schlüssel |
+| `akquise.py` | Leads importieren, Redesign + Vorher/Nachher bauen, Mail-Entwurf (nie senden), Nachfassen |
 | `store.py` | Speichert alles in `/data/zentrale.json` |
 | `web/index.html` | Die Oberfläche |
 | `tests/test_ablauf.py` | Ganzer Ablauf mit nachgebautem Gmail und GitHub |

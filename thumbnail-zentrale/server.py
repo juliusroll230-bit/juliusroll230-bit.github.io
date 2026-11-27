@@ -19,6 +19,8 @@ import traceback
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
+import akquise
+import freisteller
 import ki
 import rechnung
 import mail
@@ -26,6 +28,7 @@ import planer
 import render
 import store
 import website
+import youtube
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 WEB = os.path.join(HERE, "web")
@@ -34,7 +37,7 @@ PASSWORD = os.environ.get("PASSWORD", "")
 VERSION = {"sha": os.environ.get("APP_VERSION", "dev")[:7], "built": os.environ.get("APP_BUILT", "")}
 VARIANTEN = "abc"
 MONATE = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"]
-OFFEN = ("neu", "bereit", "in_gmail", "aenderung")
+OFFEN = ("neu", "freigabe", "bereit", "in_gmail", "aenderung")
 
 mail_lock = threading.Lock()
 status = {"mail_laeuft": False}
@@ -64,7 +67,7 @@ def rendern(a_id, nummern=None):
         for n in nummern:
             a["entwuerfe"][n]["stand"] = int(time.time())
         if a["status"] == "neu":
-            a["status"] = "bereit"
+            a["status"] = "freigabe"
 
 
 def foto_speichern(a_id, name, daten):
@@ -82,7 +85,8 @@ def foto_speichern(a_id, name, daten):
     return name
 
 
-def auftrag_anlegen(b, quelle="manuell", mail_info=None, bilder=()):
+def auftrag_anlegen(b, quelle="manuell", mail_info=None, bilder=(), im_hintergrund=False):
+    """Auftrag speichern, dann Material holen, planen und rendern (aufbereiten). Danach wartet er auf deine Freigabe."""
     a_id = store.neue_id()
     fotos = [foto_speichern(a_id, n, d) for n, d in bilder]
     entwuerfe = planer.entwuerfe_planen(b, fotos[0] if fotos else "")
@@ -102,14 +106,127 @@ def auftrag_anlegen(b, quelle="manuell", mail_info=None, bilder=()):
             k["kanal"] = k["kanal"] or a["kanal"]
             if a["paket"] == "Monats-Abo" and k.get("abo_status") not in ("aktiv",):
                 k["paket"], k["abo_status"] = "Abo", "angefragt"
+        lead = next((l for l in s.get("leads", []) if a["email"] and l.get("email") == a["email"]), None)
+        if lead:  # ein angeschriebener Creator bestellt: Akquise hat geklappt
+            lead["status"] = "kunde"
+            lead["followup"] = ""
         store.ereignis(s, f"Neue Bestellung: {a['kanal'] or a['name'] or a['email']} ({a['paket']})", a_id)
+    if im_hintergrund:
+        threading.Thread(target=aufbereiten, args=(a_id,), daemon=True).start()
+    else:
+        aufbereiten(a_id)
+    return a_id
+
+
+def aufbereiten(a_id, mit_ki=True):
+    """Holt echtes Material des Creators (Fotos aus der Mail, Original-Thumbnail per YouTube-Link), stellt die Person frei,
+    lässt die KI drei Ideen planen (ohne Schlüssel: feste Regeln) und baut die PNGs."""
     try:
+        s = store.lesen()
+        a = store.auftrag(s, a_id)
+        e = s["einstellungen"]
+        ordner = store.ordner(a_id)
+        fotos = [f for f in a["fotos"] if not f.endswith("-frei.png")]
+        text = " ".join([a.get("thema", ""), a.get("wuensche", ""), a.get("kanal", ""), a["mail"].get("text", "")])
+        original = "original.jpg" if os.path.exists(os.path.join(ordner, "original.jpg")) else ""
+        if not original and (youtube.video_id(text) or youtube.kanal_link_in(text)):
+            try:
+                m = youtube.material(text=text)
+            except Exception:
+                m = {}
+            if m.get("bild"):
+                with open(os.path.join(ordner, "original.jpg"), "wb") as f:
+                    f.write(m["bild"])
+                original = "original.jpg"
+            if m:
+                with store.aendern() as s2:
+                    x = store.auftrag(s2, a_id)
+                    x["material"] = {"video_id": m.get("video_id", ""), "titel": m.get("titel", "")}
+                    if m.get("titel") and (not x.get("thema") or youtube.video_id(x["thema"])):
+                        x["thema"] = m["titel"]
+                    if original:
+                        x["fotos"].append(original)
+                a = store.auftrag(store.lesen(), a_id)
+        person = next((f for f in a["fotos"] if f.endswith("-frei.png")), "")
+        quelle = fotos[0] if fotos else original
+        if not person and quelle and e.get("freisteller", True) and freisteller.verfuegbar():
+            ziel = os.path.splitext(quelle)[0] + "-frei.png"
+            try:
+                if freisteller.freistellen(os.path.join(ordner, quelle), os.path.join(ordner, ziel)):
+                    person = ziel
+                    with store.aendern() as s2:
+                        store.auftrag(s2, a_id)["fotos"].append(ziel)
+            except Exception as ex:
+                traceback.print_exc()
+                with store.aendern() as s2:
+                    store.ereignis(s2, f"Freistellen hat nicht geklappt, ich nehme das normale Foto: {ex}", a_id)
+        b = {k: a.get(k, "") for k in ("name", "kanal", "thema", "wuensche")}
+        foto = fotos[0] if fotos else ""
+        hintergrund = original if original and not fotos else ""
+        entwuerfe, planung = None, "regeln"
+        if mit_ki and e.get("ki_schluessel"):
+            try:
+                konz = ki.konzepte(e["ki_schluessel"], b, os.path.join(ordner, quelle) if quelle else "", bool(person))
+                entwuerfe = []
+                for k in konz:
+                    bild = (person or foto) if k.get("mit_bild") else ""
+                    k = dict(k, foto=bild, hintergrund=hintergrund if k.get("vorlage") in ("person", "strahlen") else "")
+                    if k.get("vorlage") == "person" and not person:
+                        k["vorlage"] = "strahlen"
+                    entwuerfe.append(planer.entwurf_pruefen(k))
+                planung = "ki"
+            except Exception as ex:
+                traceback.print_exc()
+                with store.aendern() as s2:
+                    store.ereignis(s2, f"KI-Planung fehlgeschlagen, feste Regeln übernehmen: {ex}", a_id)
+        if entwuerfe is None:
+            entwuerfe = planer.entwuerfe_planen(b, foto, person, hintergrund)
+        with store.aendern() as s2:
+            x = store.auftrag(s2, a_id)
+            x["entwuerfe"] = [{"entwurf": en, "stand": 0} for en in entwuerfe]
+            x["planung"] = planung
+            x["status"] = "neu"
         rendern(a_id)
+        with store.aendern() as s2:
+            x = store.auftrag(s2, a_id)
+            store.ereignis(s2, f"3 Entwürfe fertig für {x['kanal'] or x['email'] or 'Auftrag'}" +
+                           (" (KI-Ideen" + (", Gesicht freigestellt)" if person else ")") if planung == "ki" else
+                            (" (Gesicht freigestellt)" if person else "")) + ". Wartet auf deine Freigabe.", a_id)
     except Exception as e:
         traceback.print_exc()
         with store.aendern() as s:
-            store.ereignis(s, f"Thumbnails konnten nicht gebaut werden: {e}", a_id)
-    return a_id
+            if store.auftrag(s, a_id):
+                store.ereignis(s, f"Thumbnails konnten nicht gebaut werden: {e}", a_id)
+                store.auftrag(s, a_id)["status"] = "freigabe"
+
+
+def varianten_aus_text(text, anzahl=3):
+    """'B gefällt mir' oder 'Entwurf b' -> [1]. Nichts erkannt -> []."""
+    text = text or ""
+    treffer = re.findall(r"\b([ABC])\b", text) + re.findall(r"(?:entwurf|variante|version|bild)\s+([abc])\b", text, re.I)
+    return sorted({"abc".index(t.lower()) for t in treffer if "abc".index(t.lower()) < anzahl})
+
+
+def aenderung_umsetzen(a_id, wunsch):
+    """Änderungswunsch des Kunden mit KI umsetzen. Danach wartet der Auftrag wieder auf deine Freigabe."""
+    s = store.lesen()
+    a = store.auftrag(s, a_id)
+    schluessel = s["einstellungen"].get("ki_schluessel")
+    if not schluessel or not a:
+        return False
+    nummern = varianten_aus_text(wunsch, len(a["entwuerfe"])) or a.get("gesendete_varianten") or list(range(len(a["entwuerfe"])))
+    for n in nummern:
+        neu = ki.aenderung(schluessel, a["entwuerfe"][n]["entwurf"], wunsch, fotos_von(a), a.get("thema", ""))
+        with store.aendern() as s2:
+            store.auftrag(s2, a_id)["entwuerfe"][n]["entwurf"] = neu
+    rendern(a_id, nummern)
+    with store.aendern() as s2:
+        x = store.auftrag(s2, a_id)
+        x["status"] = "freigabe"
+        x["aenderungen"].append({"zeit": store.jetzt(), "von": "du", "fotos": [],
+                                 "text": "KI hat den Wunsch umgesetzt bei Entwurf " + ", ".join("ABC"[n] for n in nummern) + ". Bitte prüfen und freigeben."})
+        store.ereignis(s2, f"Änderung per KI umgesetzt für {x['kanal'] or x['email']}. Wartet auf deine Freigabe.", a_id)
+    return True
 
 
 def antwort_text(s, a, vorlage=None):
@@ -181,7 +298,7 @@ def rechnung_fuer_auftrag(a_id):
     return r
 
 
-def gmail_entwurf(a_id, nummern=None, text=None, betreff=None, extra=(), senden=False, mit_rechnung=False):
+def gmail_entwurf(a_id, nummern=None, text=None, betreff=None, extra=(), senden=False, mit_rechnung=False, art="fertig"):
     """Antwort an den Kunden mit den angehakten PNGs (und optional Rechnung und weiteren Dateien).
     senden=False legt einen Gmail-Entwurf an, senden=True schickt die Mail sofort ab."""
     s = store.lesen()
@@ -212,18 +329,22 @@ def gmail_entwurf(a_id, nummern=None, text=None, betreff=None, extra=(), senden=
         a = store.auftrag(s, a_id)
         if r:
             next(x for x in s["rechnungen"] if x["id"] == r["id"])["verschickt"] = store.jetzt() if senden else ""
+        a["gesendete_varianten"] = list(nummern)
+        a["freigegeben"] = store.jetzt()
         if senden:
             a["gesendet"] = store.jetzt()
             a["mail"]["message_id"] = mid  # damit die Antwort des Kunden im selben Verlauf landet
             a["aenderungen"].append({"zeit": store.jetzt(), "von": "du", "fotos": [],
                                      "text": f"Mail gesendet mit {len(anhaenge)} Anhang/Anhängen: {betreff}"})
-            if a["status"] != "archiv":
+            if a["status"] != "archiv" and art == "fertig":
                 a["status"] = "geliefert"
                 a["geliefert"] = a.get("geliefert") or store.jetzt()
+            elif a["status"] != "archiv":
+                a["status"] = "beim_kunden"
             store.ereignis(s, f"Mail mit {len(anhaenge)} Anhang/Anhängen gesendet an {a['kanal'] or a['email']}", a_id)
         else:
             a["gmail_entwurf"] = store.jetzt()
-            if a["status"] in ("neu", "bereit", "aenderung"):
+            if a["status"] in ("neu", "freigabe", "bereit", "aenderung"):
                 a["status"] = "in_gmail"
             store.ereignis(s, f"Antwort-Entwurf mit {len(anhaenge)} Anhang/Anhängen in Gmail angelegt: {a['kanal'] or a['email']}", a_id)
 
@@ -294,6 +415,7 @@ def mail_pruefen():
             return "nicht eingerichtet"
         bekannte = {a["email"] for a in s["auftraege"] if a["email"] and a["status"] != "archiv"}
         bekannte |= {k["email"] for k in s["kunden"] if k.get("abo_status") in ("aktiv", "angefragt")}
+        bekannte |= {l["email"] for l in s.get("leads", []) if l.get("email") and l.get("status") not in ("neu", "redesign")}
         gesehen = set(s["mail"]["gesehen"])
         imap = mail.verbinden(e["gmail"], e["app_passwort"])
         try:
@@ -303,27 +425,35 @@ def mail_pruefen():
                 imap.logout()
             except Exception:
                 pass
-        neue_auftraege = []
+        wuensche = []
         for m in sorted(mails, key=lambda m: m["datum"]):
             try:
                 if planer.ist_bestellung(m["betreff"]) and not re.match(r"^\s*(re|aw)\s*:", m["betreff"], re.I):
                     b = planer.bestellung_lesen(m["betreff"], m["text"], m["von_name"], m["von_mail"])
-                    neue_auftraege.append(auftrag_anlegen(b, "gmail", m, m["bilder"]))
+                    auftrag_anlegen(b, "gmail", m, m["bilder"])
                 else:
-                    kunden_antwort(m)
+                    a_id = kunden_antwort(m)
+                    if a_id:
+                        wuensche.append((a_id, mail.ohne_zitat(m["text"])))
+                    else:
+                        with store.aendern() as s2:
+                            akquise.antwort_gekommen(s2, m["von_mail"], m["text"], m["betreff"])
             except Exception as ex:
                 traceback.print_exc()
                 with store.aendern() as s2:
                     store.ereignis(s2, f"Mail „{m['betreff']}“ konnte nicht verarbeitet werden: {ex}")
             with store.aendern() as s2:
                 s2["mail"]["gesehen"] = (s2["mail"]["gesehen"] + [m["message_id"]])[-3000:]
-        if e.get("entwurf_automatisch"):
-            for a_id in neue_auftraege:
-                try:
-                    gmail_entwurf(a_id)
-                except Exception as ex:
-                    with store.aendern() as s2:
-                        store.ereignis(s2, f"Gmail-Entwurf fehlgeschlagen: {ex}", a_id)
+        # Nichts geht automatisch raus: neue Aufträge warten im Dashboard auf deine Freigabe.
+        if e.get("ki_schluessel") and e.get("ki_aenderungen_auto", True):
+            for a_id, wunsch in wuensche:
+                if wunsch and len(wunsch) > 3:
+                    try:
+                        aenderung_umsetzen(a_id, wunsch)
+                    except Exception as ex:
+                        traceback.print_exc()
+                        with store.aendern() as s2:
+                            store.ereignis(s2, f"KI konnte die Änderung nicht umsetzen, bitte selbst im Editor: {ex}", a_id)
         with store.aendern() as s2:
             s2["mail"]["letzte_pruefung"] = store.jetzt()
             s2["mail"]["fehler"] = ""
@@ -347,7 +477,7 @@ def kunden_antwort(m):
     with store.aendern() as s:
         kandidaten = [a for a in s["auftraege"] if a["email"] == m["von_mail"] and a["status"] != "archiv"]
         if not kandidaten:
-            return
+            return ""
         a = kandidaten[0]
         text = mail.ohne_zitat(m["text"]) or "(ohne Text)"
         neue_fotos = [foto_speichern(a["id"], n, d) for n, d in m["bilder"]]
@@ -357,6 +487,7 @@ def kunden_antwort(m):
         a["mail"]["references"] = m.get("references", "")
         a["status"] = "aenderung"
         store.ereignis(s, f"Antwort von {a['kanal'] or a['email']}: „{text[:80]}“", a["id"])
+        return a["id"]
 
 
 def abos_aufraeumen():
@@ -381,9 +512,12 @@ def zeitplan():
 
 
 # ======================= Zahlungen =======================
-def zahlung_buchen(s, betrag, email, text, auftrag_id=""):
-    s.setdefault("zahlungen", []).insert(0, {"id": store.neue_id(), "zeit": store.jetzt(), "betrag": round(betrag, 2),
-                                             "email": email, "text": text, "auftrag": auftrag_id})
+def zahlung_buchen(s, betrag, email, text, auftrag_id="", datum="", kategorie=""):
+    zeit = f"{datum}T12:00:00" if re.fullmatch(r"\d{4}-\d{2}-\d{2}", datum or "") else store.jetzt()
+    s.setdefault("zahlungen", []).insert(0, {"id": store.neue_id(), "zeit": zeit, "betrag": round(betrag, 2),
+                                             "email": email, "text": text, "auftrag": auftrag_id,
+                                             "kategorie": kategorie or ("Abo" if "abo" in text.lower() else "Thumbnails")})
+    s["zahlungen"].sort(key=lambda z: z["zeit"], reverse=True)
     store.ereignis(s, f"Zahlung {betrag:.2f} €".replace(".", ",") + f": {text}", auftrag_id)
 
 
@@ -403,6 +537,21 @@ def _monat_weiter(d):
             continue
 
 
+def finanzen_csv():
+    """Alle Einnahmen und Ausgaben als CSV (öffnet sich in Excel, z. B. für die Steuer)."""
+    import csv
+    import io
+    s = store.lesen()
+    puffer = io.StringIO()
+    w = csv.writer(puffer, delimiter=";")
+    w.writerow(["Datum", "Art", "Kategorie", "Beschreibung", "Betrag (EUR)"])
+    zeilen = [(z["zeit"][:10], "Einnahme", z.get("kategorie") or "Thumbnails", z["text"], z["betrag"]) for z in s.get("zahlungen", [])]
+    zeilen += [(x["datum"], "Ausgabe", x.get("kategorie") or "Sonstiges", x["text"], -x["betrag"]) for x in s.get("ausgaben", [])]
+    for z in sorted(zeilen, reverse=True):
+        w.writerow([z[0], z[1], z[2], z[3], f"{z[4]:.2f}".replace(".", ",")])
+    return "\ufeff" + puffer.getvalue()
+
+
 # ======================= Übersicht =======================
 def kennzahlen(s):
     e = s["einstellungen"]
@@ -412,9 +561,40 @@ def kennzahlen(s):
     abos_aktiv = [k for k in s["kunden"] if k.get("abo_status") == "aktiv"]
     einzel_monat = [a for a in geliefert_monat if a["paket"] != "Monats-Abo"]
     zahlungen = s.get("zahlungen", [])
+    ausgaben = s.get("ausgaben", [])
+    jahr = dt.date.today().strftime("%Y")
+    monate = []
+    d = dt.date.today().replace(day=1)
+    for _ in range(12):
+        m = d.strftime("%Y-%m")
+        monate.insert(0, {"monat": m, "einnahmen": round(sum(z["betrag"] for z in zahlungen if z["zeit"].startswith(m)), 2),
+                          "ausgaben": round(sum(x["betrag"] for x in ausgaben if x["datum"].startswith(m)), 2)})
+        d = (d - dt.timedelta(days=1)).replace(day=1)
+    kategorien = {}
+    for x in ausgaben:
+        if x["datum"].startswith(jahr):
+            kategorien[x.get("kategorie") or "Sonstiges"] = round(kategorien.get(x.get("kategorie") or "Sonstiges", 0) + x["betrag"], 2)
+    ein_gesamt = round(sum(z["betrag"] for z in zahlungen), 2)
+    aus_gesamt = round(sum(x["betrag"] for x in ausgaben), 2)
+    ein_monat = round(sum(z["betrag"] for z in zahlungen if z["zeit"].startswith(monat)), 2)
+    aus_monat = round(sum(x["betrag"] for x in ausgaben if x["datum"].startswith(monat)), 2)
+    ein_jahr = round(sum(z["betrag"] for z in zahlungen if z["zeit"].startswith(jahr)), 2)
+    aus_jahr = round(sum(x["betrag"] for x in ausgaben if x["datum"].startswith(jahr)), 2)
+    leads = s.get("leads", [])
     return {
+        "ausgaben_gesamt": aus_gesamt, "ausgaben_monat": aus_monat, "gewinn_gesamt": round(ein_gesamt - aus_gesamt, 2),
+        "gewinn_monat": round(ein_monat - aus_monat, 2), "einnahmen_jahr": ein_jahr, "ausgaben_jahr": aus_jahr,
+        "gewinn_jahr": round(ein_jahr - aus_jahr, 2), "monate": monate, "ausgaben_kategorien": kategorien,
+        "freigabe": sum(1 for a in auftraege if a["status"] == "freigabe"),
+        "wird_gebaut": sum(1 for a in auftraege if a["status"] == "neu"),
+        "leads_neu": sum(1 for l in leads if l.get("status") == "neu"),
+        "leads_entwurf": sum(1 for l in leads if l.get("status") == "entwurf"),
+        "leads_gesendet": sum(1 for l in leads if l.get("status") in ("gesendet", "nachgefasst")),
+        "leads_antwort": sum(1 for l in leads if l.get("status") == "antwort"),
+        "leads_kunde": sum(1 for l in leads if l.get("status") == "kunde"),
+        "leads_nachfassen": len(akquise.faellig(s)),
         "einnahmen_gesamt": round(sum(z["betrag"] for z in zahlungen), 2),
-        "einnahmen_monat": round(sum(z["betrag"] for z in zahlungen if z["zeit"].startswith(monat)), 2),
+        "einnahmen_monat": ein_monat,
         "offen": sum(1 for a in auftraege if a["status"] in OFFEN),
         "aenderungen": sum(1 for a in auftraege if a["status"] == "aenderung"),
         "abos_aktiv": len(abos_aktiv),
@@ -439,12 +619,17 @@ def stand():
         e[g] = "••••" if e.get(g) else ""
     return {
         "einstellungen": e, "auftraege": s["auftraege"], "kunden": s["kunden"], "verlauf": s["verlauf"][:60],
-        "zahlungen": s.get("zahlungen", [])[:200],
+        "zahlungen": s.get("zahlungen", [])[:300],
+        "ausgaben": s.get("ausgaben", [])[:300],
+        "leads": s.get("leads", []),
+        "akquise": dict(akquise.lauf), "freisteller": freisteller.verfuegbar(),
         "rechnungen": s.get("rechnungen", [])[:300],
         "mail": {"letzte_pruefung": s["mail"]["letzte_pruefung"], "fehler": s["mail"]["fehler"],
                  "laeuft": status["mail_laeuft"]},
         "kennzahlen": kennzahlen(s), "version": VERSION,
         "optionen": {"vorlagen": planer.VORLAGEN, "stile": planer.STILE, "schriften": planer.SCHRIFTEN,
+                     "kategorien_ausgaben": ["Software & KI", "Werbung", "Technik", "Material", "Gebühren", "Sonstiges"],
+                     "kategorien_einnahmen": ["Thumbnails", "Abo", "Extra-Wunsch", "Sonstiges"],
                      "emojis": sorted(f[:-4] for f in os.listdir(os.path.join(render.ASSETS, "emoji")) if f.endswith(".png"))},
     }
 
@@ -562,6 +747,12 @@ class Handler(BaseHTTPRequestHandler):
         m = re.match(r"^/dateien/([\w\-]+)/([\w.\-]+)$", p)
         if m:
             return self._datei(os.path.join(store.AUFTRAEGE, m.group(1), m.group(2)), download="download" in q)
+        m = re.match(r"^/leads/([\w\-]+)/([\w.\-]+)$", p)
+        if m:
+            return self._datei(os.path.join(store.DATA, "leads", m.group(1), m.group(2)), download="download" in q)
+        if p == "/api/finanzen.csv":
+            return self._senden(200, finanzen_csv(), "text/csv; charset=utf-8",
+                                {"Content-Disposition": f'attachment; filename="finanzen-{dt.date.today().isoformat()}.csv"'})
         if p == "/api/stand":
             return self._senden(200, stand())
         m = re.match(r"^/api/website/bild/([\w\-]+)$", p)
@@ -589,6 +780,8 @@ class Handler(BaseHTTPRequestHandler):
             d = self._json()
             e = planer.entwurf_pruefen(d.get("entwurf") or {})
             foto_url = f"/dateien/{d['auftrag']}/" if re.fullmatch(r"[\w\-]+", d.get("auftrag", "")) else ""
+            if re.fullmatch(r"[\w\-]+", d.get("lead", "")):
+                foto_url = f"/leads/{d['lead']}/"
             return self._senden(200, render.thumbnail_html(e, "/assets/", foto_url), "text/html; charset=utf-8")
 
         if p == "/api/auftrag":  # Auftrag von Hand anlegen
@@ -596,7 +789,7 @@ class Handler(BaseHTTPRequestHandler):
             b = {k: str(d.get(k, "")).strip() for k in ("name", "kanal", "email", "thema", "wuensche")}
             b["email"] = b["email"].lower()
             b["paket"] = "Monats-Abo" if d.get("paket") == "Monats-Abo" else "Einzel-Thumbnail"
-            return self._senden(200, {"id": auftrag_anlegen(b)})
+            return self._senden(200, {"id": auftrag_anlegen(b, im_hintergrund=True)})
 
         m = re.match(r"^/api/auftrag/([\w\-]+)/(\w+)(?:/(\d))?$", p)
         if m:
@@ -639,8 +832,47 @@ class Handler(BaseHTTPRequestHandler):
                 if d.get("loeschen"):
                     s["zahlungen"] = [z for z in s["zahlungen"] if z["id"] != d["loeschen"]]
                 else:
-                    zahlung_buchen(s, float(d.get("betrag") or 0), d.get("email", ""), str(d.get("text", "Zahlung")))
+                    betrag = float(str(d.get("betrag") or 0).replace(",", "."))
+                    if betrag <= 0:
+                        raise ValueError("Bitte einen Betrag über 0 eintragen.")
+                    zahlung_buchen(s, betrag, d.get("email", ""), str(d.get("text") or "Einnahme"),
+                                   datum=str(d.get("datum") or ""), kategorie=str(d.get("kategorie") or "Sonstiges"))
             return self._senden(200, stand())
+
+        if p == "/api/ausgabe":  # Ausgabe eintragen oder löschen
+            d = self._json()
+            with store.aendern() as s:
+                if d.get("loeschen"):
+                    s["ausgaben"] = [x for x in s["ausgaben"] if x["id"] != d["loeschen"]]
+                else:
+                    betrag = float(str(d.get("betrag") or 0).replace(",", "."))
+                    if betrag <= 0:
+                        raise ValueError("Bitte einen Betrag über 0 eintragen.")
+                    datum = str(d.get("datum") or "") if re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(d.get("datum") or "")) else dt.date.today().isoformat()
+                    s["ausgaben"].append({"id": store.neue_id(), "datum": datum, "betrag": round(betrag, 2),
+                                          "text": str(d.get("text") or "Ausgabe")[:120], "kategorie": str(d.get("kategorie") or "Sonstiges")[:40]})
+                    s["ausgaben"].sort(key=lambda x: x["datum"], reverse=True)
+                    store.ereignis(s, f"Ausgabe {rechnung.euro(betrag)}: {d.get('text') or 'Ausgabe'}")
+            return self._senden(200, stand())
+
+        if p == "/api/leads/import":
+            n_bytes = int(self.headers.get("Content-Length") or 0)
+            if not 0 < n_bytes < 10_000_000:
+                raise ValueError("Datei fehlt oder ist zu groß.")
+            neu, ergaenzt = akquise.importieren((q.get("name") or ["liste.xlsx"])[0], self.rfile.read(n_bytes))
+            return self._senden(200, dict(stand(), ergebnis=f"{neu} neue Creator, {ergaenzt} ergänzt"))
+
+        if p == "/api/lead":
+            return self._senden(200, dict(stand(), id=akquise.anlegen(self._json())))
+
+        if p == "/api/akquise/stapel":
+            d = self._json()
+            n = akquise.stapel(max(1, min(20, int(d.get("anzahl") or 5))), d.get("ids") or None)
+            return self._senden(200, dict(stand(), ergebnis=n))
+
+        m = re.match(r"^/api/lead/([\w\-]+)/(\w+)$", p)
+        if m:
+            return self._lead_aktion(m.group(1), m.group(2), q)
 
         if p == "/api/einstellungen":
             d = self._json()
@@ -654,7 +886,7 @@ class Handler(BaseHTTPRequestHandler):
                     elif isinstance(e[k], (int, float)) and not isinstance(e[k], bool):
                         v = float(v) if "." in str(v) else int(v or 0)
                     else:
-                        v = str(v).strip() if k not in ("antwort_text", "liefer_text", "abo_rechnung_text") else str(v)
+                        v = str(v).strip() if k not in ("antwort_text", "liefer_text", "abo_rechnung_text", "korrektur_text", "akquise_text", "nachfass_text") else str(v)
                     if k == "app_passwort":
                         v = mail.passwort_pruefen(v)
                     if k == "iban" and v:
@@ -705,6 +937,55 @@ class Handler(BaseHTTPRequestHandler):
 
         self._senden(404, {"fehler": "unbekannt"})
 
+    def _lead_aktion(self, l_id, aktion, q):
+        if not akquise.lead(store.lesen(), l_id):
+            return self._senden(404, {"fehler": "Creator nicht gefunden"})
+        if aktion == "redesign":
+            akquise.redesign(l_id)
+        elif aktion == "original":  # eigenes Original-Bild hochladen (wenn YouTube nicht erreichbar ist)
+            n_bytes = int(self.headers.get("Content-Length") or 0)
+            if not 0 < n_bytes < 20_000_000:
+                raise ValueError("Bild fehlt oder ist größer als 20 MB.")
+            akquise.redesign(l_id, original=self.rfile.read(n_bytes))
+        elif aktion == "video":
+            akquise.neuestes_video(l_id)
+        elif aktion == "mail":
+            akquise.mail_schreiben(l_id, mit_ki=self._json().get("ki", True))
+        elif aktion == "speichern":  # Felder, Mail-Text oder Status ändern
+            d = self._json()
+            with store.aendern() as s:
+                x = akquise.lead(s, l_id)
+                for feld in ("kanal", "link", "nische", "email", "ansprechpartner", "videotitel", "video_link", "notiz", "followup", "prioritaet"):
+                    if feld in d:
+                        x[feld] = str(d[feld]).strip().lower() if feld == "email" else str(d[feld]).strip()
+                if "betreff" in d or "text" in d:
+                    x["mail"] = dict(x.get("mail") or {}, betreff=str(d.get("betreff", (x.get("mail") or {}).get("betreff", ""))),
+                                     text=str(d.get("text", (x.get("mail") or {}).get("text", ""))))
+            if d.get("status"):
+                akquise.status_setzen(l_id, d["status"])
+        elif aktion == "entwurf":  # Gmail-Entwurf (nie senden)
+            d = self._json()
+            akquise.gmail_entwurf(l_id, d.get("betreff") or None, d.get("text") or None)
+        elif aktion == "nachfassen":
+            akquise.gmail_entwurf(l_id, nachfassen=True)
+            akquise.status_setzen(l_id, "nachgefasst")
+        elif aktion == "design":  # im Editor geändertes Redesign speichern
+            akquise.entwurf_aendern(l_id, self._json().get("entwurf") or {})
+        elif aktion == "ki":
+            s = store.lesen()
+            schluessel = s["einstellungen"].get("ki_schluessel")
+            if not schluessel:
+                raise ValueError("Dafür fehlt der KI-Schlüssel (Einstellungen).")
+            x = akquise.lead(s, l_id)
+            fotos = [f for f in ("person-frei.png", "original.jpg") if os.path.exists(os.path.join(akquise.ordner(l_id), f))]
+            neu = ki.aenderung(schluessel, (x.get("redesign") or {}).get("entwurf") or {}, self._json().get("wunsch", ""), fotos, x.get("videotitel", ""))
+            akquise.entwurf_aendern(l_id, neu)
+        elif aktion == "loeschen":
+            akquise.loeschen(l_id)
+        else:
+            return self._senden(404, {"fehler": "unbekannte Aktion"})
+        self._senden(200, stand())
+
     def _auftrag_aktion(self, a_id, aktion, n, q):
         s = store.lesen()
         a = store.auftrag(s, a_id)
@@ -729,15 +1010,12 @@ class Handler(BaseHTTPRequestHandler):
             with store.aendern() as s:
                 store.auftrag(s, a_id)["entwuerfe"][n]["entwurf"] = neu
             rendern(a_id, [n])
-        elif aktion == "neuplanen":
+        elif aktion == "neuplanen":  # alle drei Entwürfe neu (mit KI, wenn Schlüssel da)
             d = self._json()
-            b = {k: d.get(k, a.get(k, "")) for k in ("name", "kanal", "email", "thema", "wuensche", "paket")}
-            neu = planer.entwuerfe_planen(b, (a["fotos"] or [""])[0])
             with store.aendern() as s:
                 x = store.auftrag(s, a_id)
-                x.update({k: b[k] for k in ("name", "kanal", "thema", "wuensche")})
-                x["entwuerfe"] = [{"entwurf": e, "stand": 0} for e in neu]
-            rendern(a_id)
+                x.update({k: str(d[k]) for k in ("name", "kanal", "thema", "wuensche") if k in d})
+            aufbereiten(a_id, mit_ki=d.get("ki", True))
         elif aktion == "gmail":
             d = self._json()
             nummern = [int(x) for x in d.get("varianten", [])] or None
@@ -752,7 +1030,7 @@ class Handler(BaseHTTPRequestHandler):
                 extra.append((re.sub(r"[^\w.\- ]", "_", os.path.basename(str(x.get("name") or "anhang")))[-80:], daten))
             gmail_entwurf(a_id, [int(x) for x in d.get("varianten", [])], str(d.get("text") or "") or None,
                           str(d.get("betreff") or "") or None, extra, senden=d.get("modus") == "senden",
-                          mit_rechnung=bool(d.get("rechnung")))
+                          mit_rechnung=bool(d.get("rechnung")), art=str(d.get("art") or "fertig"))
         elif aktion == "mailvorschlag":
             e = s["einstellungen"]
             offen = next((r for r in s["rechnungen"] if r["auftrag"] == a_id and not r.get("storniert")), None)
@@ -765,13 +1043,16 @@ class Handler(BaseHTTPRequestHandler):
                 "rechnung_betrag": offen["betrag"] if offen else float(e.get("preis_einzel") or 0),
                 "rechnung_vorhanden": bool(offen),
                 "iban": bool(e.get("iban")), "direkt": bool(e.get("direkt_senden")),
-                "vorlagen": {"erste": antwort_text(s, a, e["antwort_text"]), "fertig": antwort_text(s, a, e.get("liefer_text"))},
+                "vorlagen": {"erste": antwort_text(s, a, e["antwort_text"]), "fertig": antwort_text(s, a, e.get("liefer_text")),
+                             "korrektur": antwort_text(s, a, e.get("korrektur_text") or e["antwort_text"])},
+                "vorschlag_art": "fertig" if a["status"] in ("geliefert",) else
+                                 ("korrektur" if a.get("gesendet") or a.get("gmail_entwurf") or any(c["von"] == "kunde" for c in a["aenderungen"]) else "erste"),
             })
         elif aktion == "status":
             d = self._json()
             with store.aendern() as s:
                 x = store.auftrag(s, a_id)
-                if d.get("status") in ("neu", "bereit", "in_gmail", "aenderung", "geliefert", "archiv"):
+                if d.get("status") in ("neu", "freigabe", "bereit", "in_gmail", "beim_kunden", "aenderung", "geliefert", "archiv"):
                     x["status"] = d["status"]
                     if d["status"] == "geliefert" and not x.get("geliefert"):
                         x["geliefert"] = store.jetzt()

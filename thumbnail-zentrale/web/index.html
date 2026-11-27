@@ -232,6 +232,41 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
 .fade-in { animation: rein .35s var(--ease) both; }
 @keyframes rein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
+/* Freigabe */
+.freigabe-liste { display: flex; flex-direction: column; gap: 14px; }
+.freigabe { border: 1px solid rgba(167,139,250,.35); border-radius: 16px; padding: 14px; background: linear-gradient(180deg, rgba(167,139,250,.07), rgba(167,139,250,0) 60%), var(--card-2); }
+.freigabe-kopf { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.freigabe-kopf .title { font-weight: 650; color: var(--text); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.freigabe-bilder { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.freigabe-bilder figure { margin: 0; position: relative; }
+.freigabe-bilder img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 10px; border: 1px solid var(--line); cursor: zoom-in; background: var(--card-3); }
+.freigabe-bilder figcaption { font-size: 12px; color: var(--muted); margin-top: 5px; line-height: 1.35; }
+.freigabe-bilder figcaption b { color: var(--text-2); }
+.banner-box { display: flex; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 14px; margin-bottom: 16px; flex-wrap: wrap; border: 1px solid rgba(167,139,250,.35); background: var(--violet-soft); }
+.banner-box.blau { border-color: rgba(59,130,246,.35); background: var(--blue-soft); }
+.banner-box span.t { flex: 1; min-width: 200px; color: var(--text); }
+.idee { font-size: 12.5px; color: var(--muted); padding: 0 12px 10px; margin-top: -4px; }
+
+/* Finanzen */
+.chart { width: 100%; height: 220px; display: block; }
+.chart text { fill: var(--muted-2); font-size: 11px; font-family: inherit; }
+.legende { display: flex; gap: 16px; font-size: 12.5px; color: var(--muted); margin-top: 6px; flex-wrap: wrap; }
+.legende i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+.kpi.rot .value { color: #fca5a5; }
+.buchung-form { display: grid; grid-template-columns: auto 1fr 1.6fr 1.2fr 1fr auto; gap: 10px; align-items: end; }
+.buchung-form .f { margin-bottom: 0; }
+.betrag.rot { color: #fca5a5; }
+.kat { font-size: 11.5px; color: var(--muted-2); border: 1px solid var(--line-2); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
+
+/* Akquise */
+.trichter { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 16px; }
+.trichter .card { padding: 14px 16px; }
+.trichter .value { font-size: 26px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+.trichter .label { font-size: 12.5px; color: var(--muted); }
+.lead-bild { width: 100%; border-radius: 14px; border: 1px solid var(--line-2); background: var(--card-3); aspect-ratio: 16/9; object-fit: cover; cursor: zoom-in; }
+.fortschritt { height: 6px; border-radius: 3px; background: var(--card-3); overflow: hidden; margin-top: 8px; }
+.fortschritt div { height: 100%; background: linear-gradient(90deg, var(--blue), var(--green)); transition: width .4s var(--ease); }
+
 @media (max-width: 1000px) {
   .kpis { grid-template-columns: repeat(3, 1fr); }
   .kpis.vier { grid-template-columns: repeat(2, 1fr); }
@@ -255,6 +290,10 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
   .sheet { top: auto; bottom: 0; left: 0; width: 100% !important; max-height: 94vh; border-radius: 22px 22px 0 0; transform: translateY(30px); }
   .sheet.open { transform: translateY(0); }
   .row-fields, .drei { grid-template-columns: 1fr; }
+  .buchung-form { grid-template-columns: 1fr 1fr; }
+  .buchung-form > :first-child, .buchung-form > :last-child { grid-column: 1 / -1; }
+  .trichter { grid-template-columns: repeat(2, 1fr); }
+  .freigabe-bilder { grid-template-columns: 1fr 1fr; }
   .kv { grid-template-columns: 90px 1fr; }
   .speicherleiste { bottom: calc(84px + env(safe-area-inset-bottom)); }
   .toast { bottom: calc(150px + env(safe-area-inset-bottom)); }
@@ -269,9 +308,10 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
     <nav class="tabs" role="tablist" aria-label="Bereiche">
       <button role="tab" data-tab="uebersicht" aria-selected="true">Übersicht</button>
       <button role="tab" data-tab="auftraege">Aufträge<span id="nav-offen"></span></button>
+      <button role="tab" data-tab="akquise">Akquise<span id="nav-akquise"></span></button>
       <button role="tab" data-tab="finanzen">Finanzen<span id="nav-geld"></span></button>
       <button role="tab" data-tab="website">Website</button>
-      <button role="tab" data-tab="einstellungen">Einstellungen</button>
+      <button role="tab" data-tab="einstellungen" aria-label="Einstellungen">Einstellungen</button>
     </nav>
   </div>
 </header>
@@ -288,6 +328,11 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
       <div class="card kpi blue"><div class="label">Aktive Abos</div><div class="value" data-count="abos_aktiv">0</div><div class="hint" id="kpi-abo-hint"></div></div>
       <div class="card kpi"><div class="label">Offene Aufträge</div><div class="value" data-count="offen">0</div><div class="hint" id="kpi-offen-hint"></div></div>
     </div>
+    <div class="card" id="freigabe-card" style="margin-bottom:16px" hidden>
+      <h2><span class="pill violet">Freigabe</span> Wartet auf dein OK</h2>
+      <p class="hint" style="margin:-6px 0 14px">Die KI hat diese Thumbnails aus den Bestell-Mails gebaut. Nichts geht raus, bevor du freigibst.</p>
+      <div class="freigabe-liste" id="freigabe-liste"></div>
+    </div>
     <div class="grid two">
       <div class="card">
         <h2>Zu tun</h2>
@@ -303,6 +348,11 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
           </div>
         </div>
         <div class="card">
+          <h2>Akquise</h2>
+          <div id="ueb-akquise" class="hint"></div>
+          <div class="btns" style="margin-top:12px"><button class="btn small" data-goto="akquise">Öffnen</button></div>
+        </div>
+        <div class="card">
           <h2>Verlauf</h2>
           <div class="feed" id="feed"></div>
         </div>
@@ -313,13 +363,15 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
   <!-- AUFTRÄGE -->
   <section data-view="auftraege" hidden>
     <h1>Aufträge</h1>
-    <p class="sub">Neue Bestellungen aus Gmail landen hier automatisch, mit drei fertigen Entwürfen.</p>
+    <p class="sub">Neue Bestellungen aus Gmail landen hier automatisch, mit drei fertigen Entwürfen. Raus geht erst etwas, wenn du freigibst.</p>
     <div class="toolbar">
       <div class="seg" id="filter">
         <button aria-pressed="true" data-f="offen">Offen</button>
+        <button aria-pressed="false" data-f="freigabe">Freigabe</button>
         <button aria-pressed="false" data-f="neu">Neu</button>
         <button aria-pressed="false" data-f="arbeit">In Bearbeitung</button>
         <button aria-pressed="false" data-f="bereit">Bereit zum Versand</button>
+        <button aria-pressed="false" data-f="warten">Beim Kunden</button>
         <button aria-pressed="false" data-f="fertig">Abgeschlossen</button>
         <button aria-pressed="false" data-f="archiv">Archiv</button>
       </div>
@@ -333,39 +385,89 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
   <!-- FINANZEN -->
   <section data-view="finanzen" hidden>
     <h1>Finanzen</h1>
-    <p class="sub">Kunden zahlen per Überweisung direkt auf dein Konto. Hier siehst du, was reinkam, was noch offen ist und welche Abos laufen.</p>
+    <p class="sub">Einnahmen und Ausgaben auf einen Blick. Zahlungen aus Rechnungen und Abos landen automatisch hier, alles andere trägst du unten selbst ein.</p>
     <div class="grid kpis vier">
-      <div class="card kpi money"><div class="label"><span class="live"></span>Gesamtumsatz</div><div class="value" data-count="einnahmen_gesamt" data-euro>0 €</div><div class="hint">seit Start</div></div>
-      <div class="card kpi money"><div class="label">Diesen Monat</div><div class="value" data-count="einnahmen_monat" data-euro>0 €</div><div class="hint" id="fin-monat-hint"></div></div>
-      <div class="card kpi warn"><div class="label">Noch offen</div><div class="value" data-count="offen_betrag" data-euro>0 €</div><div class="hint" id="fin-offen-hint"></div></div>
-      <div class="card kpi blue"><div class="label">Abo-Einnahmen</div><div class="value" data-count="abo_umsatz" data-euro>0 €</div><div class="hint" id="fin-abo-hint">pro Monat</div></div>
+      <div class="card kpi money"><div class="label"><span class="live"></span>Einnahmen</div><div class="value" data-count="einnahmen_monat" data-euro>0 €</div><div class="hint" id="fin-monat-hint"></div></div>
+      <div class="card kpi rot"><div class="label">Ausgaben</div><div class="value" data-count="ausgaben_monat" data-euro>0 €</div><div class="hint">diesen Monat</div></div>
+      <div class="card kpi blue"><div class="label">Gewinn im Monat</div><div class="value" data-count="gewinn_monat" data-euro>0 €</div><div class="hint" id="fin-gewinn-hint">Einnahmen minus Ausgaben</div></div>
+      <div class="card kpi"><div class="label">Gewinn im Jahr</div><div class="value" data-count="gewinn_jahr" data-euro>0 €</div><div class="hint" id="fin-jahr-hint"></div></div>
     </div>
     <div class="card" id="bank-hinweis" style="margin-bottom:16px" hidden>
       <div class="infobox" style="background:transparent;border:0;padding:0"><span class="pill orange">Fehlt noch</span><span style="flex:1">Trag deine IBAN ein, dann stehen Bankdaten und Verwendungszweck automatisch auf jeder Rechnung und in der Mail.</span><button class="btn small primary" data-goto="einstellungen">IBAN eintragen</button></div>
     </div>
+    <div class="card" style="margin-bottom:16px">
+      <h2>Letzte 12 Monate</h2>
+      <svg class="chart" id="chart" viewBox="0 0 720 220" style="height:auto;aspect-ratio:720/220" role="img" aria-label="Einnahmen und Ausgaben pro Monat"></svg>
+      <div class="legende"><span><i style="background:var(--green)"></i>Einnahmen</span><span><i style="background:#f87171"></i>Ausgaben</span><span id="chart-summe"></span></div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px"><h2 style="margin:0;flex:1">Buchungen</h2><a class="btn small" href="/api/finanzen.csv" download>Als Excel-Datei (CSV)</a></div>
+      <form id="buchung-form" class="buchung-form">
+        <div class="f"><span>Art</span><div class="seg" id="buchung-art"><button type="button" aria-pressed="true" data-art="einnahme">+ Einnahme</button><button type="button" aria-pressed="false" data-art="ausgabe">− Ausgabe</button></div></div>
+        <label class="f"><span>Betrag (€)</span><input class="in" name="betrag" inputmode="decimal" placeholder="0,00" required></label>
+        <label class="f"><span>Wofür</span><input class="in" name="text" placeholder="z. B. Canva Pro, Thumbnail für Max"></label>
+        <label class="f"><span>Kategorie</span><select class="in" name="kategorie" id="buchung-kat"></select></label>
+        <label class="f"><span>Datum</span><input class="in" name="datum" type="date"></label>
+        <div class="f"><button class="btn primary">Eintragen</button></div>
+      </form>
+      <div class="seg" id="buchung-filter" style="margin:16px 0 6px"><button type="button" aria-pressed="true" data-bf="alle">Alle</button><button type="button" aria-pressed="false" data-bf="einnahme">Einnahmen</button><button type="button" aria-pressed="false" data-bf="ausgabe">Ausgaben</button></div>
+      <div class="feed" id="buchungen"></div>
+      <div id="kategorien" class="hint" style="margin-top:12px"></div>
+    </div>
     <div class="grid halb">
       <div class="card">
-        <h2>Offene Rechnungen</h2>
+        <h2>Offene Rechnungen <span class="hint" id="fin-offen-hint" style="font-weight:400;font-size:13px"></span></h2>
         <div class="list" id="rechnungen-offen"></div>
       </div>
       <div class="card">
-        <h2>Abos</h2>
+        <h2>Abos <span class="hint" id="fin-abo-hint" style="font-weight:400;font-size:13px"></span></h2>
         <div class="list" id="abo-liste"></div>
       </div>
-      <div class="card">
-        <h2>Zahlungseingänge</h2>
-        <form id="zahlung-form" class="drei" style="margin-bottom:6px;align-items:end">
-          <label class="f"><span>Wofür</span><input class="in" name="text" placeholder="z. B. Extra-Wunsch"></label>
-          <label class="f"><span>Betrag (€)</span><input class="in" name="betrag" type="number" step="0.01" min="0" required></label>
-          <div class="f"><button class="btn">Eintragen</button></div>
-        </form>
-        <div class="feed" id="zahlungen"></div>
-      </div>
-      <div class="card">
+      <div class="card" style="grid-column:1/-1">
         <h2>Alle Rechnungen</h2>
         <div class="list" id="rechnungen-alle"></div>
       </div>
     </div>
+  </section>
+
+  <!-- AKQUISE -->
+  <section data-view="akquise" hidden>
+    <h1>Akquise</h1>
+    <p class="sub">Neue Kunden gewinnen: Die App holt das neueste Video eines Creators, baut ein besseres Thumbnail dazu und schreibt eine kurze, persönliche Mail. Alles landet nur als Entwurf in Gmail. Senden tust du selbst.</p>
+    <div class="toolbar">
+      <button class="btn primary" id="akq-stapel">Nächste 5 vorbereiten</button>
+      <span class="hint">baut Redesign und Mail für die nächsten 5 neuen Creator und legt die Entwürfe in Gmail ab</span>
+      <span class="grow"></span>
+      <label class="btn">Liste importieren<input type="file" id="lead-import" accept=".xlsx,.csv" hidden></label>
+      <button class="btn" id="lead-neu-btn">+ Creator</button>
+    </div>
+    <div class="trichter">
+      <div class="card"><div class="value" id="tr-neu">0</div><div class="label">noch nicht bearbeitet</div></div>
+      <div class="card"><div class="value" id="tr-bereit">0</div><div class="label">Entwurf bereit</div></div>
+      <div class="card"><div class="value" id="tr-gesendet">0</div><div class="label">angeschrieben</div></div>
+      <div class="card"><div class="value" id="tr-antwort">0</div><div class="label">haben geantwortet</div></div>
+      <div class="card"><div class="value" id="tr-kunde">0</div><div class="label">wurden Kunden</div></div>
+    </div>
+    <div class="card" id="akq-lauf" style="margin-bottom:16px" hidden>
+      <div style="display:flex;gap:10px;align-items:center"><span class="spinner"></span><span id="akq-lauf-text" style="flex:1"></span></div>
+      <div class="fortschritt"><div id="akq-balken" style="width:0"></div></div>
+    </div>
+    <div class="banner-box blau" id="akq-nachfassen" hidden><span class="t" id="akq-nachfassen-text"></span><button class="btn small" id="akq-nachfassen-zeigen">Zeigen</button></div>
+    <div class="toolbar">
+      <div class="seg" id="lead-filter">
+        <button aria-pressed="true" data-lf="aktiv">Offen</button>
+        <button aria-pressed="false" data-lf="neu">Neu</button>
+        <button aria-pressed="false" data-lf="bereit">Entwurf bereit</button>
+        <button aria-pressed="false" data-lf="gesendet">Angeschrieben</button>
+        <button aria-pressed="false" data-lf="nachfassen">Nachfassen</button>
+        <button aria-pressed="false" data-lf="antwort">Antwort</button>
+        <button aria-pressed="false" data-lf="ende">Erledigt</button>
+      </div>
+      <span class="grow"></span>
+      <input class="in" id="lead-suche" type="search" placeholder="Suchen" style="max-width:200px">
+    </div>
+    <div class="card"><div class="list" id="lead-liste"></div></div>
+    <p class="hint" style="margin-top:14px">Warum nur Entwürfe? Ungefragte Werbe-Mails automatisch zu verschicken ist in Deutschland abmahnfähig. So liest du jede Mail kurz gegen und schickst sie selbst ab. Schreib höchstens ein paar am Tag und immer mit konkretem Bezug zum Video.</p>
   </section>
 
   <!-- WEBSITE -->
@@ -392,7 +494,7 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
   <!-- EINSTELLUNGEN -->
   <section data-view="einstellungen" hidden>
     <h1>Einstellungen</h1>
-    <p class="sub">Alles bleibt auf deinem Server. Automatisch wird nie etwas gesendet, nur wenn du selbst auf „Jetzt senden“ klickst.</p>
+    <p class="sub">Alles bleibt auf deinem Server. Automatisch wird nie etwas gesendet: Kunden-Mails gehen erst raus, wenn du freigibst, Akquise-Mails sind immer nur Entwürfe.</p>
     <form id="einst-form" class="grid halb">
       <div class="card">
         <h2>Gmail verbinden</h2>
@@ -401,7 +503,6 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
         <p class="hint">So bekommst du es: <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener">myaccount.google.com/apppasswords</a> öffnen (dafür muss die Bestätigung in zwei Schritten an sein), Name „Thumbnail-Zentrale“ eingeben, das angezeigte Passwort hier einfügen.</p>
         <div class="btns" style="margin:4px 0 18px"><button class="btn small" type="button" id="mail-test">Verbindung testen</button></div>
         <label class="f"><span>Postfach prüfen alle … Minuten</span><input class="in" name="pruefen_minuten" type="number" min="2" max="120"></label>
-        <label class="check"><input class="switch" type="checkbox" name="entwurf_automatisch"> Bei neuer Bestellung Antwort-Entwurf mit den 3 Bildern in Gmail anlegen</label>
         <label class="check"><input class="switch" type="checkbox" name="direkt_senden"> Knopf „Jetzt senden“ zeigen (sonst nur Gmail-Entwurf)</label>
       </div>
       <div class="card">
@@ -428,6 +529,7 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
         <label class="f"><span>Dein Name (unter den Mails)</span><input class="in" name="dein_name"></label>
         <label class="f"><span>Erste Antwort mit den 3 Entwürfen</span><textarea class="in" name="antwort_text" rows="7"></textarea></label>
         <label class="f"><span>Lieferung des fertigen Thumbnails</span><textarea class="in" name="liefer_text" rows="7"></textarea></label>
+        <label class="f"><span>Korrektur nach Änderungswunsch</span><textarea class="in" name="korrektur_text" rows="6"></textarea></label>
         <label class="f"><span>Monatsrechnung fürs Abo</span><textarea class="in" name="abo_rechnung_text" rows="5"></textarea></label>
         <p class="hint">Platzhalter: {vorname}, {name}, {kanal}, {thema_satz}, {dein_name}, {monat}. {zahlung} wird zu Betrag, Frist, IBAN und Rechnungsnummer.</p>
       </div>
@@ -453,9 +555,18 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
           </details>
         </div>
         <div class="card">
-          <h2>Änderungen in eigenen Worten (optional)</h2>
+          <h2>KI (optional)</h2>
           <label class="f"><span>Anthropic-API-Schlüssel</span><input class="in" name="ki_schluessel" type="password" autocomplete="off" placeholder="sk-ant-…" data-ph="sk-ant-…"></label>
-          <p class="hint" style="margin:0">Damit kannst du im Editor schreiben „Text größer, Hintergrund rot, Pfeil weg“. Schlüssel gibt es auf console.anthropic.com, eine Änderung kostet unter einem Cent.</p>
+          <p class="hint">Mit Schlüssel liest die KI jede Bestellung, schaut sich Foto oder Original-Thumbnail an und plant drei starke Ideen. Sie setzt Änderungswünsche um und schreibt Akquise-Mails. Kosten: ein paar Cent pro Bestellung. Schlüssel gibt es auf console.anthropic.com. Ohne Schlüssel läuft alles mit festen Regeln weiter, kostenlos.</p>
+          <label class="check"><input class="switch" type="checkbox" name="ki_aenderungen_auto"> Änderungswünsche aus Kunden-Mails automatisch umsetzen (danach wieder zur Freigabe)</label>
+          <label class="check"><input class="switch" type="checkbox" name="freisteller"> Personen auf Fotos automatisch freistellen <span class="hint" id="freisteller-hint"></span></label>
+        </div>
+        <div class="card">
+          <h2>Akquise-Mails</h2>
+          <label class="f"><span>Erste Mail an einen Creator (ohne KI)</span><textarea class="in" name="akquise_text" rows="8"></textarea></label>
+          <label class="f"><span>Nachfassen</span><textarea class="in" name="nachfass_text" rows="5"></textarea></label>
+          <label class="f"><span>Nachfassen nach … Tagen</span><input class="in" name="nachfassen_tage" type="number" min="2" max="30"></label>
+          <p class="hint" style="margin:0">Platzhalter: {anrede}, {kanal}, {videotitel}, {preis_einzel}, {preis_abo}, {website}, {dein_name}.</p>
         </div>
       </div>
       <div style="grid-column:1/-1"><button class="btn primary">Speichern</button></div>
@@ -482,7 +593,7 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
       <label class="f"><span>An</span><input class="in" id="m-an" readonly></label>
       <label class="f"><span>Betreff</span><input class="in" id="m-betreff"></label>
     </div>
-    <div class="f"><span>Vorlage</span><div class="seg" id="m-vorlage"><button type="button" data-v="erste" aria-pressed="false">Erste Entwürfe</button><button type="button" data-v="fertig" aria-pressed="true">Fertiges Thumbnail</button></div></div>
+    <div class="f"><span>Vorlage</span><div class="seg" id="m-vorlage"><button type="button" data-v="erste" aria-pressed="false">Erste Entwürfe</button><button type="button" data-v="korrektur" aria-pressed="false">Korrektur</button><button type="button" data-v="fertig" aria-pressed="true">Fertiges Thumbnail</button></div></div>
     <label class="f"><span>Text</span><textarea class="in" id="m-text" rows="9"></textarea></label>
     <div class="f"><span>Bilder anhängen</span><div class="anh" id="m-bilder"></div></div>
     <label class="check" id="m-rechnung-zeile"><input class="switch" type="checkbox" id="m-rechnung"> <span id="m-rechnung-text">Rechnung als PDF anhängen</span></label>
@@ -525,7 +636,8 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
         <label class="f"><span>Textgröße <b id="ed-gross-wert"></b></span><input type="range" id="ed-gross" min="60" max="140" step="5" style="width:100%"></label>
         <label class="f"><span>Zusatz-Band (optional)</span><input class="in" id="ed-banner" maxlength="40" placeholder="z. B. NEU, GRATIS, 2026"></label>
         <label class="check"><input class="switch" type="checkbox" id="ed-pfeil"> Pfeil zeigen</label>
-        <div class="f"><span>Kundenfoto statt Emoji</span><div class="fotos" id="ed-fotos"></div></div>
+        <label class="check" id="ed-hg-zeile"><input class="switch" type="checkbox" id="ed-hg"> Original-Bild unscharf als Hintergrund</label>
+        <div class="f"><span>Foto statt Emoji <span class="hint">(„frei“ = freigestellte Person)</span></span><div class="fotos" id="ed-fotos"></div></div>
         <div class="f"><span>Emoji 1 (groß) <button type="button" class="btn small" id="ed-emoji-switch" style="margin-left:6px">1 ↔ 2</button></span><div class="emoji-grid" id="ed-emoji1"></div></div>
         <div class="f"><span>Emoji 2 (klein)</span><div class="emoji-grid" id="ed-emoji2"></div></div>
       </div>
@@ -544,9 +656,36 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
       <label class="f"><span>Kanal</span><input class="in" name="kanal"></label>
     </div>
     <label class="f"><span>E-Mail</span><input class="in" name="email" type="email"></label>
-    <label class="f"><span>Videotitel oder Thema</span><input class="in" name="thema" required></label>
+    <label class="f"><span>Videotitel oder Thema</span><input class="in" name="thema" required placeholder="Titel oder YouTube-Link"></label>
+    <p class="hint" style="margin:-6px 0 14px">Steht hier oder in den Wünschen ein YouTube-Link, holt die App das Original-Thumbnail und stellt die Person darauf frei.</p>
     <label class="f"><span>Wünsche</span><textarea class="in" name="wuensche" rows="3" placeholder='z. B. Text: "100 TAGE", lila, mit Pfeil'></textarea></label>
     <button class="btn primary">Anlegen und Entwürfe bauen</button>
+  </form>
+</section>
+
+<!-- Creator-Blatt (Akquise) -->
+<div class="sheet-bg" id="lead-bg" hidden></div>
+<section class="sheet" id="lead" hidden role="dialog" aria-modal="true" aria-labelledby="lead-title">
+  <div class="sheet-head"><h2 id="lead-title">Creator</h2><span id="lead-pill"></span><button class="x" data-lead-close aria-label="Schließen">×</button></div>
+  <div class="sheet-body" id="lead-body"></div>
+</section>
+
+<!-- Neuer Creator -->
+<div class="sheet-bg" id="ln-bg" hidden></div>
+<section class="sheet" id="ln" hidden role="dialog" aria-modal="true" aria-labelledby="ln-title" style="width:min(560px,calc(100vw - 32px))">
+  <div class="sheet-head"><h2 id="ln-title">Creator hinzufügen</h2><button class="x" data-ln-close aria-label="Schließen">×</button></div>
+  <form class="sheet-body" id="ln-form">
+    <label class="f"><span>Kanal-Link</span><input class="in" name="link" placeholder="https://www.youtube.com/@kanalname" required></label>
+    <p class="hint" style="margin:-6px 0 14px">Reicht schon. Den Namen und das neueste Video holt die App selbst.</p>
+    <div class="row-fields">
+      <label class="f"><span>E-Mail (aus dem Impressum)</span><input class="in" name="email" type="email"></label>
+      <label class="f"><span>Ansprechperson</span><input class="in" name="ansprechpartner" placeholder="optional"></label>
+    </div>
+    <div class="row-fields">
+      <label class="f"><span>Nische</span><input class="in" name="nische" placeholder="z. B. Finanzen"></label>
+      <label class="f"><span>Video-Link</span><input class="in" name="video_link" placeholder="optional, sonst das neueste"></label>
+    </div>
+    <button class="btn primary">Hinzufügen</button>
   </form>
 </section>
 
@@ -563,20 +702,28 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
     if (a.status === "archiv") return ["Archiv", "grey", "archiv"];
     if (a.status === "geliefert") return ["Abgeschlossen", "green", "fertig"];
     if (a.status === "aenderung") return ["Änderung gewünscht", "orange", "arbeit"];
-    if (a.status === "neu" && !(a.entwuerfe[0] || {}).stand) return ["Wird gebaut", "grey", "neu"];
+    if (a.status === "neu") return ["Wird gebaut", "grey", "neu"];
+    if (a.status === "freigabe") return ["Wartet auf Freigabe", "violet", "freigabe"];
+    if (a.status === "beim_kunden") return ["Beim Kunden", "blue", "warten"];
     if (!a.geoeffnet) return ["Neu", "blue", "neu"];
     if (a.status === "in_gmail") return ["Bereit zum Versand", "violet", "bereit"];
     return ["In Bearbeitung", "orange", "arbeit"];
   }
   var STATUS_SETZEN = {
-    neu: { status: "bereit", geoeffnet: false }, arbeit: { status: "bereit", geoeffnet: true },
+    neu: { status: "bereit", geoeffnet: false }, freigabe: { status: "freigabe" }, arbeit: { status: "bereit", geoeffnet: true }, warten: { status: "beim_kunden", geoeffnet: true },
     bereit: { status: "in_gmail", geoeffnet: true }, fertig: { status: "geliefert", geoeffnet: true }
   };
   var ABO = { angefragt: ["Abo angefragt", "orange"], aktiv: ["Abo aktiv", "green"], pausiert: ["Pausiert", "grey"], "gekündigt": ["Gekündigt", "red"] };
   function tag(iso) { return iso ? new Date(iso + (iso.length === 10 ? "T12:00:00" : "")).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" }) : ""; }
   function heuteIso() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
   var STIL_FARBE = { finanzen: "#00a650", fitness: "#ff5a2d", gaming: "#8a2be2", tech: "#0a6cff", allgemein: "#e0201b" };
-  var VORLAGE_NAME = { strahlen: "Strahlen", split: "Split", spot: "Spot", vergleich: "Vergleich" };
+  var VORLAGE_NAME = { person: "Person", strahlen: "Strahlen", split: "Split", spot: "Spot", vergleich: "Vergleich" };
+  var LEAD_STATUS = {
+    neu: ["Neu", "grey"], redesign: ["Redesign fertig", "blue"], entwurf: ["Entwurf in Gmail", "violet"], gesendet: ["Angeschrieben", "orange"],
+    nachgefasst: ["Nachgefasst", "orange"], antwort: ["Hat geantwortet", "green"], kunde: ["Kunde", "green"], kein_interesse: ["Kein Interesse", "grey"]
+  };
+  function leadBild(l, datei) { return l.redesign && l.redesign.stand ? "/leads/" + l.id + "/" + (datei || "pitch.png") + "?v=" + l.redesign.stand : ""; }
+  function faellig(l) { return (l.status === "gesendet" || l.status === "nachgefasst") && l.followup && l.followup <= heuteIso(); }
 
   function esc(t) { return String(t == null ? "" : t).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function euro(n) { return (Number(n) || 0).toLocaleString("de-DE", { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 }) + " €"; }
@@ -669,21 +816,25 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
     var k = D.kennzahlen, e = D.einstellungen;
     var h = new Date().getHours();
     $("#hallo").textContent = (h < 11 ? "Guten Morgen" : h < 18 ? "Hallo" : "Guten Abend") + (e.dein_name ? ", " + e.dein_name : "");
-    $("#hallo-sub").textContent = k.aenderungen ? (k.aenderungen === 1 ? "1 Kunde wartet" : k.aenderungen + " Kunden warten") + " auf eine Änderung." : k.offen ? (k.offen === 1 ? "1 offener Auftrag." : k.offen + " offene Aufträge.") : "Alles erledigt. Neue Bestellungen kommen automatisch rein.";
+    $("#hallo-sub").textContent = k.freigabe ? (k.freigabe === 1 ? "1 Auftrag wartet" : k.freigabe + " Aufträge warten") + " auf deine Freigabe." : k.aenderungen ? (k.aenderungen === 1 ? "1 Kunde wartet" : k.aenderungen + " Kunden warten") + " auf eine Änderung." : k.offen ? (k.offen === 1 ? "1 offener Auftrag." : k.offen + " offene Aufträge.") : "Alles erledigt. Neue Bestellungen kommen automatisch rein.";
     $("#kpi-abo-hint").textContent = k.abos_angefragt ? k.abos_angefragt + " angefragt" : euro(k.abo_umsatz) + " pro Monat";
     $("#kpi-offen-hint").textContent = k.aenderungen ? k.aenderungen + " mit Änderungswunsch" : k.geliefert_monat + " diesen Monat geliefert";
     var offenText = k.offen_rechnungen ? k.offen_rechnungen + (k.offen_rechnungen === 1 ? " Rechnung" : " Rechnungen") + (k.ueberfaellig ? ", " + k.ueberfaellig + " überfällig" : "") : "keine offenen Rechnungen";
     $("#kpi-offen-betrag-hint").textContent = offenText;
-    $("#fin-offen-hint").textContent = offenText;
     $("#fin-monat-hint").textContent = new Date().toLocaleDateString("de-DE", { month: "long", year: "numeric" });
-    $("#fin-abo-hint").textContent = k.abos_aktiv + (k.abos_aktiv === 1 ? " aktives Abo" : " aktive Abos") + (k.abos_kuendigen ? ", " + k.abos_kuendigen + " gekündigt zum Laufzeitende" : "");
+    $("#fin-abo-hint").textContent = "· " + k.abos_aktiv + (k.abos_aktiv === 1 ? " aktiv, " : " aktiv, ") + euro(k.abo_umsatz) + " pro Monat" + (k.abos_kuendigen ? ", " + k.abos_kuendigen + " gekündigt" : "");
+    $("#fin-offen-hint").textContent = k.offen_betrag ? "· " + euro(k.offen_betrag) : "";
+    $("#fin-jahr-hint").textContent = new Date().getFullYear() + ": " + euro(k.einnahmen_jahr) + " rein, " + euro(k.ausgaben_jahr) + " raus";
+    $("#fin-gewinn-hint").textContent = "seit Start " + euro(k.gewinn_gesamt);
     $("#nav-offen").innerHTML = k.offen ? '<span class="badge-dot">' + k.offen + "</span>" : "";
+    var akqAlarm = k.leads_antwort + k.leads_nachfassen;
+    $("#nav-akquise").innerHTML = akqAlarm ? '<span class="badge-dot" style="background:var(--green);box-shadow:0 0 10px rgba(34,197,94,.5)">' + akqAlarm + "</span>" : "";
     var geldAlarm = k.ueberfaellig + k.abos_faellig;
     $("#nav-geld").innerHTML = geldAlarm ? '<span class="badge-dot" style="background:var(--orange);box-shadow:0 0 10px rgba(245,158,11,.6)">' + geldAlarm + "</span>" : "";
     zaehlen();
 
     // Zu tun
-    var prio = { aenderung: 0, bereit: 1, neu: 2, in_gmail: 3 };
+    var prio = { freigabe: 0, aenderung: 1, bereit: 2, neu: 3, in_gmail: 4 };
     var todo = D.auftraege.filter(function (a) { return a.status in prio; }).sort(function (a, b) { return prio[a.status] - prio[b.status]; }).slice(0, 8);
     var hinweise = [];
     if (k.ueberfaellig) hinweise.push(k.ueberfaellig + (k.ueberfaellig === 1 ? " Rechnung ist" : " Rechnungen sind") + " überfällig.");
@@ -691,6 +842,27 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
     if (k.unbezahlt) hinweise.push(k.unbezahlt + " gelieferte Einzel-Thumbnails noch nicht bezahlt.");
     $("#todo").innerHTML = (todo.length ? zeilenHtml(todo) : '<div class="empty">Keine offenen Aufträge.</div>') +
       (hinweise.length ? '<div class="infobox" style="margin-top:10px"><span class="pill orange">Geld</span><span style="flex:1">' + esc(hinweise.join(" ")) + '</span><button class="btn small" data-goto="finanzen">Ansehen</button></div>' : "");
+
+    // Freigabe: was die KI gebaut hat, wartet auf dein OK
+    var frei = D.auftraege.filter(function (a) { return a.status === "freigabe" || a.status === "neu"; });
+    $("#freigabe-card").hidden = !frei.length;
+    $("#freigabe-liste").innerHTML = frei.map(function (a) {
+      var wunsch = a.aenderungen.filter(function (c) { return c.von === "kunde"; }).pop();
+      var gebaut = a.status !== "neu";
+      return '<div class="freigabe fade-in"><div class="freigabe-kopf"><span class="title">' + esc(a.kanal || a.name || a.email || "Ohne Namen") + " · " + esc(a.thema || "") + "</span>" +
+        (wunsch && a.gesendet ? pill(["Korrektur", "orange"]) : pill([a.paket === "Monats-Abo" ? "Abo" : "Einzel", "grey"])) + "</div>" +
+        (wunsch && a.gesendet ? '<p class="hint" style="margin:0 0 10px">Wunsch: „' + esc(wunsch.text.slice(0, 160)) + "“</p>" : "") +
+        '<div class="freigabe-bilder">' + (gebaut ? a.entwuerfe.map(function (en, n) {
+          return '<figure><img loading="lazy" alt="Entwurf ' + "ABC"[n] + '" src="' + vorschauBild(a, n) + '" data-zoom-bild><figcaption><b>' + "ABC"[n] + "</b> " + esc(en.entwurf.idee || VORLAGE_NAME[en.entwurf.vorlage] || "") + "</figcaption></figure>";
+        }).join("") : '<div class="hint" style="grid-column:1/-1;display:flex;gap:8px;align-items:center"><span class="spinner"></span>Die KI baut gerade die Entwürfe …</div>') + "</div>" +
+        (gebaut ? '<div class="btns" style="margin-top:12px"><button class="btn primary small" data-frei-ok="' + a.id + '">✓ Freigeben und senden …</button><button class="btn small" data-auftrag="' + a.id + '">Ansehen &amp; bearbeiten</button>' +
+          '<button class="btn small" data-frei-neu="' + a.id + '">Neue Ideen</button></div>' : "") + "</div>";
+    }).join("");
+
+    // Akquise kurz
+    $("#ueb-akquise").innerHTML = D.leads.length ? (k.leads_antwort ? '<b style="color:var(--green)">' + k.leads_antwort + (k.leads_antwort === 1 ? " Antwort" : " Antworten") + "</b> · " : "") +
+      k.leads_gesendet + " angeschrieben · " + D.leads.filter(function (l) { return l.status === "redesign" || l.status === "entwurf"; }).length + " Entwürfe bereit · " + k.leads_neu + " neu" + (k.leads_nachfassen ? '<br><span style="color:var(--orange)">' + k.leads_nachfassen + " zum Nachfassen fällig</span>" : "")
+      : "Noch keine Creator. Importier deine Lead-Liste und die App baut für jeden ein Redesign.";
 
     // Gmail
     var m = D.mail, eingerichtet = !!(e.gmail && e.app_passwort);
@@ -706,7 +878,7 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
     var q = ($("#suche").value || "").toLowerCase();
     var liste = D.auftraege.filter(function (a) {
       var gruppe = statusVon(a)[2];
-      if (filter === "offen" && ["neu", "arbeit", "bereit"].indexOf(gruppe) < 0) return false;
+      if (filter === "offen" && ["neu", "freigabe", "arbeit", "bereit"].indexOf(gruppe) < 0) return false;
       if (filter !== "offen" && gruppe !== filter) return false;
       return !q || [a.kanal, a.name, a.email, a.thema].join(" ").toLowerCase().indexOf(q) >= 0;
     });
@@ -749,10 +921,8 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
         (kd.abo_status === "aktiv" || kd.abo_status === "angefragt" ? '<button class="btn small" data-abo-rechnung="' + esc(kd.email) + '">Rechnung senden</button>' : "") +
         '<button class="btn small green" data-abo-zahlung="' + esc(kd.email) + '">Monat bezahlt</button></div></div>';
     }).join("") || '<div class="empty">Abos erscheinen hier, sobald jemand das Monats-Abo bestellt.</div>';
-    $("#zahlungen").innerHTML = D.zahlungen.slice(0, 40).map(function (z) {
-      return '<div class="fade-in"><time>' + datum(z.zeit) + '</time><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(z.text) + '</span><b class="betrag gruen">+ ' + euro(z.betrag) +
-        '</b><button class="x" style="width:24px;height:24px;font-size:14px" title="Löschen" data-zahlung-weg="' + z.id + '">×</button></div>';
-    }).join("") || '<div class="empty">Noch keine Zahlungen.</div>';
+    finanzenZeichnen();
+    akquiseZeichnen();
 
     // Einstellungen nur füllen, wenn nicht gerade bearbeitet
     var f = $("#einst-form");
@@ -764,9 +934,226 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
         else el.value = e[el.name];
       });
     }
+    $("#freisteller-hint").textContent = D.freisteller ? "" : "(auf diesem Server nicht verfügbar)";
     $("#version").textContent = "Thumbnail-Zentrale " + (D.version.sha || "") + (D.version.built ? " · gebaut " + datum(D.version.built, true) : "");
     if (offenerAuftrag) blattZeichnen();
+    if (offenerLead) leadZeichnen();
   }
+
+  /* ---------------- Finanzen ---------------- */
+  var buchungArt = "einnahme", buchungFilter = "alle";
+  function finanzenZeichnen() {
+    var k = D.kennzahlen, mon = k.monate || [];
+    // Balken: Einnahmen grün, Ausgaben rot
+    var max = Math.max.apply(null, [10].concat(mon.map(function (m) { return Math.max(m.einnahmen, m.ausgaben); })));
+    var W = 720, H = 220, unten = 22, breit = W / Math.max(1, mon.length), svg = "";
+    [0.5, 1].forEach(function (f) { var y = (H - unten) * (1 - f) + 4; svg += '<line x1="0" x2="' + W + '" y1="' + y + '" y2="' + y + '" stroke="rgba(255,255,255,.06)"/><text x="4" y="' + (y + 12) + '">' + euro(Math.round(max * f)) + "</text>"; });
+    mon.forEach(function (m, i) {
+      var x = i * breit, hE = (H - unten - 8) * m.einnahmen / max, hA = (H - unten - 8) * m.ausgaben / max, bw = Math.min(18, breit * 0.3);
+      svg += '<rect x="' + (x + breit / 2 - bw - 1) + '" y="' + (H - unten - hE) + '" width="' + bw + '" height="' + Math.max(hE, m.einnahmen ? 2 : 0) + '" rx="3" fill="var(--green)"><title>' + m.monat + ": " + euro(m.einnahmen) + " Einnahmen</title></rect>" +
+        '<rect x="' + (x + breit / 2 + 1) + '" y="' + (H - unten - hA) + '" width="' + bw + '" height="' + Math.max(hA, m.ausgaben ? 2 : 0) + '" rx="3" fill="#f87171"><title>' + m.monat + ": " + euro(m.ausgaben) + " Ausgaben</title></rect>" +
+        '<text x="' + (x + breit / 2) + '" y="' + (H - 6) + '" text-anchor="middle">' + new Date(m.monat + "-15").toLocaleDateString("de-DE", { month: "short" }).replace(".", "") + "</text>";
+    });
+    $("#chart").innerHTML = svg;
+    var s12 = mon.reduce(function (s, m) { return [s[0] + m.einnahmen, s[1] + m.ausgaben]; }, [0, 0]);
+    $("#chart-summe").textContent = "12 Monate: Gewinn " + euro(Math.round((s12[0] - s12[1]) * 100) / 100);
+    // Kategorien im Formular
+    var kats = D.optionen[buchungArt === "ausgabe" ? "kategorien_ausgaben" : "kategorien_einnahmen"], sel = $("#buchung-kat");
+    if (sel.dataset.art !== buchungArt) { sel.innerHTML = kats.map(function (c) { return "<option>" + esc(c) + "</option>"; }).join(""); sel.dataset.art = buchungArt; }
+    var datumFeld = $("#buchung-form").datum; if (!datumFeld.value) datumFeld.value = heuteIso();
+    // Buchungsliste
+    var liste = D.zahlungen.map(function (z) { return { art: "einnahme", id: z.id, datum: (z.zeit || "").slice(0, 10), text: z.text, kat: z.kategorie || "Thumbnails", betrag: z.betrag }; })
+      .concat(D.ausgaben.map(function (x) { return { art: "ausgabe", id: x.id, datum: x.datum, text: x.text, kat: x.kategorie || "Sonstiges", betrag: x.betrag }; }))
+      .filter(function (x) { return buchungFilter === "alle" || x.art === buchungFilter; })
+      .sort(function (a, b) { return a.datum < b.datum ? 1 : a.datum > b.datum ? -1 : 0; }).slice(0, 60);
+    $("#buchungen").innerHTML = liste.map(function (x) {
+      return '<div class="fade-in"><time>' + tag(x.datum) + '</time><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(x.text) + '</span><span class="kat">' + esc(x.kat) + "</span>" +
+        '<b class="betrag ' + (x.art === "ausgabe" ? "rot" : "gruen") + '">' + (x.art === "ausgabe" ? "− " : "+ ") + euro(x.betrag) + "</b>" +
+        '<button class="x" style="width:24px;height:24px;font-size:14px" title="Löschen" data-buchung-weg="' + x.id + '" data-buchung-art="' + x.art + '">×</button></div>';
+    }).join("") || '<div class="empty">Noch keine Buchungen. Trag oben deine erste Einnahme oder Ausgabe ein.</div>';
+    var kk = k.ausgaben_kategorien || {}, namen = Object.keys(kk).sort(function (a, b) { return kk[b] - kk[a]; });
+    $("#kategorien").innerHTML = namen.length ? "Ausgaben " + new Date().getFullYear() + ": " + namen.map(function (n) { return esc(n) + " " + euro(kk[n]); }).join(" · ") : "";
+  }
+  $("#buchung-art").addEventListener("click", function (ev) {
+    var b = ev.target.closest("button"); if (!b) return;
+    buchungArt = b.dataset.art;
+    $$("#buchung-art button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    finanzenZeichnen();
+  });
+  $("#buchung-filter").addEventListener("click", function (ev) {
+    var b = ev.target.closest("button"); if (!b) return;
+    buchungFilter = b.dataset.bf;
+    $$("#buchung-filter button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    finanzenZeichnen();
+  });
+  $("#buchung-form").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var f = this, d = { betrag: f.betrag.value.replace(",", "."), text: f.text.value || (buchungArt === "ausgabe" ? "Ausgabe" : "Einnahme"), kategorie: f.kategorie.value, datum: f.datum.value };
+    laden($("button.primary", f), api(buchungArt === "ausgabe" ? "/api/ausgabe" : "/api/zahlung", d).then(neuerStand)).then(function () {
+      f.betrag.value = ""; f.text.value = ""; toast(buchungArt === "ausgabe" ? "Ausgabe eingetragen." : "Einnahme eingetragen.");
+    }).catch(fehler);
+  });
+  document.addEventListener("click", function (ev) {
+    var b = ev.target.closest("[data-buchung-weg]"); if (!b) return;
+    if (confirm("Buchung löschen?")) api(b.dataset.buchungArt === "ausgabe" ? "/api/ausgabe" : "/api/zahlung", { loeschen: b.dataset.buchungWeg }).then(neuerStand).catch(fehler);
+  });
+
+  /* ---------------- Akquise ---------------- */
+  var leadFilter = "aktiv", offenerLead = null;
+  function akquiseZeichnen() {
+    var k = D.kennzahlen, lauf = D.akquise || {};
+    $("#tr-neu").textContent = k.leads_neu;
+    $("#tr-bereit").textContent = D.leads.filter(function (l) { return l.status === "redesign" || l.status === "entwurf"; }).length;
+    $("#tr-gesendet").textContent = k.leads_gesendet + k.leads_antwort + k.leads_kunde + D.leads.filter(function (l) { return l.status === "kein_interesse"; }).length;
+    $("#tr-antwort").textContent = k.leads_antwort + k.leads_kunde;
+    $("#tr-kunde").textContent = k.leads_kunde;
+    $("#akq-lauf").hidden = !lauf.aktiv;
+    if (lauf.aktiv) {
+      $("#akq-lauf-text").textContent = "Bereite vor: " + (lauf.aktuell || "…") + " (" + lauf.fertig + " von " + lauf.gesamt + ")";
+      $("#akq-balken").style.width = (lauf.gesamt ? Math.round(100 * lauf.fertig / lauf.gesamt) : 0) + "%";
+    }
+    $("#akq-stapel").disabled = !!lauf.aktiv;
+    $("#akq-nachfassen").hidden = !k.leads_nachfassen;
+    $("#akq-nachfassen-text").textContent = k.leads_nachfassen + (k.leads_nachfassen === 1 ? " Creator hat" : " Creator haben") + " seit ein paar Tagen nicht geantwortet. Eine kurze, freundliche Nachfrage bringt oft die Antwort.";
+    var q = ($("#lead-suche").value || "").toLowerCase();
+    var liste = D.leads.filter(function (l) {
+      var st = l.status;
+      if (leadFilter === "aktiv" && ["kunde", "kein_interesse"].indexOf(st) >= 0) return false;
+      if (leadFilter === "neu" && st !== "neu") return false;
+      if (leadFilter === "bereit" && st !== "redesign" && st !== "entwurf") return false;
+      if (leadFilter === "gesendet" && st !== "gesendet" && st !== "nachgefasst") return false;
+      if (leadFilter === "nachfassen" && !faellig(l)) return false;
+      if (leadFilter === "antwort" && st !== "antwort") return false;
+      if (leadFilter === "ende" && st !== "kunde" && st !== "kein_interesse") return false;
+      return !q || [l.kanal, l.nische, l.email, l.videotitel].join(" ").toLowerCase().indexOf(q) >= 0;
+    });
+    $("#lead-liste").innerHTML = liste.slice(0, 150).map(function (l) {
+      var bild = leadBild(l, "redesign.png");
+      return '<div class="row fade-in" data-lead="' + l.id + '">' + (bild ? '<img class="thumb" loading="lazy" alt="" src="' + bild + '">' : '<div class="thumb"></div>') +
+        '<div class="main"><div class="title">' + esc(l.kanal) + (l.email ? "" : ' <span class="hint">· E-Mail fehlt</span>') + '</div><div class="meta">' + esc(l.videotitel || l.nische || l.link || "–") + "</div></div>" +
+        '<div class="right">' + (faellig(l) ? pill(["Nachfassen", "orange"]) : pill(LEAD_STATUS[l.status] || [l.status, "grey"])) +
+        '<div class="meta">' + esc(l.nische || "") + (l.kontaktiert ? " · " + tag(l.kontaktiert) : "") + "</div></div></div>";
+    }).join("") || '<div class="empty">' + (D.leads.length ? "Keine Creator in dieser Ansicht." : "Noch keine Creator. Importier deine Liste (Excel oder CSV) oder füg einen Kanal-Link hinzu.") + "</div>";
+  }
+  $("#lead-filter").addEventListener("click", function (ev) {
+    var b = ev.target.closest("button"); if (!b) return;
+    leadFilter = b.dataset.lf;
+    $$("#lead-filter button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+    akquiseZeichnen();
+  });
+  $("#akq-nachfassen-zeigen").addEventListener("click", function () { $('#lead-filter [data-lf="nachfassen"]').click(); });
+  $("#lead-suche").addEventListener("input", akquiseZeichnen);
+  $("#lead-import").addEventListener("change", function () {
+    var f = this.files[0]; if (!f) return; this.value = "";
+    api("/api/leads/import?name=" + encodeURIComponent(f.name), f).then(neuerStand).then(function (d) { toast("Importiert: " + d.ergebnis + "."); }).catch(fehler);
+  });
+  $("#akq-stapel").addEventListener("click", function () {
+    var b = this;
+    if (!D.leads.some(function (l) { return l.status === "neu"; })) return toast("Keine neuen Creator mehr. Importier weitere oder füg welche hinzu.");
+    laden(b, api("/api/akquise/stapel", { anzahl: 5 }).then(neuerStand)).then(function (d) {
+      toast(d.ergebnis ? "Läuft: " + d.ergebnis + " Creator werden vorbereitet. Die Mails landen als Entwürfe in Gmail." : "Nichts zu tun.");
+      bald();
+    }).catch(fehler);
+  });
+  $("#lead-neu-btn").addEventListener("click", function () { $("#ln-form").reset(); blattAuf($("#ln"), $("#ln-bg")); });
+  $("[data-ln-close]").addEventListener("click", function () { blattZu($("#ln"), $("#ln-bg")); });
+  $("#ln-bg").addEventListener("click", function () { blattZu($("#ln"), $("#ln-bg")); });
+  $("#ln-form").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var f = new FormData(this), d = {};
+    f.forEach(function (v, k) { d[k] = v; });
+    laden($("button", this), api("/api/lead", d).then(neuerStand)).then(function (r) { blattZu($("#ln"), $("#ln-bg")); oeffneLead(r.id); }).catch(fehler);
+  });
+  document.addEventListener("click", function (ev) {
+    var r = ev.target.closest("[data-lead]");
+    if (r && !ev.target.closest(".sheet")) oeffneLead(r.dataset.lead);
+  });
+  function leadAktuell() { return D.leads.filter(function (l) { return l.id === offenerLead; })[0]; }
+  function oeffneLead(id) { offenerLead = id; $("#lead-body").dataset.lead = ""; leadZeichnen(); blattAuf($("#lead"), $("#lead-bg")); }
+  function leadZu() { offenerLead = null; blattZu($("#lead"), $("#lead-bg")); }
+  $("[data-lead-close]").addEventListener("click", leadZu);
+  $("#lead-bg").addEventListener("click", leadZu);
+  var LEAD_FELDER = [["kanal", "Kanal"], ["email", "E-Mail"], ["ansprechpartner", "Ansprechperson"], ["nische", "Nische"], ["link", "Kanal-Link"], ["video_link", "Video-Link"], ["videotitel", "Videotitel"]];
+  function leadZeichnen() {
+    var l = leadAktuell(), body = $("#lead-body");
+    if (!l) return leadZu();
+    $("#lead-title").textContent = l.kanal || "Creator";
+    $("#lead-pill").innerHTML = '<select class="in" id="l-status" style="width:auto;padding:5px 30px 5px 10px;font-size:13px" aria-label="Status">' +
+      Object.keys(LEAD_STATUS).map(function (s) { return '<option value="' + s + '"' + (l.status === s ? " selected" : "") + ">" + LEAD_STATUS[s][0] + "</option>"; }).join("") + "</select>";
+    if (body.dataset.lead === l.id + ":" + ((l.redesign || {}).stand || 0) + ":" + l.status + ":" + ((l.mail || {}).text || "").length) return;  // nichts Neues, Eingaben nicht überschreiben
+    body.dataset.lead = l.id + ":" + ((l.redesign || {}).stand || 0) + ":" + l.status + ":" + ((l.mail || {}).text || "").length;
+    var pitch = leadBild(l), m = l.mail || {}, kiDa = !!D.einstellungen.ki_schluessel, rd = l.redesign || {};
+    var gesendet = ["gesendet", "nachgefasst", "antwort", "kunde", "kein_interesse"].indexOf(l.status) >= 0;
+    body.innerHTML =
+      (l.status === "antwort" ? '<div class="banner-box"><span class="t"><b>Hat geantwortet.</b> Schau in Gmail. Wird es ein Auftrag, kommt er automatisch, sobald die Person bestellt.</span><button class="btn small" data-l-status="kunde">Ist Kunde geworden</button><button class="btn small" data-l-status="kein_interesse">Kein Interesse</button></div>' : "") +
+      (faellig(l) ? '<div class="banner-box blau"><span class="t">Seit ' + tag(l.kontaktiert) + " keine Antwort. Zeit für eine kurze Nachfrage.</span><button class=\"btn small primary\" id=\"l-nachfassen\">Nachfass-Entwurf in Gmail</button></div>" : "") +
+      '<div class="grid two">' +
+        "<div>" + (pitch ? '<img class="lead-bild" alt="Vorher und Nachher" src="' + pitch + '" data-zoom-bild>' +
+          '<p class="hint" style="margin:8px 0 0">' + esc(rd.entwurf && rd.entwurf.idee || "") + (rd.quelle === "ki" ? " · von der KI geplant" : "") + (rd.person ? " · Person freigestellt" : "") + (rd.original ? "" : " · ohne Original (YouTube nicht erreichbar)") + "</p>"
+          : '<div class="lead-bild" style="display:grid;place-items:center;cursor:default"><span class="hint">Noch kein Redesign</span></div>') +
+          '<div class="btns" style="margin-top:12px"><button class="btn small' + (pitch ? "" : " primary") + '" id="l-redesign">' + (pitch ? "Redesign neu bauen" : "Redesign bauen") + "</button>" +
+          (pitch ? '<button class="btn small" id="l-bearbeiten">Bearbeiten</button>' : "") +
+          '<button class="btn small" id="l-video">Neuestes Video holen</button>' +
+          '<label class="btn small" title="Falls YouTube nicht klappt: Original-Thumbnail selbst hochladen">Original hochladen<input type="file" accept="image/*" id="l-original" hidden></label></div></div>' +
+        '<div class="card"><h3>Mail</h3>' +
+          '<label class="f"><span>Betreff</span><input class="in" id="l-betreff" value="' + esc(m.betreff || "") + '"></label>' +
+          '<label class="f"><span>Text</span><textarea class="in" id="l-text" rows="9" placeholder="Noch keine Mail. Klick auf „Mail schreiben“.">' + esc(m.text || "") + "</textarea></label>" +
+          '<div class="btns"><button class="btn small" id="l-mail">' + (kiDa ? "Mit KI neu schreiben" : "Mail aus Vorlage") + "</button>" +
+          (kiDa ? '<button class="btn small ghost" id="l-mail-vorlage">Vorlage</button>' : "") + '<span class="grow"></span>' +
+          '<button class="btn small primary" id="l-entwurf"' + (pitch ? "" : " disabled") + ">Als Gmail-Entwurf</button></div>" +
+          '<p class="hint" style="margin:10px 0 0">Der Entwurf hat das Vorher/Nachher-Bild und das neue Thumbnail im Anhang. Senden tust du selbst in Gmail' + (gesendet ? "." : ', danach hier auf „Hab ich gesendet“.') + "</p>" +
+          (!gesendet ? '<div class="btns" style="margin-top:10px"><button class="btn small green" data-l-status="gesendet">✓ Hab ich gesendet</button></div>' : "") +
+        "</div>" +
+      "</div>" +
+      '<div class="grid two" style="margin-top:16px">' +
+        '<div class="card"><h3>Angaben</h3><div class="row-fields">' + LEAD_FELDER.map(function (f) {
+          return '<label class="f"' + (f[0] === "videotitel" ? ' style="grid-column:1/-1"' : "") + "><span>" + f[1] + '</span><input class="in" data-l-feld="' + f[0] + '" value="' + esc(l[f[0]] || "") + '"></label>';
+        }).join("") + '<label class="f" style="grid-column:1/-1"><span>Notiz</span><input class="in" data-l-feld="notiz" value="' + esc(l.notiz || "") + '"></label></div>' +
+        (l.link ? '<a class="btn small" href="' + esc(l.link) + '" target="_blank" rel="noopener">Kanal öffnen ↗</a> ' : "") + (l.video_link ? '<a class="btn small" href="' + esc(l.video_link) + '" target="_blank" rel="noopener">Video öffnen ↗</a>' : "") + "</div>" +
+        '<div class="card"><h3>Verlauf</h3><div class="feed">' + ((l.verlauf || []).slice().reverse().map(function (v) { return "<div><time>" + datum(v.zeit, true) + "</time><span>" + esc(v.text) + "</span></div>"; }).join("") || '<div class="empty">Noch nichts passiert.</div>') + "</div>" +
+          (l.followup && gesendet ? '<p class="hint">Nachfassen ab ' + tag(l.followup) + "</p>" : "") +
+          '<div class="btns" style="margin-top:12px">' + (gesendet && l.status !== "kunde" && l.status !== "kein_interesse" ? '<button class="btn small" data-l-status="kein_interesse">Kein Interesse</button>' : "") +
+          '<button class="btn small danger" id="l-weg">Löschen</button></div></div>' +
+      "</div>";
+  }
+  function leadAktion(pfad, daten, btn, meldung) {
+    return laden(btn, api("/api/lead/" + offenerLead + "/" + pfad, daten).then(neuerStand).then(function (d) { if (meldung) toast(meldung); return d; })).catch(fehler);
+  }
+  function leadMailSpeichern() { return api("/api/lead/" + offenerLead + "/speichern", { betreff: $("#l-betreff").value, text: $("#l-text").value }); }
+  $("#lead-body").addEventListener("click", function (ev) {
+    var b = ev.target.closest("button"); if (!b) return;
+    if (b.dataset.lStatus) return leadAktion("speichern", { status: b.dataset.lStatus }, b, "Status: " + LEAD_STATUS[b.dataset.lStatus][0] + ".");
+    if (b.id === "l-redesign") return leadAktion("redesign", {}, b, "Redesign fertig.");
+    if (b.id === "l-video") return leadAktion("video", {}, b, "Neuestes Video geholt. Jetzt Redesign neu bauen.");
+    if (b.id === "l-bearbeiten") return edOeffnen(0, offenerLead);
+    if (b.id === "l-mail") return leadAktion("mail", { ki: true }, b, "Mail geschrieben. Lies sie kurz gegen.");
+    if (b.id === "l-mail-vorlage") return leadAktion("mail", { ki: false }, b);
+    if (b.id === "l-entwurf") return laden(b, leadMailSpeichern().then(function () { return api("/api/lead/" + offenerLead + "/entwurf", {}); }).then(neuerStand))
+      .then(function () { toast("Entwurf liegt in Gmail. Dort prüfen und selbst senden."); }).catch(fehler);
+    if (b.id === "l-nachfassen") return leadAktion("nachfassen", {}, b, "Nachfass-Entwurf liegt in Gmail.");
+    if (b.id === "l-weg") { if (confirm("Creator endgültig löschen?")) leadAktion("loeschen", {}, b, "Gelöscht.").then(leadZu); }
+  });
+  $("#lead-body").addEventListener("change", function (ev) {
+    var t = ev.target;
+    if (t.dataset.lFeld) { var d = {}; d[t.dataset.lFeld] = t.value; leadAktion("speichern", d, null, "Gespeichert."); }
+    if (t.id === "l-betreff" || t.id === "l-text") leadMailSpeichern().then(neuerStand).catch(fehler);
+    if (t.id === "l-original" && t.files[0]) {
+      var f = t.files[0];
+      toast("Baue das Redesign mit deinem Bild …");
+      api("/api/lead/" + offenerLead + "/original", f).then(neuerStand).then(function () { toast("Redesign fertig."); }).catch(fehler);
+    }
+  });
+  $("#lead-pill").addEventListener("change", function (ev) { if (ev.target.id === "l-status") leadAktion("speichern", { status: ev.target.value }, null, "Status geändert."); });
+
+  /* ---------------- Freigabe ---------------- */
+  document.addEventListener("click", function (ev) {
+    var z = ev.target.closest("[data-zoom-bild]");
+    if (z) { var lb = document.createElement("div"); lb.className = "lightbox"; lb.innerHTML = '<img src="' + z.src + '" alt="">'; lb.onclick = function () { lb.remove(); }; document.body.appendChild(lb); return; }
+    var ok = ev.target.closest("[data-frei-ok]");
+    if (ok) { oeffneAuftrag(ok.dataset.freiOk); return mailOeffnen(ok); }
+    var neu = ev.target.closest("[data-frei-neu]");
+    if (neu && confirm("Drei ganz neue Ideen bauen lassen?")) laden(neu, api("/api/auftrag/" + neu.dataset.freiNeu + "/neuplanen", { ki: true }).then(neuerStand)).then(function () { toast("Neue Entwürfe sind da."); }).catch(fehler);
+  });
 
   /* ---------------- Aufträge-Liste ---------------- */
   $("#filter").addEventListener("click", function (ev) {
@@ -796,6 +1183,8 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
     if ($("#ed").classList.contains("open")) return edZu();
     if ($("#mailblatt").classList.contains("open")) return mailZu();
     if ($("#neu").classList.contains("open")) return blattZu($("#neu"), $("#neu-bg"));
+    if ($("#ln").classList.contains("open")) return blattZu($("#ln"), $("#ln-bg"));
+    if ($("#lead").classList.contains("open")) return leadZu();
     if ($("#sheet").classList.contains("open")) auftragZu();
   });
 
@@ -816,7 +1205,7 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
     $("#sheet-title").textContent = a.kanal || a.name || a.email || "Auftrag";
     var st = statusVon(a);
     $("#sheet-pill").innerHTML = '<select class="in" id="a-status" style="width:auto;padding:5px 30px 5px 10px;font-size:13px" aria-label="Status">' +
-      [["neu", "Neu"], ["arbeit", "In Bearbeitung"], ["bereit", "Bereit zum Versand"], ["fertig", "Abgeschlossen"]].map(function (o) {
+      [["neu", "Neu"], ["freigabe", "Wartet auf Freigabe"], ["arbeit", "In Bearbeitung"], ["bereit", "Bereit zum Versand"], ["warten", "Beim Kunden"], ["fertig", "Abgeschlossen"]].map(function (o) {
         return '<option value="' + o[0] + '"' + (st[2] === o[0] ? " selected" : "") + ">" + o[1] + "</option>"; }).join("") +
       (st[2] === "archiv" ? '<option selected value="">Archiv</option>' : "") + "</select>";
     var body = $("#sheet-body");
@@ -826,6 +1215,7 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
     var varianten = a.entwuerfe.map(function (en, n) {
       var bild = vorschauBild(a, n);
       return '<div class="variant">' + (bild ? '<img alt="Entwurf ' + "ABC"[n] + '" src="' + bild + '" data-zoom>' : '<div style="aspect-ratio:16/9;display:grid;place-items:center" class="hint">wird gebaut …</div>') +
+        (en.entwurf.idee ? '<div class="idee" style="padding:10px 12px 0;margin:0">' + esc(en.entwurf.idee) + "</div>" : "") +
         '<div class="vb"><b>' + "ABC"[n] + " · " + esc(VORLAGE_NAME[en.entwurf.vorlage] || "") + '</b>' +
         '<label class="hint" style="display:flex;align-items:center;gap:4px"><input type="checkbox" data-mit="' + n + '"' + (auswahl.indexOf(n) >= 0 ? " checked" : "") + "> in Mail</label>" +
         '<button class="btn small" data-bearbeiten="' + n + '">Bearbeiten</button>' +
@@ -836,10 +1226,13 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
         (c.fotos && c.fotos.length ? "<br>" + c.fotos.map(function (f) { return '<a href="/dateien/' + a.id + "/" + esc(f) + '" target="_blank">📎 ' + esc(f) + "</a>"; }).join(" ") : "") +
         "<small>" + (c.von === "du" ? "Notiz" : "Kunde") + " · " + datum(c.zeit, true) + "</small></div>";
     }).join("");
+    var letzterWunsch = a.aenderungen.filter(function (c) { return c.von === "kunde"; }).pop();
     body.innerHTML =
+      (a.status === "freigabe" ? '<div class="banner-box"><span class="t"><b>Wartet auf deine Freigabe.</b> ' + (a.gesendet && letzterWunsch ? "Die KI hat den Änderungswunsch umgesetzt. Prüf das Ergebnis." : "Die KI hat drei Entwürfe gebaut. Prüf sie kurz, pass sie bei Bedarf an.") + "</span></div>" : "") +
+      (a.status === "neu" ? '<div class="banner-box blau"><span class="spinner"></span><span class="t">Die Entwürfe werden gerade gebaut. Das dauert meist unter einer Minute.</span></div>' : "") +
       '<div class="grid variants">' + varianten + "</div>" +
       '<div class="btns" style="margin:16px 0 14px">' +
-        '<button class="btn primary" id="a-mail">✉ Fertiges Thumbnail per Mail senden</button>' +
+        '<button class="btn primary" id="a-mail">' + (a.status === "freigabe" ? "✓ Freigeben und per Mail senden" : a.status === "geliefert" ? "✉ Nochmal senden" : "✉ Per Mail senden") + "</button>" +
         (a.status !== "geliefert" ? '<button class="btn" id="a-geliefert">Abschließen</button>' : '<button class="btn" id="a-wieder">Wieder öffnen</button>') +
         '<label class="check" style="margin:0 6px"><input class="switch" type="checkbox" id="a-bezahlt"' + (a.bezahlt ? " checked" : "") + (a.paket === "Monats-Abo" ? " disabled" : "") + "> " + (a.paket === "Monats-Abo" ? "über Abo" : "Bezahlt") + "</label>" +
       "</div>" +
@@ -862,7 +1255,7 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
           (a.fotos.length ? "<dt>Fotos</dt><dd>" + a.fotos.map(function (f) { return '<a href="/dateien/' + a.id + "/" + esc(f) + '" target="_blank">' + esc(f) + "</a>"; }).join("<br>") + "</dd>" : "") +
         "</dl>" + (a.mail && a.mail.text ? '<details class="raw"><summary>Original-Mail</summary><pre>' + esc(a.mail.text) + "</pre></details>" : "") +
         '<div class="btns" style="margin-top:16px"><label class="btn small">Foto hinzufügen<input type="file" accept="image/*" id="a-foto" hidden></label>' +
-        '<button class="btn small" id="a-neu">Entwürfe neu planen</button>' +
+        '<button class="btn small" id="a-neu">' + (D.einstellungen.ki_schluessel ? "Neue Ideen (KI)" : "Entwürfe neu planen") + "</button>" +
         (a.status !== "archiv" ? '<button class="btn small" id="a-archiv">Archivieren</button>' : "") +
         '<button class="btn small danger" id="a-weg">Löschen</button></div></div>' +
       "</div>";
@@ -882,7 +1275,7 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
     if (b.id === "a-geliefert") return aktion("status", { status: "geliefert" }, b, "Als geliefert markiert.");
     if (b.id === "a-wieder") return aktion("status", { status: "bereit" }, b);
     if (b.id === "a-archiv") return aktion("status", { status: "archiv" }, b, "Archiviert.").then(auftragZu);
-    if (b.id === "a-neu") { if (confirm("Alle drei Entwürfe neu aus Thema und Wünschen bauen? Deine Änderungen daran gehen verloren.")) aktion("neuplanen", {}, b, "Neu gebaut."); return; }
+    if (b.id === "a-neu") { if (confirm("Alle drei Entwürfe neu aus Thema und Wünschen bauen? Deine Änderungen daran gehen verloren.")) aktion("neuplanen", { ki: true }, b, "Neu gebaut."); return; }
     if (b.id === "a-weg") { if (confirm("Auftrag endgültig löschen?")) aktion("loeschen", {}, b, "Gelöscht.").then(auftragZu); return; }
     if (b.id === "notiz-los") { var v = $("#notiz-text").value.trim(); if (v) aktion("notiz", { text: v }, b).then(function () { $("#notiz-text").value = ""; }); }
   });
@@ -901,11 +1294,23 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
   $("#sheet-body").addEventListener("keydown", function (ev) { if (ev.key === "Enter" && ev.target.id === "notiz-text") $("#notiz-los").click(); });
 
   /* ---------------- Editor ---------------- */
-  var ed = null, edNr = 0, edTimer = null;
-  function edOeffnen(n) {
-    var a = aktuell(); edNr = n;
-    ed = JSON.parse(JSON.stringify(a.entwuerfe[n].entwurf));
-    $("#ed-title").textContent = "Entwurf " + "ABC"[n] + " bearbeiten";
+  var ed = null, edNr = 0, edTimer = null, edLead = null;
+  function edFotos() {  // [Dateiname, URL-Basis]
+    if (edLead) { var l = D.leads.filter(function (x) { return x.id === edLead; })[0], rd = (l && l.redesign) || {};
+      return { basis: "/leads/" + edLead + "/", fotos: (rd.person ? ["person-frei.png"] : []).concat(rd.original ? ["original.jpg"] : []) }; }
+    return { basis: "/dateien/" + offenerAuftrag + "/", fotos: aktuell().fotos };
+  }
+  function edOeffnen(n, leadId) {
+    edLead = leadId || null; edNr = n;
+    if (edLead) {
+      var l = D.leads.filter(function (x) { return x.id === edLead; })[0];
+      ed = JSON.parse(JSON.stringify(l.redesign.entwurf));
+      $("#ed-title").textContent = "Redesign für " + l.kanal + " bearbeiten";
+    } else {
+      ed = JSON.parse(JSON.stringify(aktuell().entwuerfe[n].entwurf));
+      $("#ed-title").textContent = "Entwurf " + "ABC"[n] + " bearbeiten";
+    }
+    var a = edLead ? { aenderungen: [] } : aktuell(), F = edFotos();
     var o = D.optionen;
     $("#ed-vorlage").innerHTML = o.vorlagen.map(function (v) { return '<button type="button" data-v="' + v + '">' + VORLAGE_NAME[v] + "</button>"; }).join("");
     $("#ed-stil").innerHTML = o.stile.map(function (s) { return '<button type="button" class="swatch" title="' + s + '" data-s="' + s + '" style="background:' + STIL_FARBE[s] + '"></button>'; }).join("");
@@ -913,8 +1318,8 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
     ["#ed-emoji1", "#ed-emoji2"].forEach(function (sel, i) {
       $(sel).innerHTML = o.emojis.map(function (e) { return '<button type="button" title="' + e + '" data-e="' + e + '" data-i="' + i + '"><img loading="lazy" alt="' + e + '" src="/assets/emoji/' + e + '.png"></button>'; }).join("");
     });
-    $("#ed-fotos").innerHTML = '<button type="button" data-foto="">Emoji</button>' + a.fotos.map(function (f) { return '<button type="button" data-foto="' + esc(f) + '"><img alt="" src="/dateien/' + a.id + "/" + esc(f) + '"></button>'; }).join("") +
-      '<label class="btn small" style="height:64px;border-radius:10px">+ Foto<input type="file" accept="image/*" id="ed-foto-neu" hidden></label>';
+    $("#ed-fotos").innerHTML = '<button type="button" data-foto="">Emoji</button>' + F.fotos.map(function (f) { return '<button type="button" data-foto="' + esc(f) + '" title="' + esc(f) + '"><img alt="" src="' + F.basis + esc(f) + '">' + (/-frei\.png$/.test(f) ? '<span class="kat" style="position:absolute;bottom:2px;left:2px;background:rgba(0,0,0,.6)">frei</span>' : "") + "</button>"; }).join("") +
+      (edLead ? "" : '<label class="btn small" style="height:64px;border-radius:10px">+ Foto<input type="file" accept="image/*" id="ed-foto-neu" hidden></label>');
     var kiDa = D.einstellungen.ki_schluessel;
     $("#ki-wunsch").disabled = !kiDa; $("#ki-los").disabled = !kiDa;
     $("#ki-hint").innerHTML = kiDa ? "Beispiele: „mach den Text gelb“, „nimm das Foto“, „schreib GRATIS aufs Band“." : 'Dafür in den <a href="#" data-goto="einstellungen" id="ki-einst">Einstellungen</a> einen KI-Schlüssel eintragen. Alles andere geht auch ohne.';
@@ -933,6 +1338,8 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
     $("#ed-gross").value = ed.gross; $("#ed-gross-wert").textContent = ed.gross + " %";
     $("#ed-banner").value = ed.banner;
     $("#ed-pfeil").checked = ed.pfeil;
+    var hgKandidat = ed.hintergrund || edFotos().fotos.filter(function (f) { return !/-frei\.png$/.test(f); })[0] || "";
+    $("#ed-hg-zeile").hidden = !hgKandidat; $("#ed-hg").checked = !!ed.hintergrund; $("#ed-hg").dataset.datei = hgKandidat;
     $$("#ed-fotos [data-foto]").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.foto === (ed.foto || "") ? "true" : "false"); });
     $$("#ed-emoji1 button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.e === ed.emoji[0] ? "true" : "false"); });
     $$("#ed-emoji2 button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.e === (ed.emoji[1] || ed.emoji[0]) ? "true" : "false"); });
@@ -941,7 +1348,7 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
   function vorschau() {
     clearTimeout(edTimer);
     edTimer = setTimeout(function () {
-      api("/api/vorschau", { entwurf: ed, auftrag: offenerAuftrag }, { text: true }).then(function (html) { $("#frame").srcdoc = html; });
+      api("/api/vorschau", edLead ? { entwurf: ed, lead: edLead } : { entwurf: ed, auftrag: offenerAuftrag }, { text: true }).then(function (html) { $("#frame").srcdoc = html; });
     }, 120);
   }
   function skalieren() { var w = $("#frame-wrap").clientWidth; $("#frame").style.transform = "scale(" + (w / 1280) + ")"; }
@@ -971,6 +1378,7 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
     else if (t.id === "ed-gross") { ed.gross = +t.value; $("#ed-gross-wert").textContent = ed.gross + " %"; }
     else if (t.id === "ed-banner") ed.banner = t.value;
     else if (t.id === "ed-pfeil") ed.pfeil = t.checked;
+    else if (t.id === "ed-hg") ed.hintergrund = t.checked ? t.dataset.datei : "";
     else return;
     vorschau();
   });
@@ -984,31 +1392,36 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
   });
   $("#ed-save").addEventListener("click", function () {
     var b = this;
-    laden(b, api("/api/auftrag/" + offenerAuftrag + "/entwurf/" + edNr, { entwurf: ed }).then(neuerStand)).then(function () { toast("Gespeichert. Das PNG ist neu gebaut."); edZu(); }).catch(fehler);
+    laden(b, api(edLead ? "/api/lead/" + edLead + "/design" : "/api/auftrag/" + offenerAuftrag + "/entwurf/" + edNr, { entwurf: ed }).then(neuerStand)).then(function () { toast("Gespeichert. Das Bild ist neu gebaut."); edZu(); }).catch(fehler);
   });
   $("#ki-los").addEventListener("click", function () {
     var w = $("#ki-wunsch").value.trim(); if (!w) return;
     var b = this;
     // erst den Stand aus dem Editor speichern, dann die KI darauf ansetzen
-    laden(b, api("/api/auftrag/" + offenerAuftrag + "/entwurf/" + edNr, { entwurf: ed })
-      .then(function () { return api("/api/auftrag/" + offenerAuftrag + "/ki/" + edNr, { wunsch: w }); })
-      .then(neuerStand)).then(function () { ed = JSON.parse(JSON.stringify(aktuell().entwuerfe[edNr].entwurf)); edFuellen(); toast("Umgesetzt. Prüf die Vorschau und speichere."); }).catch(fehler);
+    var pfad = edLead ? "/api/lead/" + edLead + "/" : "/api/auftrag/" + offenerAuftrag + "/";
+    laden(b, api(pfad + (edLead ? "design" : "entwurf/" + edNr), { entwurf: ed })
+      .then(function () { return api(pfad + (edLead ? "ki" : "ki/" + edNr), { wunsch: w }); })
+      .then(neuerStand)).then(function () {
+        ed = JSON.parse(JSON.stringify(edLead ? D.leads.filter(function (x) { return x.id === edLead; })[0].redesign.entwurf : aktuell().entwuerfe[edNr].entwurf));
+        edFuellen(); toast("Umgesetzt. Prüf die Vorschau und speichere.");
+      }).catch(fehler);
   });
   $("#ki-wunsch").addEventListener("keydown", function (ev) { if (ev.key === "Enter") $("#ki-los").click(); });
-  document.addEventListener("click", function (ev) { if (ev.target.id === "ki-einst") { ev.preventDefault(); edZu(); auftragZu(); } });
+  document.addEventListener("click", function (ev) { if (ev.target.id === "ki-einst") { ev.preventDefault(); edZu(); auftragZu(); leadZu(); } });
 
   /* ---------------- Mail schreiben ---------------- */
   var M = { vorschlag: null, dateien: [] };
   function mailOeffnen(btn) {
     var a = aktuell();
+    if (!a) return;
     if (!a.email) return toast("Trag zuerst die E-Mail-Adresse des Kunden ein.");
     laden(btn, api("/api/auftrag/" + a.id + "/mailvorschlag", {})).then(function (v) {
       M.vorschlag = v; M.dateien = [];
       var e = D.einstellungen;
       $("#m-an").value = a.email;
       $("#m-betreff").value = v.betreff.match(/^\s*(re|aw)\s*:/i) ? v.betreff : "Re: " + v.betreff;
-      var fertig = ["in_gmail", "aenderung", "geliefert"].indexOf(a.status) >= 0 || a.geoeffnet;
-      mailVorlage(fertig ? "fertig" : "erste");
+      var art = v.vorschlag_art || "erste", fertig = art !== "erste";
+      mailVorlage(art);
       var gewaehlt = $$("[data-mit]").filter(function (c) { return c.checked; }).map(function (c) { return +c.dataset.mit; });
       if (fertig && gewaehlt.length === 3) gewaehlt = [];  // beim fertigen Thumbnail eher nur eins
       $("#m-bilder").innerHTML = a.entwuerfe.map(function (en, n) {
@@ -1016,7 +1429,7 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
         return bild ? '<label><input type="checkbox" data-m-bild="' + n + '"' + (gewaehlt.length ? (gewaehlt.indexOf(n) >= 0 ? " checked" : "") : (!fertig || n === 0 ? " checked" : "")) + '><img alt="" src="' + bild + '"><span>Entwurf ' + "ABC"[n] + "</span></label>" : "";
       }).join("");
       $("#m-rechnung-zeile").hidden = a.paket === "Monats-Abo";
-      $("#m-rechnung").checked = v.rechnung && fertig;
+      $("#m-rechnung").checked = v.rechnung && art === "fertig";
       $("#m-rechnung-text").innerHTML = "Rechnung " + esc(v.rechnung_nr) + " über " + euro(v.rechnung_betrag) + " als PDF anhängen" + (v.rechnung_vorhanden ? " (schon erstellt)" : "") + (!v.rechnung ? " (Auftrag ist bezahlt)" : "") +
         (v.iban ? "" : ' <span class="hint">(ohne IBAN, <a href="#" data-goto="einstellungen" data-mail-zu>eintragen</a>)</span>');
       $("#m-senden").hidden = !v.direkt;
@@ -1065,6 +1478,7 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
     laden(btn, Promise.all(M.dateien.map(alsDataUrl)).then(function (urls) {
       return api("/api/auftrag/" + a.id + "/versand", {
         modus: modus, varianten: bilder, betreff: $("#m-betreff").value, text: $("#m-text").value, rechnung: rechnungDran,
+        art: ($('#m-vorlage [aria-pressed="true"]') || {}).dataset ? $('#m-vorlage [aria-pressed="true"]').dataset.v : "fertig",
         extra: M.dateien.map(function (f, i) { return { name: f.name, daten: urls[i] }; })
       });
     }).then(neuerStand)).then(function () {
@@ -1224,7 +1638,7 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
     f.forEach(function (v, k) { d[k] = v; });
     laden($("button:not([type])", this), api("/api/auftrag", d)).then(function (r) {
       blattZu($("#neu"), $("#neu-bg"));
-      return holen().then(function () { zeigeTab("auftraege"); oeffneAuftrag(r.id); });
+      return holen().then(function () { zeigeTab("auftraege"); oeffneAuftrag(r.id); bald(); });
     }).catch(fehler);
   });
 
@@ -1258,12 +1672,6 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
     var z = ev.target.closest("[data-zahlung-weg]");
     if (z && confirm("Zahlung löschen?")) api("/api/zahlung", { loeschen: z.dataset.zahlungWeg }).then(neuerStand).catch(fehler);
   });
-  $("#zahlung-form").addEventListener("submit", function (ev) {
-    ev.preventDefault();
-    var f = this;
-    api("/api/zahlung", { betrag: f.betrag.value, text: f.text.value || "Zahlung" }).then(neuerStand).then(function () { f.reset(); toast("Zahlung eingetragen."); }).catch(fehler);
-  });
-
   /* ---------------- Einstellungen & Gmail ---------------- */
   $("#einst-form").addEventListener("submit", function (ev) {
     ev.preventDefault();
@@ -1286,8 +1694,18 @@ footer.ver { text-align: center; color: var(--muted-2); font-size: 12px; margin-
   try { start = localStorage.getItem("tz-tab") || start; } catch (e) {}
   zeigeTab(start);
   holen();
-  setInterval(function () { var fokus = document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
-    if (document.visibilityState === "visible" && $("#ed").hidden && !fokus) holen(); }, 15000);
+  // Alle 15 Sekunden neu laden, alle 3 Sekunden solange etwas gebaut wird
+  var pollTimer = null;
+  function bald() { clearTimeout(pollTimer); pollTimer = setTimeout(takt, 3000); }
+  function takt() {
+    var fokus = document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+    var p = document.visibilityState === "visible" && $("#ed").hidden && !fokus ? holen() : Promise.resolve();
+    p.then(function () {
+      var schnell = D && (D.kennzahlen.wird_gebaut > 0 || (D.akquise && D.akquise.aktiv));
+      pollTimer = setTimeout(takt, schnell ? 3000 : 15000);
+    });
+  }
+  pollTimer = setTimeout(takt, 15000);
 })();
 </script>
 </body>

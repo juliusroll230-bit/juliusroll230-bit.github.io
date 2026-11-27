@@ -36,6 +36,8 @@ html, body {{ width: 1280px; height: 720px; overflow: hidden; background: #000; 
 .t div {{ white-space: nowrap; }}
 .emo {{ position: absolute; filter: drop-shadow(0 18px 22px rgba(0,0,0,.45)); }}
 .sticker {{ filter: drop-shadow(6px 0 0 #fff) drop-shadow(-6px 0 0 #fff) drop-shadow(0 6px 0 #fff) drop-shadow(0 -6px 0 #fff) drop-shadow(0 18px 20px rgba(0,0,0,.5)); }}
+.person {{ position: absolute; filter: drop-shadow(7px 0 0 #fff) drop-shadow(-7px 0 0 #fff) drop-shadow(0 7px 0 #fff) drop-shadow(0 -7px 0 #fff) drop-shadow(0 24px 30px rgba(0,0,0,.6)); }}
+.bgfoto {{ position: absolute; inset: -40px; background-size: cover; background-position: center; filter: blur(14px) saturate(1.25) brightness(.55); }}
 .foto {{ position: absolute; object-fit: cover; border: 12px solid #fff; border-radius: 6px; box-shadow: 0 24px 40px rgba(0,0,0,.55); }}
 .vig {{ position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 50%, rgba(0,0,0,.6) 100%); pointer-events: none; }}
 .rays {{ position: absolute; inset: -500px; background: repeating-conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,.1) 0deg 8deg, rgba(255,255,255,0) 8deg 16deg); }}
@@ -90,8 +92,28 @@ def _banner(text, links, oben, bg="#fff", farbe="#111", size=72, schrift="Anton"
             f'font-family:{SCHRIFT_CSS.get(schrift, "Anton")};font-size:{size}px">{_e(text)}</div>')
 
 
+def ist_freigestellt(name):
+    return str(name or "").endswith("-frei.png")
+
+
+def _person(e, foto_url, rechts=30, hoehe=690, max_breite=620):
+    """Freigestellte Person, unten am Bildrand, mit weißem Rand."""
+    return (f'<img class="person" src="{foto_url}{_e(e["foto"])}" style="right:{rechts}px;bottom:-8px;'
+            f'height:{hoehe}px;max-width:{max_breite}px;object-fit:contain;object-position:bottom">')
+
+
+def _hintergrund(e, foto_url, farbe):
+    """Original-Bild des Creators verschwommen als Hintergrund, eingefärbt in der Farbwelt."""
+    if not (e.get("hintergrund") and foto_url):
+        return ""
+    return (f'<div class="bgfoto" style="background-image:url({foto_url}{_e(e["hintergrund"])})"></div>'
+            f'<div class="abs" style="inset:0;background:linear-gradient(90deg,rgba(0,0,0,.78) 0%,rgba(0,0,0,.35) 55%,{farbe}55 100%)"></div>')
+
+
 def _rechts_bild(e, base, foto_url, links, oben, groesse, drehung=6):
     """Kundenfoto (falls vorhanden) oder das erste Emoji auf der rechten Seite."""
+    if e.get("foto") and foto_url and ist_freigestellt(e["foto"]):
+        return _person(e, foto_url, rechts=max(10, 1280 - links - groesse - 40), hoehe=min(700, int(groesse * 1.55)))
     if e.get("foto") and foto_url:
         w, h = int(groesse * 0.92), int(groesse * 1.08)
         return (f'<img class="foto" src="{foto_url}{_e(e["foto"])}" style="left:{links}px;top:{oben - 20}px;'
@@ -109,11 +131,27 @@ def thumbnail_html(e, base="", foto_url=""):
     em2 = e["emoji"][1] if len(e["emoji"]) > 1 else e["emoji"][0]
     v = e["vorlage"]
     teile = []
-    if v == "strahlen":
+    if v == "person":  # großes Gesicht rechts, riesiger Text links: der klassische YouTube-Look
+        mit_person = e.get("foto") and foto_url and ist_freigestellt(e["foto"])
+        teile += [
+            f'<div class="abs" style="inset:0;background:radial-gradient(circle at 75% 45%,{hell} 0%,{mittel} 40%,{dunkel} 100%)"></div>',
+            '<div class="abs" style="inset:0;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent 20%,#000 70%)">'
+            '<div class="abs" style="left:320px;top:0;width:1280px;height:720px"><div class="rays"></div></div></div>',
+            _hintergrund(e, foto_url, hell),
+            _person(e, foto_url) if mit_person else _rechts_bild(e, base, foto_url, 760, 130, 460, 6),
+            _emoji(base, em2 if mit_person else em2, "left:640px;top:40px;width:170px;transform:rotate(-10deg)", "sticker"),
+            _text(z, [f1, f2], s, int(190 * g), 50, 70 if len(z) > 1 else 190, 680 if mit_person else 700, 560),
+            _banner(e["banner"], 56, 590, bg=f2, schrift=s, maxw=640),
+            '<div class="vig"></div>',
+        ]
+        if e["pfeil"]:
+            teile.insert(-1, _pfeil("left:520px;top:400px;width:230px;height:150px", f2))
+    elif v == "strahlen":
         teile += [
             f'<div class="abs" style="inset:0;background:radial-gradient(circle at 72% 50%,{hell} 0%,{mittel} 45%,{dunkel} 100%)"></div>',
             '<div class="abs" style="inset:0;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent 10%,#000 55%)">'
             '<div class="abs" style="left:280px;top:0;width:1280px;height:720px"><div class="rays"></div></div></div>',
+            _hintergrund(e, foto_url, hell),
             _emoji(base, em2, "left:1090px;top:24px;width:160px;transform:rotate(14deg)"),
             _rechts_bild(e, base, foto_url, 790, 150, 440, 8),
             _text(z, [f1, f2], s, int(170 * g), 56, 130 if len(z) > 1 else 220, 740, 470),
@@ -207,3 +245,55 @@ def als_pdf(html_text, ziel):
             page.pdf(path=ziel, format="A4", print_background=True, margin={"top": "0", "bottom": "0", "left": "0", "right": "0"})
         finally:
             browser.close()
+
+
+def html_png(html_text, ziel, breite=1920, hoehe=1080):
+    """Beliebiges HTML (z. B. ein Vorher/Nachher-Bild für die Akquise) als PNG speichern."""
+    from playwright.sync_api import sync_playwright
+    with _lock, sync_playwright() as p, tempfile.TemporaryDirectory() as tmp:
+        browser = p.chromium.launch(executable_path=CHROMIUM or None, args=["--no-sandbox"])
+        try:
+            page = browser.new_page(viewport={"width": breite, "height": hoehe})
+            datei = os.path.join(tmp, "seite.html")
+            with open(datei, "w", encoding="utf-8") as f:
+                f.write(html_text)
+            page.goto("file://" + datei, wait_until="load")
+            page.evaluate("document.fonts.ready")
+            page.wait_for_timeout(80)
+            os.makedirs(os.path.dirname(ziel), exist_ok=True)
+            page.screenshot(path=ziel, type="png")
+        finally:
+            browser.close()
+
+
+def pitch_html(kanal, videotitel, original_url, neu_url, idee="", base=""):
+    """Vorher/Nachher-Bild (1920 x 1080) für die Mail an einen neuen Creator."""
+    f = base + "fonts/"
+    vorher = (f'<img src="{_e(original_url)}">' if original_url else
+              '<div class="leer">Original-Thumbnail<br>nicht geladen</div>')
+    return f"""<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face {{ font-family: 'Anton'; src: url({f}anton-latin-400-normal.woff2), url({f}anton-latin-ext-400-normal.woff2); }}
+* {{ margin:0; padding:0; box-sizing:border-box; }}
+body {{ width:1920px; height:1080px; background:#0b0b0c; color:#fff; font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  background-image: radial-gradient(900px 500px at 10% -10%, rgba(59,130,246,.18), transparent 60%), radial-gradient(800px 500px at 100% 110%, rgba(34,197,94,.14), transparent 60%); }}
+.kopf {{ position:absolute; left:80px; top:64px; right:80px; }}
+.kopf b {{ font-family:Anton; font-weight:400; font-size:64px; letter-spacing:.01em; color:#fff200; text-transform:uppercase; }}
+.kopf p {{ margin-top:10px; font-size:30px; color:#a1a1aa; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }}
+.kopf p span {{ color:#fff; font-weight:600; }}
+.bild {{ position:absolute; top:250px; width:840px; }}
+.bild img, .bild .leer {{ width:840px; height:472px; object-fit:cover; border-radius:22px; display:block; }}
+.bild .leer {{ display:grid; place-items:center; background:#161618; color:#71717a; font-size:28px; text-align:center; border:2px dashed #3f3f46; }}
+.vorher {{ left:80px; }} .vorher img {{ filter:saturate(.85); opacity:.92; }}
+.nachher {{ right:80px; }} .nachher img {{ box-shadow:0 0 0 4px #22c55e, 0 30px 80px rgba(34,197,94,.35); }}
+.etikett {{ display:inline-block; margin-bottom:18px; padding:8px 18px; border-radius:999px; font-weight:700; font-size:24px; letter-spacing:.08em; }}
+.vorher .etikett {{ background:#27272a; color:#a1a1aa; }} .nachher .etikett {{ background:#22c55e; color:#04140a; }}
+.pfeil {{ position:absolute; left:932px; top:480px; width:56px; height:56px; border-radius:50%; background:#fff; color:#0b0b0c; font-size:34px; display:grid; place-items:center; font-weight:800; }}
+.fuss {{ position:absolute; left:80px; right:80px; bottom:70px; font-size:28px; color:#d4d4d8; }}
+.fuss i {{ color:#22c55e; font-style:normal; }}
+</style></head><body>
+<div class="kopf"><b>Redesign-Idee</b><p><span>{_e(kanal)}</span> · „{_e(videotitel)}“</p></div>
+<div class="bild vorher"><div class="etikett">VORHER</div>{vorher}</div>
+<div class="pfeil">→</div>
+<div class="bild nachher"><div class="etikett">NACHHER</div><img src="{_e(neu_url)}"></div>
+<div class="fuss"><i>●</i> {_e(idee or "Mehr Kontrast, weniger Text, ein klarer Blickfang")}</div>
+</body></html>"""
