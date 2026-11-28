@@ -5,7 +5,7 @@ Ein Entwurf ist ein kleines dict, das render.py in ein Bild verwandelt.
 """
 import re
 
-VORLAGEN = ["strahlen", "split", "spot", "vergleich"]
+VORLAGEN = ["person", "strahlen", "split", "spot", "vergleich"]
 STILE = ["finanzen", "fitness", "gaming", "tech", "allgemein"]
 SCHRIFTEN = ["Anton", "Bebas", "Mont", "Lucky", "Archivo"]
 
@@ -168,8 +168,9 @@ def emojis_von(text, nische):
     return out
 
 
-def entwuerfe_planen(b, foto=""):
-    """Drei unterschiedliche Entwürfe (A, B, C) für eine Bestellung."""
+def entwuerfe_planen(b, foto="", person="", hintergrund=""):
+    """Drei unterschiedliche Entwürfe (A, B, C) für eine Bestellung.
+    foto: Kundenfoto, person: freigestellte Person (…-frei.png), hintergrund: Original-Bild des Creators."""
     alles = f"{b.get('thema', '')} {b.get('wuensche', '')}"
     nische = nische_von(alles)
     stil = nische
@@ -196,6 +197,17 @@ def entwuerfe_planen(b, foto=""):
     if foto:  # mit Kundenfoto: A und C zeigen das Foto, B bleibt mit Emojis
         a["foto"] = foto
         c["foto"] = foto if not vergleich else ""
+    a["idee"] = "Großer Text mit Strahlen, Bild rechts"
+    b2["idee"] = "Zweigeteilt mit Pfeil, Emojis statt Foto"
+    c["idee"] = "Vorher/Nachher-Vergleich" if c["vorlage"] == "vergleich" else "Dunkel mit Lichtfleck und Textband"
+    if person:  # echtes Gesicht des Creators: das wirkt im Feed am stärksten
+        a = dict(a, vorlage="person", foto=person, hintergrund=hintergrund, pfeil=False,
+                 idee="Dein Gesicht groß rechts, riesiger Text links")
+        b2 = dict(b2, foto=person, pfeil=True, idee="Zweigeteilt mit Pfeil, Gesicht freigestellt")
+        if c["vorlage"] != "vergleich":
+            c = dict(c, foto=person, idee="Dunkel mit Lichtfleck, Gesicht und Textband")
+    elif hintergrund:
+        a["hintergrund"] = hintergrund
     return [entwurf_pruefen(x) for x in (a, b2, c)]
 
 
@@ -213,6 +225,8 @@ def entwurf_pruefen(e):
         "schrift": e.get("schrift") if e.get("schrift") in SCHRIFTEN else "Anton",
         "emoji": emoji or ["fire"],
         "foto": re.sub(r"[^\w.\-]", "", str(e.get("foto") or "")),
+        "hintergrund": re.sub(r"[^\w.\-]", "", str(e.get("hintergrund") or "")),
+        "idee": str(e.get("idee") or "")[:140],
         "pfeil": bool(e.get("pfeil")),
         "banner": str(e.get("banner") or "")[:40],
         "gross": max(60, min(140, int(e.get("gross") or 100))),
