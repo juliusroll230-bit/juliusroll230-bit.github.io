@@ -69,12 +69,12 @@ button{font:inherit;color:inherit}
 .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:8px}
 .wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 var(--gutter)}
-.accent{color:var(--accent);background:linear-gradient(90deg,#3b82f6,#22c55e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.accent{color:var(--accent)}
 h1,h2,h3{color:var(--text);font-weight:700;letter-spacing:-.025em;margin:0;text-wrap:balance}
 h2{font-size:clamp(30px,4.4vw,48px);line-height:1.08}
 .lead{color:var(--muted);font-size:clamp(16px,1.6vw,18px);max-width:52ch;margin:14px 0 0;text-wrap:pretty}
 .sec{padding:clamp(64px,10vw,112px) 0}
-.sec-head{text-align:center;display:flex;flex-direction:column;align-items:center;margin-bottom:clamp(28px,5vw,48px)}
+.sec-head{display:flex;flex-direction:column;align-items:flex-start;margin-bottom:clamp(22px,4vw,36px)}
 
 /* Weiches Licht im Hintergrund */
 .glow{position:absolute;pointer-events:none;border-radius:50%;filter:blur(90px);opacity:.5;z-index:0}
@@ -105,25 +105,25 @@ h2{font-size:clamp(30px,4.4vw,48px);line-height:1.08}
 .head-cta{min-height:36px;padding:0 14px;font-size:14px;border-radius:10px}
 
 /* ---------- Hero ---------- */
-.hero{position:relative;padding:clamp(48px,9vw,96px) 0 clamp(40px,6vw,64px);text-align:center;overflow:hidden}
-.hero .glow{width:520px;height:520px;background:var(--accent);top:-260px;left:50%;transform:translateX(-50%);opacity:.22}
-.hero .wrap{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center}
-.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:14px;color:var(--muted)}
-.pill i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(34,197,94,.7);display:block}
-.hero h1{font-size:clamp(40px,7.4vw,80px);line-height:1.02;margin-top:20px;max-width:14ch}
-.hero .lead{text-align:center;margin-top:18px}
-.hero-ctas{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:28px}
-.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;list-style:none;padding:0;margin:26px 0 0}
-.chips li{padding:8px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:14px;color:var(--muted)}
-.chips b{color:var(--text);font-weight:600}
+.hero{padding:clamp(56px,10vw,120px) 0 clamp(24px,4vw,40px)}
+.hero h1{font-size:clamp(40px,7vw,76px);line-height:1.03;max-width:13ch}
+.hero .lead{margin-top:20px;max-width:46ch}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.hero-grid{display:grid;gap:40px;align-items:center}
+.hero-pic{display:none;margin:0}
+@media (min-width:960px){.hero-grid{grid-template-columns:1.15fr .85fr}.hero-pic{display:block}}
+.hero-pic img{width:100%;height:auto;border-radius:14px;border:1px solid var(--line);box-shadow:var(--shadow);transform:rotate(2.5deg);margin-top:20px}
+.hero-pic figcaption{font-size:13px;color:var(--muted);margin:16px 0 0 12px}
+.price-line{margin:22px 0 0;color:var(--muted);font-size:15px}
+.price-line b{color:var(--text);font-weight:600}
 
 /* ---------- Vorher / Nachher ---------- */
 #vorher-nachher{padding-top:clamp(24px,4vw,40px)}
-.tabs{display:inline-flex;gap:4px;padding:4px;border-radius:12px;background:var(--card);border:1px solid var(--line);margin:0 auto 20px}
+.tabs{display:inline-flex;gap:4px;padding:4px;border-radius:12px;background:var(--card);border:1px solid var(--line);margin:0 0 16px}
 .tab{border:0;background:transparent;padding:8px 16px;border-radius:9px;cursor:pointer;font-weight:500;font-size:15px;color:var(--muted);transition:background-color .25s,color .25s}
 .tab:hover{color:var(--text)}
 .tab[aria-selected="true"]{background:var(--card-3);color:var(--text)}
-.ba-box{max-width:960px;margin:0 auto;text-align:center}
+.ba-box{max-width:960px}
 .ba{position:relative;aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;background:var(--bg-2);border:1px solid var(--line);
   box-shadow:0 30px 80px -30px rgba(0,0,0,.8);cursor:ew-resize;touch-action:pan-y;user-select:none;-webkit-user-select:none;--pos:50%}
 .ba img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;transition:opacity .35s ease}
@@ -137,7 +137,7 @@ h2{font-size:clamp(30px,4.4vw,48px);line-height:1.08}
 .ba-tag{position:absolute;top:14px;padding:5px 12px;border-radius:999px;font-size:13px;font-weight:600;background:rgba(11,11,12,.6);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);pointer-events:none}
 .ba-tag--before{left:14px}
 .ba-tag--after{right:14px;background:var(--green);color:#04140a}
-.ba-cap{color:var(--muted);margin:18px auto 0;max-width:52ch;min-height:3.2em}
+.ba-cap{color:var(--text-2);margin:16px 0 0;max-width:60ch;min-height:3.2em}
 .ba-cap b{color:var(--text);font-weight:600}
 .demo-note{font-size:13px;color:var(--muted);opacity:.8;margin-top:6px}
 
@@ -154,8 +154,8 @@ html.scrolly .ba{cursor:default;transform:rotateX(var(--rx,0deg)) scale(var(--sc
   box-shadow:0 40px 90px -30px rgba(59,130,246,calc(.15 + var(--gl,0) * .35)),0 30px 80px -30px rgba(0,0,0,.8)}
 html.scrolly .ba-handle{cursor:default}
 html.scrolly .ba-cap{min-height:3.2em;margin-top:14px}
-html.scrolly .ba-progress{display:block;height:3px;border-radius:3px;background:var(--line);max-width:240px;margin:10px auto 0;overflow:hidden}
-html.scrolly .ba-progress span{display:block;height:100%;width:100%;background:linear-gradient(90deg,#3b82f6,#22c55e);transform-origin:0 50%;transform:scaleX(var(--prog,0))}
+html.scrolly .ba-progress{display:block;height:3px;border-radius:3px;background:var(--line);max-width:240px;margin:10px 0 0;overflow:hidden}
+html.scrolly .ba-progress span{display:block;height:100%;width:100%;background:var(--accent);transform-origin:0 50%;transform:scaleX(var(--prog,0))}
 html.scrolly .ba-box.reveal{opacity:1;transform:none}
 @media (max-height:620px){html.scrolly .ba-stage .lead{display:none}}
 .hero .wrap{transform:translateY(calc(var(--hp,0) * -40px));opacity:calc(1 - var(--hp,0) * .9)}
@@ -171,6 +171,9 @@ html.scrolly .ba-box.reveal{opacity:1;transform:none}
 .card-cap b{display:block;color:var(--text);font-weight:500}
 
 /* ---------- Ablauf ---------- */
+.flow{max-width:62ch;margin:0;padding:0 0 0 1.4em;display:grid;gap:16px;color:var(--muted);font-size:17px}
+.flow li::marker{color:var(--accent);font-weight:700}
+.flow b{color:var(--text);font-weight:600}
 .steps{display:grid;gap:14px;list-style:none;padding:0;margin:0;counter-reset:s}
 @media (min-width:820px){.steps{grid-template-columns:repeat(3,1fr);gap:16px}}
 .step{padding:24px;border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0) 40%),var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
@@ -179,10 +182,10 @@ html.scrolly .ba-box.reveal{opacity:1;transform:none}
 .step p{color:var(--muted);margin:8px 0 0}
 
 /* ---------- Preise ---------- */
-.plans{display:grid;gap:16px;max-width:860px;margin:0 auto}
+.plans{display:grid;gap:16px;max-width:860px}
 @media (min-width:760px){.plans{grid-template-columns:1fr 1fr}}
 .plan{position:relative;display:flex;flex-direction:column;padding:28px;border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0) 40%),var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
-.plan--featured{border-color:rgba(59,130,246,.6);background:linear-gradient(180deg,rgba(59,130,246,.1),rgba(255,255,255,0) 55%),var(--card);box-shadow:var(--glow)}
+.plan--featured{border-color:rgba(59,130,246,.6)}
 .plan-top{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:30px}
 .plan-name{font-size:18px;letter-spacing:-.01em}
 .plan-badge{margin:0;padding:3px 10px;border-radius:999px;background:var(--green-soft);color:#4ade80;border:1px solid rgba(34,197,94,.3);font-size:12px;font-weight:600;white-space:nowrap}
@@ -195,11 +198,11 @@ html.scrolly .ba-box.reveal{opacity:1;transform:none}
 .plan-list li{display:flex;gap:10px;align-items:flex-start}
 .plan-list li::before{content:"";flex:none;width:18px;height:18px;margin-top:3px;border-radius:50%;background:var(--green-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 12.5l3.2 3.2L17 9' fill='none' stroke='%2322c55e' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
 .plan .btn{width:100%}
-.plan-fine{color:var(--muted);font-size:13.5px;margin:12px 0 0;text-align:center}
-.vat-note{color:var(--muted);font-size:13.5px;text-align:center;margin:22px 0 0}
+.plan-fine{color:var(--muted);font-size:13.5px;margin:12px 0 0}
+.vat-note{color:var(--muted);font-size:13.5px;margin:18px 0 0}
 
 /* ---------- FAQ ---------- */
-.faq-list{max-width:760px;margin:0 auto}
+.faq-list{max-width:760px}
 .faq{border-bottom:1px solid var(--line)}
 .faq summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:20px 0;cursor:pointer;font-weight:500;font-size:17px}
 .faq summary::-webkit-details-marker{display:none}
@@ -211,11 +214,9 @@ html.scrolly .ba-box.reveal{opacity:1;transform:none}
 .faq-a p{margin:0}
 
 /* ---------- Kontakt ---------- */
-.contact{position:relative;overflow:hidden;text-align:center;padding:clamp(40px,7vw,72px) clamp(20px,5vw,56px);border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0) 40%),var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
-.contact .glow{width:460px;height:300px;background:var(--accent);top:-180px;left:50%;transform:translateX(-50%);opacity:.25}
+.contact{position:relative;overflow:hidden;padding:clamp(40px,7vw,72px) clamp(20px,5vw,56px);border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0) 40%),var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
 .contact>*:not(.glow){position:relative;z-index:1}
-.contact .lead{margin-left:auto;margin-right:auto}
-.contact-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:28px}
+.contact-btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
 .contact-mail{display:inline-block;margin-top:18px;color:var(--muted);font-size:15px;text-decoration:none;word-break:break-all}
 .contact-mail:hover{color:var(--text)}
 
@@ -323,20 +324,20 @@ html.js .reveal.in{opacity:1;transform:none}
 <main id="top">
   <!-- ============ START ============ -->
   <section class="hero" aria-labelledby="hero-title">
-    <div class="glow" aria-hidden="true"></div>
-    <div class="wrap">
-      <p class="pill reveal"><i aria-hidden="true"></i>Thumbnails für YouTube &amp; Twitch</p>
-      <h1 class="reveal" id="hero-title" style="--d:1">Mehr Klicks für <span class="accent">deine Videos.</span></h1>
-      <p class="lead reveal" style="--d:2">Ich mache dir Thumbnails, die im Feed auffallen. Du schickst mir dein Thema und ein paar Bilder, ich schicke dir in <span data-cfg="lieferzeit">24–48 Stunden</span> dein fertiges Thumbnail.</p>
-      <div class="hero-ctas reveal" style="--d:3">
+    <div class="wrap hero-grid">
+      <div>
+      <h1 class="reveal" id="hero-title">Thumbnails, auf die man <span class="accent">klickt.</span></h1>
+      <p class="lead reveal" style="--d:1">Hi, ich bin <span data-cfg="marke">Julius</span>. Ich mache Thumbnails für kleinere YouTube- und Twitch-Kanäle. Du schickst mir deinen Videotitel und ein, zwei Fotos, ich schick dir in <span data-cfg="lieferzeit">24–48 Stunden</span> das fertige Bild zurück.</p>
+      <div class="hero-ctas reveal" style="--d:2">
         <button class="btn btn--accent" type="button" data-order="einzel">Thumbnail bestellen</button>
         <a class="btn btn--ghost" href="#vorher-nachher">Vorher-Nachher ansehen</a>
       </div>
-      <ul class="chips reveal" style="--d:4">
-        <li><b data-cfg="preisEinzel" data-fmt="euro">5 €</b> pro Thumbnail</li>
-        <li><b data-cfg="preisAbo" data-fmt="euro">35 €</b> im Monat unbegrenzt</li>
-        <li>Abo monatlich kündbar</li>
-      </ul>
+      <p class="price-line reveal" style="--d:3"><b data-cfg="preisEinzel" data-fmt="euro">5 €</b> pro Thumbnail <span aria-hidden="true">·</span> oder <b data-cfg="preisAbo" data-fmt="euro">35 €</b> im Monat für so viele, wie du brauchst</p>
+      </div>
+      <figure class="hero-pic reveal" style="--d:2" aria-hidden="true">
+        <img data-img="gaming_after" alt="" width="1280" height="720">
+        <figcaption>eins meiner Beispiele, Gaming</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -345,7 +346,7 @@ html.js .reveal.in{opacity:1;transform:none}
     <div class="wrap ba-stage">
       <div class="sec-head">
         <h2 class="reveal" id="ba-title">Vorher. Nachher.</h2>
-        <p class="lead reveal" style="--d:1"><span class="when-drag">Zieh den Regler und sieh selbst, was ein gutes Thumbnail ausmacht.</span><span class="when-scroll">Scroll weiter und sieh, wie aus einem blassen Bild ein Hingucker wird.</span></p>
+        <p class="lead reveal" style="--d:1"><span class="when-drag">Zieh den Regler. Links siehst du, wie das Bild vorher aussah.</span><span class="when-scroll">Scroll weiter. Links siehst du, wie das Bild vorher aussah.</span></p>
       </div>
       <div class="ba-box reveal" style="--d:2">
         <div class="tabs" role="tablist" aria-label="Beispiel wählen">
@@ -363,9 +364,9 @@ html.js .reveal.in{opacity:1;transform:none}
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
         </div></div>
-        <p class="ba-cap" id="ba-cap" aria-live="polite"><b>Klare Botschaft.</b> Eine große Zahl statt langem Titel. Lesbar auch auf dem kleinsten Handy.</p>
+        <p class="ba-cap" id="ba-cap" aria-live="polite">Vorher stand der ganze Titel drauf, 15 Wörter. Auf dem Handy liest das niemand. Jetzt: eine große Zahl und eine Kurve, die nach oben geht.</p>
         <div class="ba-progress" aria-hidden="true"><span></span></div>
-        <p class="demo-note">Beispiel-Designs, keine echten Kundenaufträge.</p>
+        <p class="demo-note">Ehrlich gesagt: Das sind Beispiele, die ich zum Zeigen gebaut habe. Echte Kundenaufträge kommen hier hin, sobald es welche gibt.</p>
       </div>
     </div>
   </section>
@@ -374,8 +375,8 @@ html.js .reveal.in{opacity:1;transform:none}
   <section class="sec" id="beispiele" aria-labelledby="beispiele-title" style="padding-top:0">
     <div class="wrap">
       <div class="sec-head">
-        <h2 class="reveal" id="beispiele-title">Noch mehr Beispiele</h2>
-        <p class="lead reveal" style="--d:1">Finanzen, Fitness, Gaming, Tech: Ich passe den Look an deinen Kanal an. Zum Vergrößern antippen.</p>
+        <h2 class="reveal" id="beispiele-title">Noch ein paar</h2>
+        <p class="lead reveal" style="--d:1">Querbeet aus verschiedenen Nischen. Antippen zum Vergrößern.</p>
       </div>
       <div class="grid">
         <button class="card reveal" type="button" data-img="fitness_after" data-caption="Fitness · Tag 1 vs. Tag 30" data-alt="Thumbnail mit großer Schrift „Tag 1“ und „Tag 30“, grübelndem Emoji, Bizeps-Emoji und Banner „100 Liegestütze“."><span class="card-img"><img data-img="fitness_after" alt="" width="1280" height="720" loading="lazy"></span><span class="card-cap"><b>Tag 1 vs. Tag 30</b>Fitness</span></button>
@@ -394,25 +395,12 @@ html.js .reveal.in{opacity:1;transform:none}
   <section class="sec" id="ablauf" aria-labelledby="ablauf-title" style="padding-top:0">
     <div class="wrap">
       <div class="sec-head">
-        <h2 class="reveal" id="ablauf-title">So einfach geht’s</h2>
-        <p class="lead reveal" style="--d:1">Kein Konto, keine Anmeldung. Alles läuft per E-Mail.</p>
+        <h2 class="reveal" id="ablauf-title">So läuft’s ab</h2>
       </div>
-      <ol class="steps">
-        <li class="step reveal">
-          <span class="step-num" aria-hidden="true">1</span>
-          <h3>Schreib mir</h3>
-          <p>Videotitel, ein paar Fotos oder Screenshots und deine Idee. Mehr brauche ich nicht.</p>
-        </li>
-        <li class="step reveal" style="--d:1">
-          <span class="step-num" aria-hidden="true">2</span>
-          <h3>Ich baue dein Thumbnail</h3>
-          <p>In <span data-cfg="lieferzeit">24–48 Stunden</span> bekommst du es fertig in 1280 × 720, als JPG und PNG.</p>
-        </li>
-        <li class="step reveal" style="--d:2">
-          <span class="step-num" aria-hidden="true">3</span>
-          <h3>Hochladen und Klicks holen</h3>
-          <p>Passt etwas nicht? Sag Bescheid, dann ändere ich es für dich.</p>
-        </li>
+      <ol class="flow reveal">
+        <li><b>Du schreibst mir.</b> Am einfachsten über den Bestell-Button. Titel, ein paar Fotos oder Screenshots, und was rüberkommen soll. Ein Konto brauchst du nicht.</li>
+        <li><b>Ich baue das Thumbnail.</b> Meistens dauert das <span data-cfg="lieferzeit">24–48 Stunden</span>. Du bekommst es in 1280 × 720 als JPG und PNG.</li>
+        <li><b>Du sagst, ob’s passt.</b> Wenn nicht, ändere ich es. Die Rechnung kommt per Mail, du zahlst per Überweisung.</li>
       </ol>
     </div>
   </section>
@@ -421,14 +409,14 @@ html.js .reveal.in{opacity:1;transform:none}
   <section class="sec" id="preise" aria-labelledby="preise-title" style="padding-top:0">
     <div class="wrap">
       <div class="sec-head">
-        <h2 class="reveal" id="preise-title">Simple Preise</h2>
-        <p class="lead reveal" style="--d:1">Keine Mindestlaufzeit, keine versteckten Kosten.</p>
+        <h2 class="reveal" id="preise-title">Was es kostet</h2>
+        <p class="lead reveal" style="--d:1">Zwei Optionen, mehr nicht. Das Abo kannst du jeden Monat kündigen.</p>
       </div>
       <div class="plans">
         <article class="plan reveal" aria-labelledby="plan-einzel">
           <div class="plan-top"><h3 class="plan-name" id="plan-einzel">Einzel-Thumbnail</h3></div>
           <p class="plan-price"><span class="plan-amount" data-cfg="preisEinzel" data-fmt="num">5</span><span class="plan-cur">€</span><span class="plan-per">pro Thumbnail</span></p>
-          <p class="plan-desc">Perfekt zum Ausprobieren oder für einzelne Videos.</p>
+          <p class="plan-desc">Gut zum Testen, ob dir mein Stil gefällt.</p>
           <ul class="plan-list">
             <li>1 Thumbnail in 1280 × 720 px</li>
             <li><span>Fertig in <span data-cfg="lieferzeit">24–48 Stunden</span></span></li>
@@ -440,11 +428,11 @@ html.js .reveal.in{opacity:1;transform:none}
         <article class="plan plan--featured reveal" aria-labelledby="plan-abo" style="--d:1">
           <div class="plan-top"><h3 class="plan-name" id="plan-abo">Monats-Abo</h3><p class="plan-badge" id="abo-badge">Lohnt sich ab 8 Videos</p></div>
           <p class="plan-price"><span class="plan-amount" data-cfg="preisAbo" data-fmt="num">35</span><span class="plan-cur">€</span><span class="plan-per">pro Monat</span></p>
-          <p class="plan-desc">Unbegrenzt Thumbnails für alle Videos im Monat.</p>
+          <p class="plan-desc">Für alle, die jede Woche hochladen.</p>
           <ul class="plan-list">
             <li>Unbegrenzt viele Thumbnails</li>
             <li>Korrekturen immer inklusive</li>
-            <li>Einheitlicher Look für deinen Kanal</li>
+            <li>Alle Thumbnails im gleichen Stil</li>
             <li>Monatlich kündbar</li>
           </ul>
           <button class="btn btn--accent" type="button" data-order="abo">Abo starten</button>
@@ -459,7 +447,7 @@ html.js .reveal.in{opacity:1;transform:none}
   <section class="sec" id="faq" aria-labelledby="faq-title" style="padding-top:0">
     <div class="wrap">
       <div class="sec-head">
-        <h2 class="reveal" id="faq-title">Fragen &amp; Antworten</h2>
+        <h2 class="reveal" id="faq-title">Was oft gefragt wird</h2>
       </div>
       <div class="faq-list reveal">
         <details class="faq">
@@ -498,9 +486,8 @@ html.js .reveal.in{opacity:1;transform:none}
   <section id="kontakt" aria-labelledby="kontakt-title">
     <div class="wrap">
       <div class="contact reveal">
-        <div class="glow" aria-hidden="true"></div>
-        <h2 id="kontakt-title">Lust auf <span class="accent">mehr Klicks?</span></h2>
-        <p class="lead">Schreib mir einfach. Ich melde mich innerhalb von <span data-cfg="antwortzeit">24 Stunden</span>.</p>
+        <h2 id="kontakt-title">Hast du ein Video, das bald online geht?</h2>
+        <p class="lead">Dann schreib mir. Ich antworte meistens innerhalb von <span data-cfg="antwortzeit">24 Stunden</span>, oft schneller.</p>
         <div class="contact-btns">
           <button class="btn btn--accent" type="button" data-order="einzel">Thumbnail bestellen</button>
           <button class="btn btn--ghost" type="button" data-copy-email>E-Mail-Adresse kopieren</button>
@@ -583,7 +570,7 @@ html.js .reveal.in{opacity:1;transform:none}
       <h2 class="dlg-title" id="order-title" tabindex="-1" data-autofocus>Thumbnail bestellen</h2>
       <button class="dlg-close" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
     </div>
-    <p class="dlg-intro">Füll aus, was du schon weißt. Daraus wird deine fertige E-Mail an mich. Diese Seite speichert und versendet nichts.</p>
+    <p class="dlg-intro">Füll aus, was du schon weißt. Daraus wird eine E-Mail an mich, die du nur noch abschicken musst. Die Seite selbst speichert nichts.</p>
     <fieldset class="pkg">
       <legend class="label">Paket</legend>
       <label class="pkg-opt"><input class="pkg-input" type="radio" name="paket" value="einzel" checked><span class="pkg-box"><b>Einzel-Thumbnail</b><span><span data-cfg="preisEinzel" data-fmt="euro">5 €</span> pro Stück</span></span></label>
@@ -663,9 +650,9 @@ html.js .reveal.in{opacity:1;transform:none}
     if (!box) return;
     var handle = $(".ba-handle", box), before = $(".ba-before", box), after = $(".ba-after", box), cap = $("#ba-cap");
     var PAIRS = [
-      { b: "finance_before", a: "finance_after", t: "Finanzen", cap: "<b>Klare Botschaft.</b> Eine große Zahl statt langem Titel. Lesbar auch auf dem kleinsten Handy." },
-      { b: "fitness_before", a: "fitness_after", t: "Fitness", cap: "<b>Emotion und Fokus.</b> Ein klares Motiv, das sofort neugierig macht. Man versteht das Video in einer Sekunde." },
-      { b: "gaming_before", a: "gaming_after", t: "Gaming", cap: "<b>Starker Kontrast.</b> Knallige Farben, die sich im Feed von allen anderen Videos abheben." }
+      { b: "finance_before", a: "finance_after", t: "Finanzen", cap: "Vorher stand der ganze Titel drauf, 15 Wörter. Auf dem Handy liest das niemand. Jetzt: eine große Zahl und eine Kurve, die nach oben geht." },
+      { b: "fitness_before", a: "fitness_after", t: "Fitness", cap: "Vorher grauer Hintergrund und ein langer Titel. Jetzt Tag 1 gegen Tag 30, da weiß man sofort, worum es geht." },
+      { b: "gaming_before", a: "gaming_after", t: "Gaming", cap: "Vorher ein dunkles Standbild aus dem Stream mit \u201E24h Stream ohne Pause!!!\u201C. Jetzt knallige Farben, Controller und Stoppuhr." }
     ];
     var pos = 50, dragging = false, touched = false;
     function set(p) {
