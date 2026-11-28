@@ -141,6 +141,25 @@ h2{font-size:clamp(30px,4.4vw,48px);line-height:1.08}
 .ba-cap b{color:var(--text);font-weight:600}
 .demo-note{font-size:13px;color:var(--muted);opacity:.8;margin-top:6px}
 
+/* Scroll-Story: Bildschirm kippt rein und wischt beim Scrollen von Vorher zu Nachher */
+.ba-3d{perspective:1600px}
+.ba-progress,.when-scroll{display:none}
+html.scrolly .when-scroll{display:inline}
+html.scrolly .when-drag{display:none}
+html.scrolly #vorher-nachher{height:420vh;padding:0}
+html.scrolly .ba-stage{position:sticky;top:64px;height:calc(100vh - 64px);height:calc(100svh - 64px);display:flex;flex-direction:column;justify-content:center;padding-top:12px;padding-bottom:12px}
+html.scrolly .ba-stage .sec-head{margin-bottom:clamp(14px,3vh,28px)}
+html.scrolly .ba-box{width:min(960px,calc((100svh - 400px) * 16 / 9),100%)}
+html.scrolly .ba{cursor:default;transform:rotateX(var(--rx,0deg)) scale(var(--sc,1));transform-origin:50% 0;will-change:transform;
+  box-shadow:0 40px 90px -30px rgba(59,130,246,calc(.15 + var(--gl,0) * .35)),0 30px 80px -30px rgba(0,0,0,.8)}
+html.scrolly .ba-handle{cursor:default}
+html.scrolly .ba-cap{min-height:3.2em;margin-top:14px}
+html.scrolly .ba-progress{display:block;height:3px;border-radius:3px;background:var(--line);max-width:240px;margin:10px auto 0;overflow:hidden}
+html.scrolly .ba-progress span{display:block;height:100%;width:100%;background:linear-gradient(90deg,#3b82f6,#22c55e);transform-origin:0 50%;transform:scaleX(var(--prog,0))}
+html.scrolly .ba-box.reveal{opacity:1;transform:none}
+@media (max-height:620px){html.scrolly .ba-stage .lead{display:none}}
+.hero .wrap{transform:translateY(calc(var(--hp,0) * -40px));opacity:calc(1 - var(--hp,0) * .9)}
+
 /* ---------- Galerie ---------- */
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 @media (min-width:820px){.grid{grid-template-columns:repeat(4,1fr);gap:16px}}
@@ -323,10 +342,10 @@ html.js .reveal.in{opacity:1;transform:none}
 
   <!-- ============ VORHER / NACHHER ============ -->
   <section class="sec" id="vorher-nachher" aria-labelledby="ba-title">
-    <div class="wrap">
+    <div class="wrap ba-stage">
       <div class="sec-head">
         <h2 class="reveal" id="ba-title">Vorher. Nachher.</h2>
-        <p class="lead reveal" style="--d:1">Zieh den Regler und sieh selbst, was ein gutes Thumbnail ausmacht.</p>
+        <p class="lead reveal" style="--d:1"><span class="when-drag">Zieh den Regler und sieh selbst, was ein gutes Thumbnail ausmacht.</span><span class="when-scroll">Scroll weiter und sieh, wie aus einem blassen Bild ein Hingucker wird.</span></p>
       </div>
       <div class="ba-box reveal" style="--d:2">
         <div class="tabs" role="tablist" aria-label="Beispiel wählen">
@@ -334,7 +353,7 @@ html.js .reveal.in{opacity:1;transform:none}
           <button class="tab" type="button" role="tab" aria-selected="false" data-pair="1">Fitness</button>
           <button class="tab" type="button" role="tab" aria-selected="false" data-pair="2">Gaming</button>
         </div>
-        <div class="ba" id="ba">
+        <div class="ba-3d"><div class="ba" id="ba">
           <img class="ba-after" data-img="finance_after" alt="Nachher: neu gestaltetes Finanz-Thumbnail mit großer Zahl und Wachstumskurve" width="1280" height="720">
           <img class="ba-before" data-img="finance_before" alt="Vorher: blasses Finanz-Thumbnail mit langem Titel" width="1280" height="720">
           <span class="ba-tag ba-tag--before" aria-hidden="true">Vorher</span>
@@ -343,8 +362,9 @@ html.js .reveal.in{opacity:1;transform:none}
           <button class="ba-handle" type="button" role="slider" aria-label="Vorher-Nachher-Regler" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50 Prozent Vorher">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
-        </div>
+        </div></div>
         <p class="ba-cap" id="ba-cap" aria-live="polite"><b>Klare Botschaft.</b> Eine große Zahl statt langem Titel. Lesbar auch auf dem kleinsten Handy.</p>
+        <div class="ba-progress" aria-hidden="true"><span></span></div>
         <p class="demo-note">Beispiel-Designs, keine echten Kundenaufträge.</p>
       </div>
     </div>
@@ -658,8 +678,9 @@ html.js .reveal.in{opacity:1;transform:none}
       var r = box.getBoundingClientRect();
       set((e.clientX - r.left) / r.width * 100);
     }
+    var scrolly = false;
     box.addEventListener("pointerdown", function (e) {
-      if (e.button !== 0) return;
+      if (e.button !== 0 || scrolly) return;
       dragging = true; touched = true;
       box.classList.add("dragging");
       try { box.setPointerCapture(e.pointerId); } catch (err) {}
@@ -678,7 +699,7 @@ html.js .reveal.in{opacity:1;transform:none}
       touched = true;
     });
 
-    function show(i) {
+    function show(i, instant) {
       var pair = PAIRS[i], imgs = window.IMAGES || {};
       $$(".tab").forEach(function (t) { t.setAttribute("aria-selected", String(Number(t.getAttribute("data-pair")) === i)); });
       cap.innerHTML = pair.cap;
@@ -692,13 +713,65 @@ html.js .reveal.in{opacity:1;transform:none}
         set(50);
         requestAnimationFrame(function () { box.classList.remove("swap"); });
       };
+      if (instant) {
+        if (imgs[pair.b]) before.src = imgs[pair.b];
+        if (imgs[pair.a]) after.src = imgs[pair.a];
+        return;
+      }
       if (reduceMotion.matches) { swap(); return; }
       box.classList.add("swap");
       setTimeout(swap, 250);
     }
     $$(".tab").forEach(function (t) {
-      t.addEventListener("click", function () { show(Number(t.getAttribute("data-pair"))); });
+      t.addEventListener("click", function () {
+        var i = Number(t.getAttribute("data-pair"));
+        if (scrolly) { scrollToPair(i); return; }
+        show(i);
+      });
     });
+
+    /* ---- Scroll-Story (ab 0 % Bewegung reduziert: normaler Regler) ---- */
+    var sec = $("#vorher-nachher"), stage = $(".ba-stage"), cur = 0, ticking = false;
+    var INTRO = 0.14, SEG = (1 - INTRO) / PAIRS.length;
+    var clamp = function (v, a, b) { return v < a ? a : v > b ? b : v; };
+    var ease = function (t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; };
+    function progress() {
+      var top = sec.getBoundingClientRect().top + window.scrollY - 64;
+      var len = sec.offsetHeight - stage.offsetHeight;
+      return { top: top, len: len, p: clamp((window.scrollY - top) / len, 0, 1) };
+    }
+    function scrollToPair(i) {
+      var g = progress();
+      window.scrollTo({ top: g.top + g.len * (INTRO + SEG * (i + 0.8)), behavior: "smooth" });
+    }
+    function frame() {
+      ticking = false;
+      if (!scrolly) return;
+      var p = progress().p;
+      var k = ease(clamp(p / INTRO, 0, 1));
+      box.style.setProperty("--rx", (32 * (1 - k)).toFixed(2) + "deg");
+      box.style.setProperty("--sc", (0.82 + 0.18 * k).toFixed(4));
+      box.style.setProperty("--gl", k.toFixed(3));
+      var q = Math.max(0, p - INTRO) / SEG, i = Math.min(PAIRS.length - 1, Math.floor(q)), t = q - i;
+      if (p >= 1) { i = PAIRS.length - 1; t = 1; }
+      if (i !== cur) { cur = i; show(i, true); }
+      set(100 - 100 * ease(clamp((t - 0.15) / 0.6, 0, 1)));
+      sec.style.setProperty("--prog", p.toFixed(4));
+      $(".ba-progress span").style.setProperty("--prog", p.toFixed(4));
+    }
+    function requestFrame() { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }
+    function setMode() {
+      var want = !reduceMotion.matches && window.innerHeight >= 480;
+      if (want === scrolly) return;
+      scrolly = want;
+      document.documentElement.classList.toggle("scrolly", scrolly);
+      if (scrolly) { touched = true; cur = -1; requestFrame(); }
+      else { box.style.removeProperty("--rx"); box.style.removeProperty("--sc"); show(0, true); cur = 0; set(50); }
+    }
+    window.addEventListener("scroll", requestFrame, { passive: true });
+    window.addEventListener("resize", function () { setMode(); requestFrame(); });
+    if (reduceMotion.addEventListener) reduceMotion.addEventListener("change", setMode);
+    setMode();
 
     /* Einmal kurz hin und her schwingen, damit man sieht: hier kann man ziehen */
     if (!reduceMotion.matches && "IntersectionObserver" in window) {
@@ -858,7 +931,11 @@ html.js .reveal.in{opacity:1;transform:none}
   /* Ruhiges Einblenden, Kopfzeile, schwebender Button */
   function initScroll() {
     var header = $("#siteHeader"), fab = $("#fab"), hero = $(".hero"), contact = $("#kontakt"), footer = $(".site-footer");
-    function onScroll() { header.classList.toggle("scrolled", window.scrollY > 8); }
+    var heroIn = $(".hero .wrap");
+    function onScroll() {
+      header.classList.toggle("scrolled", window.scrollY > 8);
+      if (!reduceMotion.matches) heroIn.style.setProperty("--hp", Math.min(1, window.scrollY / (hero.offsetHeight || 1)).toFixed(3));
+    }
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     var items = $$(".reveal");
