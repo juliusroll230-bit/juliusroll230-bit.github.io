@@ -4,18 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Julius Thumbnails – Mehr Klicks mit professionellen YouTube-Thumbnails</title>
-<meta name="description" content="Professionelle Thumbnails für YouTuber und Streamer: einzeln für 5 € oder unbegrenzt im Monats-Abo für 35 €. Fertig in 24–48 Stunden, Bestellung einfach per E-Mail.">
+<meta name="description" content="Thumbnails für YouTuber und Streamer: einzeln für 5 € oder unbegrenzt im Monats-Abo für 35 €. Fertig in 24–48 Stunden, Bestellung einfach per E-Mail.">
 <meta name="theme-color" content="#0B0B0C">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Julius Thumbnails – Mehr Klicks mit professionellen Thumbnails">
-<meta property="og:description" content="Ein Bild entscheidet, ob jemand klickt. Thumbnails für YouTuber und Streamer: einzeln 5 €, unbegrenzt 35 € im Monat.">
+<meta property="og:title" content="Julius Thumbnails – Mehr Klicks für deine Videos">
+<meta property="og:description" content="Thumbnails für YouTuber und Streamer: einzeln 5 €, unbegrenzt 35 € im Monat. Fertig in 24–48 Stunden.">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Julius Thumbnails – Mehr Klicks mit professionellen Thumbnails">
-<meta name="twitter:description" content="Ein Bild entscheidet, ob jemand klickt. Thumbnails für YouTuber und Streamer: einzeln 5 €, unbegrenzt 35 € im Monat.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='11' fill='%230B0B0C'/%3E%3Crect x='9' y='14' width='30' height='20' rx='4' fill='none' stroke='%23C99A7A' stroke-width='2.2'/%3E%3Cpath d='M21 19.5v9l7.5-4.5z' fill='%23C99A7A'/%3E%3C/svg%3E">
-<link rel="preload" href="assets/fonts/italiana-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/manrope-300.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/dm-mono-400.woff2" as="font" type="font/woff2" crossorigin>
+<meta name="twitter:title" content="Julius Thumbnails – Mehr Klicks für deine Videos">
+<meta name="twitter:description" content="Thumbnails für YouTuber und Streamer: einzeln 5 €, unbegrenzt 35 € im Monat. Fertig in 24–48 Stunden.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='12' fill='%233b82f6'/%3E%3Cpath d='M19 15.5v17l14-8.5z' fill='%23fff'/%3E%3C/svg%3E">
 
 <!-- =====================================================================
      EINSTELLUNGEN
@@ -50,568 +47,416 @@ document.documentElement.classList.add("js");
 </script>
 
 <style>
-/* ---------- Schriften (liegen auf diesem Server, nichts wird von Google geladen) ---------- */
-@font-face{font-family:"Italiana";font-weight:400;font-style:normal;font-display:swap;src:url(assets/fonts/italiana-400.woff2) format("woff2")}
-@font-face{font-family:"Manrope";font-weight:300;font-style:normal;font-display:swap;src:url(assets/fonts/manrope-300.woff2) format("woff2")}
-@font-face{font-family:"Manrope";font-weight:400;font-style:normal;font-display:swap;src:url(assets/fonts/manrope-400.woff2) format("woff2")}
-@font-face{font-family:"Manrope";font-weight:500;font-style:normal;font-display:swap;src:url(assets/fonts/manrope-500.woff2) format("woff2")}
-@font-face{font-family:"Manrope";font-weight:600;font-style:normal;font-display:swap;src:url(assets/fonts/manrope-600.woff2) format("woff2")}
-@font-face{font-family:"DM Mono";font-weight:300;font-style:normal;font-display:swap;src:url(assets/fonts/dm-mono-300.woff2) format("woff2")}
-@font-face{font-family:"DM Mono";font-weight:400;font-style:normal;font-display:swap;src:url(assets/fonts/dm-mono-400.woff2) format("woff2")}
-
 :root{
-  --night:#0B0B0C; --champagne:#EFE6D2; --rose:#C99A7A; --moss:#161618;
-  --rose-soft:rgba(201,154,122,.12); --line:rgba(239,230,210,.14); --line-strong:rgba(239,230,210,.28);
-  --muted:rgba(239,230,210,.62); --ink-muted:rgba(11,11,12,.62); --ink-line:rgba(11,11,12,.16);
-  --f-display:"Italiana","Manrope",serif; --f-sans:"Manrope",system-ui,sans-serif; --f-mono:"DM Mono",ui-monospace,monospace;
-  --ease:cubic-bezier(.16,1,.3,1); --gutter:clamp(16px,4vw,56px); --vh:100vh;
+  /* gleiche Farben wie die Thumbnail-Zentrale */
+  --bg:#0B0B0C; --bg-2:#161618; --card:#161618; --card-hover:#1c1c1f; --card-3:#232327;
+  --text:#ffffff; --text-2:#e4e4e7; --muted:#a1a1aa; --line:#27272a; --line-strong:#3f3f46;
+  --accent:#3b82f6; --accent-hover:#4f8ff7; --accent-soft:rgba(59,130,246,.14); --on-accent:#ffffff;
+  --green:#22c55e; --green-soft:rgba(34,197,94,.13);
+  --shadow:0 1px 0 rgba(255,255,255,.04) inset,0 10px 30px -12px rgba(0,0,0,.7);
+  --glow:0 0 0 1px rgba(59,130,246,.55),0 8px 28px -6px rgba(59,130,246,.55);
+  --radius:18px; --ease:cubic-bezier(.2,.8,.2,1); --gutter:clamp(16px,4vw,40px);
   color-scheme:dark;
 }
-@supports (height:100svh){:root{--vh:100svh}}
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:auto;-webkit-text-size-adjust:100%;background:var(--night)}
-html,body{font-family:var(--f-sans)}
-body{margin:0;background:var(--night);color:var(--champagne);font-weight:300;font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:clip}
+html{-webkit-text-size-adjust:100%;background:var(--bg);scroll-behavior:smooth;scroll-padding-top:80px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--text-2);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Segoe UI",system-ui,sans-serif;font-weight:400;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:clip}
 img{max-width:100%;display:block}
 a{color:inherit}
 button{font:inherit;color:inherit}
-::selection{background:var(--rose);color:var(--night)}
+::selection{background:var(--accent);color:var(--on-accent)}
 .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-:focus-visible{outline:1.5px solid var(--rose);outline-offset:3px;border-radius:4px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:8px}
+.wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 var(--gutter)}
+.accent{color:var(--accent);background:linear-gradient(90deg,#3b82f6,#22c55e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+h1,h2,h3{color:var(--text);font-weight:700;letter-spacing:-.025em;margin:0;text-wrap:balance}
+h2{font-size:clamp(30px,4.4vw,48px);line-height:1.08}
+.lead{color:var(--muted);font-size:clamp(16px,1.6vw,18px);max-width:52ch;margin:14px 0 0;text-wrap:pretty}
+.sec{padding:clamp(64px,10vw,112px) 0}
+.sec-head{text-align:center;display:flex;flex-direction:column;align-items:center;margin-bottom:clamp(28px,5vw,48px)}
 
-/* ---------- Schrift-Rollen ---------- */
-.type-display{font-family:var(--f-display);font-weight:400;font-size:22vw;line-height:.9;letter-spacing:.01em;margin:0}
-@media (min-width:768px){.type-display{font-size:clamp(56px,9vw,168px)}}
-.type-manifesto{font-family:var(--f-display);font-weight:400;font-size:clamp(32px,4.5vw,72px);line-height:1.04;margin:0}
-.type-footer{font-family:var(--f-display);font-weight:400;font-size:clamp(36px,6vw,96px);line-height:.98;margin:0}
-.type-body{font-family:var(--f-sans);font-weight:300;font-size:16px;line-height:1.65}
-.type-body-lg{font-family:var(--f-sans);font-weight:400;font-size:17px;line-height:1.6}
-.type-body-sm{font-family:var(--f-sans);font-weight:400;font-size:15px;line-height:1.6}
-.type-label{font-family:var(--f-mono);font-weight:400;font-size:11px;text-transform:uppercase;letter-spacing:.2em;line-height:1.5}
-@media (min-width:768px){.type-label{font-size:12px}}
-.title-dash{-webkit-text-stroke:.03em currentColor;color:var(--rose)}
-.euro{font-family:var(--f-sans);font-weight:300}
-.rose{color:var(--rose)}
+/* Weiches Licht im Hintergrund */
+.glow{position:absolute;pointer-events:none;border-radius:50%;filter:blur(90px);opacity:.5;z-index:0}
 
-/* ---------- Bühne, Korn, Cursor ---------- */
-#stage{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;pointer-events:none;display:block}
-.grain{position:fixed;inset:-50%;z-index:90;pointer-events:none;opacity:.07;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-.cursor-dot,.cursor-ring{position:fixed;left:0;top:0;transform:translate3d(-200px,-200px,0);z-index:100;pointer-events:none;border-radius:50%;opacity:0;transition:opacity .3s}
-.cursor-dot{width:6px;height:6px;margin:-3px 0 0 -3px;background:var(--rose);transition:opacity .3s,width .3s var(--ease),height .3s var(--ease),margin .3s var(--ease)}
-.cursor-ring{width:34px;height:34px;margin:-17px 0 0 -17px;border:1px solid var(--rose);transition:opacity .3s,width .45s var(--ease),height .45s var(--ease),margin .45s var(--ease),background-color .45s}
-html.has-cursor,html.has-cursor *{cursor:none!important}
-html.has-cursor .cursor-dot,html.has-cursor .cursor-ring{opacity:1}
-html.has-cursor.cursor-out .cursor-dot,html.has-cursor.cursor-out .cursor-ring{opacity:0}
-html.cursor-hover .cursor-ring{width:78px;height:78px;margin:-39px 0 0 -39px;background:rgba(201,154,122,.12)}
-html.cursor-hover .cursor-dot{width:3px;height:3px;margin:-1.5px 0 0 -1.5px}
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 20px;border-radius:12px;border:1px solid transparent;
+  text-decoration:none;font-weight:600;font-size:15px;cursor:pointer;white-space:nowrap;transition:transform .15s var(--ease),background-color .2s,border-color .2s,color .2s,box-shadow .25s var(--ease)}
+.btn:active{transform:scale(.97)}
+.btn--accent{background:var(--accent);color:var(--on-accent)}
+.btn--accent:hover{background:var(--accent-hover);box-shadow:var(--glow)}
+.btn--ghost{background:#1c1c1f;border-color:var(--line-strong);color:var(--text)}
+.btn--ghost:hover{background:var(--card-3)}
+.btn svg{width:18px;height:18px;flex:none}
 
 /* ---------- Kopfzeile ---------- */
-#siteHeader{position:fixed;top:0;left:0;right:0;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;
-  padding:18px var(--gutter);color:var(--champagne);opacity:0;transform:translateY(-14px);transition:opacity 1s var(--ease) .5s,transform 1.2s var(--ease) .5s,color .5s}
-body.loaded #siteHeader{opacity:1;transform:none}
-#siteHeader::before{content:"";position:absolute;inset:0 0 -32px 0;z-index:-1;pointer-events:none;transition:opacity .5s,background .5s;
-  background:linear-gradient(to bottom,rgba(11,11,12,.92),rgba(11,11,12,.6) 60%,rgba(11,11,12,0))}
-#siteHeader[data-theme="paper"]{color:var(--night)}
-#siteHeader[data-theme="paper"]::before{background:linear-gradient(to bottom,rgba(239,230,210,.95),rgba(239,230,210,.6) 60%,rgba(239,230,210,0))}
-#siteHeader[data-theme="moss"]::before{background:linear-gradient(to bottom,rgba(22,22,24,.96),rgba(22,22,24,.6) 60%,rgba(22,22,24,0))}
-.brand{display:inline-flex;align-items:center;gap:12px;text-decoration:none;justify-self:start}
-.brand svg{width:30px;height:30px;flex:none}
-.brand-word{font-family:var(--f-display);font-size:22px;letter-spacing:.06em;line-height:1;white-space:nowrap}
-@media (max-width:639px){.brand-word{display:none}}
-.chapter-label{justify-self:center;white-space:nowrap}
-.chapter-label span{display:inline-block}
-.head-right{justify-self:end;display:flex;align-items:center;gap:28px}
-.nav{display:none;gap:24px}
-@media (min-width:1024px){.nav{display:flex}}
-.nav a{text-decoration:none;opacity:.62;transition:opacity .3s;position:relative;padding:4px 0}
-.nav a:hover,.nav a[aria-current="true"]{opacity:1}
-.nav a[aria-current="true"]::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:var(--rose)}
-.head-cta{border:1px solid currentColor;border-radius:999px;background:transparent;padding:9px 16px;cursor:pointer;transition:background-color .3s,color .3s}
-.head-cta:hover{background:var(--rose);border-color:var(--rose);color:var(--night)}
+#siteHeader{position:sticky;top:0;z-index:50;background:rgba(11,11,12,.72);-webkit-backdrop-filter:saturate(180%) blur(18px);backdrop-filter:saturate(180%) blur(18px);border-bottom:1px solid transparent;transition:border-color .3s}
+#siteHeader.scrolled{border-bottom-color:var(--line)}
+.head-in{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+.brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;font-size:17px;letter-spacing:-.01em}
+.brand-mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#3b82f6,#22c55e);box-shadow:0 0 18px rgba(59,130,246,.45);display:grid;place-items:center;flex:none}
+.brand-mark svg{width:14px;height:14px}
+.brand-word span+span{color:var(--muted);font-weight:500}
+.head-right{display:flex;align-items:center;gap:22px}
+.nav{display:none;gap:22px;font-size:15px}
+@media (min-width:820px){.nav{display:flex}}
+.nav a{text-decoration:none;color:var(--muted);transition:color .2s}
+.nav a:hover{color:var(--text)}
+.head-cta{min-height:36px;padding:0 14px;font-size:14px;border-radius:10px}
 
+/* ---------- Hero ---------- */
+.hero{position:relative;padding:clamp(48px,9vw,96px) 0 clamp(40px,6vw,64px);text-align:center;overflow:hidden}
+.hero .glow{width:520px;height:520px;background:var(--accent);top:-260px;left:50%;transform:translateX(-50%);opacity:.22}
+.hero .wrap{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:14px;color:var(--muted)}
+.pill i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(34,197,94,.7);display:block}
+.hero h1{font-size:clamp(40px,7.4vw,80px);line-height:1.02;margin-top:20px;max-width:14ch}
+.hero .lead{text-align:center;margin-top:18px}
+.hero-ctas{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:28px}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;list-style:none;padding:0;margin:26px 0 0}
+.chips li{padding:8px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:14px;color:var(--muted)}
+.chips b{color:var(--text);font-weight:600}
 
-/* ---------- Kapitel ---------- */
-main{position:relative;z-index:10}
-.chapter{position:relative}
-.sticky{position:sticky;top:0;height:var(--vh);overflow:hidden}
-.wrap{width:100%;max-width:1440px;margin:0 auto;padding:0 var(--gutter)}
-.eyebrow{display:flex;gap:14px;align-items:center;color:var(--muted);margin:0 0 22px}
-.eyebrow b{font-weight:400;color:var(--rose)}
-.eyebrow i{display:block;width:34px;height:1px;background:currentColor;opacity:.5}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 24px;border-radius:999px;border:1px solid transparent;
-  text-decoration:none;font-family:var(--f-mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:transform .5s var(--ease),background-color .3s,color .3s,border-color .3s}
-.btn:active{transform:scale(.97)}
-.btn--rose{background:var(--rose);color:var(--night)}
-.btn--rose:hover{background:var(--champagne)}
-.btn--line{border-color:var(--line-strong);color:inherit;background:rgba(11,11,12,.25);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
-.btn--line:hover{border-color:var(--rose);color:var(--rose)}
-.btn--ink{background:var(--night);color:var(--champagne)}
-.btn--ink:hover{background:var(--rose);color:var(--night)}
-.reveal{opacity:0;transform:translateY(28px);transition:opacity 1s ease,transform 1.2s var(--ease);transition-delay:calc(var(--d,0) * 90ms)}
-.reveal.in{opacity:1;transform:none}
+/* ---------- Vorher / Nachher ---------- */
+#vorher-nachher{padding-top:clamp(24px,4vw,40px)}
+.tabs{display:inline-flex;gap:4px;padding:4px;border-radius:12px;background:var(--card);border:1px solid var(--line);margin:0 auto 20px}
+.tab{border:0;background:transparent;padding:8px 16px;border-radius:9px;cursor:pointer;font-weight:500;font-size:15px;color:var(--muted);transition:background-color .25s,color .25s}
+.tab:hover{color:var(--text)}
+.tab[aria-selected="true"]{background:var(--card-3);color:var(--text)}
+.ba-box{max-width:960px;margin:0 auto;text-align:center}
+.ba{position:relative;aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;background:var(--bg-2);border:1px solid var(--line);
+  box-shadow:0 30px 80px -30px rgba(0,0,0,.8);cursor:ew-resize;touch-action:pan-y;user-select:none;-webkit-user-select:none;--pos:50%}
+.ba img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;transition:opacity .35s ease}
+.ba.swap img{opacity:0}
+.ba .ba-before{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
+.ba-line{position:absolute;top:0;bottom:0;left:var(--pos);width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 12px rgba(0,0,0,.4);pointer-events:none}
+.ba-handle{position:absolute;top:50%;left:var(--pos);width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:rgba(255,255,255,.92);color:var(--bg);
+  display:grid;place-items:center;box-shadow:0 6px 24px rgba(0,0,0,.35);border:0;padding:0;cursor:ew-resize;transition:transform .2s var(--ease)}
+.ba-handle:hover,.ba.dragging .ba-handle{transform:scale(1.08)}
+.ba-handle svg{width:22px;height:22px}
+.ba-tag{position:absolute;top:14px;padding:5px 12px;border-radius:999px;font-size:13px;font-weight:600;background:rgba(11,11,12,.6);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);pointer-events:none}
+.ba-tag--before{left:14px}
+.ba-tag--after{right:14px;background:var(--green);color:#04140a}
+.ba-cap{color:var(--muted);margin:18px auto 0;max-width:52ch;min-height:3.2em}
+.ba-cap b{color:var(--text);font-weight:600}
+.demo-note{font-size:13px;color:var(--muted);opacity:.8;margin-top:6px}
 
-/* 01 Auftakt */
-#auftakt{height:190vh}
-.hero{display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:clamp(28px,7vh,72px)}
-@media (min-width:900px){.hero{justify-content:center;padding-bottom:0}}
-.hero-inner{max-width:760px;transform:translateY(calc(var(--p,0) * -60px));opacity:calc(1 - max(0, var(--p,0) - .45) * 2.4)}
-.hero-title{display:block}
-@media (max-width:599px){.hero-title{font-size:19vw}.hero-copy{display:none}.hero-sub{margin-top:12px}.hero-ctas{margin-top:20px}.facts{margin-top:20px}}
-.hero-title .ln{display:block;overflow:hidden;padding-bottom:.06em}
-.hero-title .ln>span{display:inline-block;transform:translateY(105%);transition:transform 1.6s var(--ease)}
-.hero-title .ln:nth-child(2)>span{transition-delay:.12s}
-body.loaded .hero-title .ln>span{transform:none}
-.hero-sub{margin:18px 0 0;max-width:30ch;color:var(--champagne)}
-.hero-copy{margin:22px 0 0;max-width:44ch;color:var(--muted)}
-.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
-.facts{display:flex;flex-wrap:wrap;gap:8px 22px;list-style:none;padding:0;margin:28px 0 0;color:var(--muted)}
-.facts li::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--rose);margin-right:10px;vertical-align:middle}
-.hero-fade{opacity:0;transform:translateY(18px);transition:opacity 1.2s ease .5s,transform 1.4s var(--ease) .5s}
-body.loaded .hero-fade{opacity:1;transform:none}
-.scroll-hint{position:absolute;right:var(--gutter);bottom:clamp(28px,7vh,72px);display:none;align-items:center;gap:12px;color:var(--muted);opacity:calc(1 - var(--p,0)*4)}
-.scroll-hint i{display:block;width:1px;height:46px;background:linear-gradient(var(--rose),transparent);animation:drip 2.4s var(--ease) infinite}
-@keyframes drip{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
-@media (min-width:900px){.scroll-hint{display:flex}}
-
-/* 02 Der Feed */
-#feed{height:280vh}
-.feed-panel{display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:clamp(28px,8vh,80px)}
-@media (min-width:900px){.feed-panel{justify-content:center;padding-bottom:0}}
-.manifesto{max-width:15ch}
-@media (min-width:900px){.manifesto{max-width:13.5ch}}
-.manifesto .w{opacity:.14;transition:opacity .5s}
-.manifesto .w.on{opacity:1}
-.manifesto .w.accent.on{color:var(--rose)}
-.feed-note{max-width:40ch;margin:26px 0 0;color:var(--muted);opacity:calc(min(1, max(0, var(--p,0) - .55) * 4))}
-
-/* 03 Verwandlung */
-#verwandlung{height:460vh}
-.morph{display:flex;flex-direction:column;justify-content:space-between;padding-top:92px;padding-bottom:clamp(22px,5vh,48px)}
-.morph-top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
-.morph-title{font-size:clamp(44px,6vw,104px)}
-.morph-count{color:var(--muted);white-space:nowrap}
-.morph-count b{color:var(--rose);font-weight:400}
-.morph-bottom{display:grid;gap:18px}
-@media (min-width:900px){.morph-bottom{grid-template-columns:1fr auto;align-items:end}}
-.morph-cards{position:relative;min-height:112px}
-.morph-card{position:absolute;inset:auto 0 0 0;opacity:0;transform:translateY(16px);transition:opacity .6s,transform .9s var(--ease)}
-.morph-card.on{opacity:1;transform:none}
-.morph-card h3{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,3.2vw,48px);line-height:1.05;margin:0 0 8px}
-.morph-card p{margin:0;color:var(--muted);max-width:46ch}
-.meter{display:grid;grid-template-columns:auto minmax(120px,1fr) auto;align-items:center;gap:14px;width:min(100%,380px)}
-.meter-bar{position:relative;height:1px;background:var(--line-strong)}
-.meter-bar span{position:absolute;inset:0;background:var(--rose);transform-origin:left;transform:scaleX(var(--mix,0))}
-.meter-bar span::after{content:"";position:absolute;right:-4px;top:-4px;width:9px;height:9px;border-radius:50%;background:var(--rose)}
-.meter .is-on{color:var(--rose)}
-/* Ersatz ohne 3D */
-.morph-fallback{display:none}
-html.no-webgl .morph-fallback{display:block;position:absolute;left:50%;top:50%;width:min(86vw,880px);aspect-ratio:16/9;transform:translate(-50%,-55%);border-radius:14px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.6),0 0 0 1px var(--line)}
-.morph-fallback img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.morph-fallback .fb-after{clip-path:inset(0 calc(100% - var(--mix,0) * 100%) 0 0)}
-
-/* 04 Ablauf */
-#ablauf{height:320vh}
-.flow{display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:clamp(24px,6vh,64px)}
-@media (min-width:900px){.flow{justify-content:center;padding-bottom:0}}
-.flow-title{font-size:clamp(44px,7vw,120px);margin-bottom:clamp(20px,5vh,56px)}
-.steps{list-style:none;margin:0;padding:0;display:grid;gap:clamp(14px,3vh,28px);max-width:620px;position:relative}
-.step{display:grid;grid-template-columns:auto 1fr;gap:6px 22px;opacity:.28;transition:opacity .6s}
-.step.on{opacity:1}
-.step-num{grid-row:span 2;color:var(--rose);padding-top:.5em}
-.step h3{font-family:var(--f-display);font-weight:400;font-size:clamp(26px,2.8vw,40px);line-height:1.05;margin:0}
-.step p{margin:0;color:var(--muted);max-width:48ch}
-@media (max-width:899px){.step p{display:none}.step.on p{display:block}}
-.flow-line{position:absolute;left:-18px;top:6px;bottom:6px;width:1px;background:var(--line)}
-.flow-line span{position:absolute;inset:0;background:var(--rose);transform-origin:top;transform:scaleY(var(--fill,0))}
-@media (max-width:767px){.flow-line{display:none}}
-
-/* 05 Beispiele */
-#beispiele{height:400vh}
-.gallery{display:flex;flex-direction:column;justify-content:center;gap:clamp(18px,4vh,40px)}
-.gallery-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
-.gallery-title{font-size:clamp(44px,7vw,120px)}
-.gallery-note{color:var(--muted);margin:0}
-.track{display:flex;gap:clamp(14px,2vw,28px);padding:0 var(--gutter);width:max-content;will-change:transform;transform:translate3d(var(--tx,0px),0,0)}
-.card{flex:none;width:clamp(260px,34vw,540px);border:0;background:none;padding:0;text-align:left;cursor:pointer}
-.card-img{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:var(--moss);box-shadow:0 0 0 1px var(--line),0 30px 80px rgba(0,0,0,.45);transition:transform .8s var(--ease),box-shadow .5s}
-.card-img img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
-.card:hover .card-img{box-shadow:0 0 0 1px var(--rose),0 40px 100px rgba(0,0,0,.55)}
+/* ---------- Galerie ---------- */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media (min-width:820px){.grid{grid-template-columns:repeat(4,1fr);gap:16px}}
+.card{border:0;padding:0;background:transparent;text-align:left;cursor:zoom-in;display:block;width:100%}
+.card-img{display:block;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:var(--bg-2);border:1px solid var(--line)}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease)}
 .card:hover .card-img img{transform:scale(1.04)}
-.card-cap{display:flex;gap:14px;align-items:baseline;margin-top:16px}
-.card-cap .type-label{color:var(--rose);flex:none}
-.card-cap span:last-child{font-family:var(--f-display);font-size:clamp(20px,2vw,28px);line-height:1.1}
-.track-progress{height:1px;background:var(--line);position:relative;max-width:280px}
-.track-progress span{position:absolute;inset:0;background:var(--rose);transform-origin:left;transform:scaleX(var(--p,0))}
+.card-cap{display:block;font-size:14px;margin-top:8px;color:var(--muted);line-height:1.4}
+.card-cap b{display:block;color:var(--text);font-weight:500}
 
-/* 06 Preise (Papier) */
-#preise{background:linear-gradient(180deg,#F3EBDA,var(--champagne));color:var(--night);padding:clamp(110px,16vh,180px) 0 clamp(120px,18vh,200px);border-radius:28px 28px 0 0}
-#preise .eyebrow{color:var(--ink-muted)}
-#preise .eyebrow b{color:#9A6A4B}
-.price-head{display:grid;gap:20px;margin-bottom:clamp(36px,7vh,72px)}
-@media (min-width:900px){.price-head{grid-template-columns:1.2fr 1fr;align-items:end}}
-.price-head p{margin:0;color:var(--ink-muted);max-width:42ch}
-.plans{display:grid;gap:18px}
-@media (min-width:900px){.plans{grid-template-columns:1fr 1fr;gap:24px}}
-.plan{position:relative;border:1px solid var(--ink-line);border-radius:22px;padding:clamp(24px,3vw,40px);display:flex;flex-direction:column;background:rgba(255,255,255,.28)}
-.plan--featured{background:var(--night);color:var(--champagne);border-color:var(--night);box-shadow:0 40px 90px rgba(11,11,12,.25)}
-.plan-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.plan-badge{color:var(--rose);border:1px solid rgba(201,154,122,.5);border-radius:999px;padding:5px 12px;margin:0}
-.plan-name{font-family:var(--f-display);font-weight:400;font-size:clamp(30px,3vw,44px);line-height:1;margin:0}
-.plan-desc{margin:14px 0 0;opacity:.72;max-width:38ch}
-.plan-price{display:flex;align-items:baseline;gap:10px;margin:26px 0 22px;flex-wrap:wrap}
-.plan-amount{font-family:var(--f-display);font-size:clamp(72px,9vw,132px);line-height:.85}
-.plan-cur{font-family:var(--f-sans);font-weight:300;font-size:clamp(30px,3.5vw,48px);line-height:1}
-.plan-per{opacity:.7}
-.plan-list{list-style:none;margin:0 0 28px;padding:0;display:grid;gap:10px}
-.plan-list li{display:flex;gap:12px;align-items:baseline}
-.plan-list li::before{content:"";flex:none;width:12px;height:1px;background:currentColor;opacity:.5;transform:translateY(-4px)}
-.plan--featured .plan-list li::before{background:var(--rose);opacity:1}
-.plan .btn{margin-top:auto;width:100%}
-.plan-fine{margin:14px 0 0;opacity:.6;font-size:13px}
-.calc{margin-top:22px;border:1px solid var(--ink-line);border-radius:22px;padding:clamp(22px,3vw,36px);display:grid;gap:18px}
-@media (min-width:900px){.calc{grid-template-columns:1.1fr 1fr auto;align-items:center;gap:32px}}
-.calc-q{display:block;margin-bottom:12px;color:var(--ink-muted)}
-.calc-row{display:flex;align-items:center;gap:18px}
-.calc-num{font-family:var(--f-display);font-size:56px;line-height:1;min-width:2ch;text-align:right}
-.calc-out{margin:0;font-weight:400}
-.range{-webkit-appearance:none;appearance:none;width:100%;height:28px;background:transparent;cursor:pointer;--fill:25%}
-.range::-webkit-slider-runnable-track{height:2px;border-radius:2px;background:linear-gradient(90deg,var(--night) var(--fill),var(--ink-line) var(--fill))}
-.range::-moz-range-track{height:2px;border-radius:2px;background:linear-gradient(90deg,var(--night) var(--fill),var(--ink-line) var(--fill))}
-.range::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--rose);border:4px solid var(--champagne);box-shadow:0 0 0 1px var(--night);margin-top:-10px}
-.range::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--rose);border:4px solid var(--champagne);box-shadow:0 0 0 1px var(--night)}
-.vat-note{margin:22px 0 0;color:var(--ink-muted);font-size:13px}
+/* ---------- Ablauf ---------- */
+.steps{display:grid;gap:14px;list-style:none;padding:0;margin:0;counter-reset:s}
+@media (min-width:820px){.steps{grid-template-columns:repeat(3,1fr);gap:16px}}
+.step{padding:24px;border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0) 40%),var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
+.step-num{width:34px;height:34px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:600;margin-bottom:16px}
+.step h3{font-size:19px;letter-spacing:-.01em}
+.step p{color:var(--muted);margin:8px 0 0}
 
-/* FAQ-Vorhang */
-#faq{position:relative;z-index:12;background:var(--moss);border-radius:28px 28px 0 0;margin-top:-28px;padding:clamp(96px,14vh,160px) 0 clamp(80px,12vh,140px);box-shadow:0 -30px 80px rgba(0,0,0,.35)}
-.faq-grid{display:grid;gap:40px}
-@media (min-width:900px){.faq-grid{grid-template-columns:1fr 1.3fr;gap:64px}}
-.faq-side p{color:var(--muted);max-width:36ch}
-.faq-side a{color:var(--rose)}
-.faq-side .type-manifesto{margin-bottom:20px}
-.faq{border-top:1px solid var(--line)}
-.faq:last-child{border-bottom:1px solid var(--line)}
-.faq summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 0;cursor:pointer;font-family:var(--f-display);font-size:clamp(22px,2.2vw,30px);line-height:1.15}
+/* ---------- Preise ---------- */
+.plans{display:grid;gap:16px;max-width:860px;margin:0 auto}
+@media (min-width:760px){.plans{grid-template-columns:1fr 1fr}}
+.plan{position:relative;display:flex;flex-direction:column;padding:28px;border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0) 40%),var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
+.plan--featured{border-color:rgba(59,130,246,.6);background:linear-gradient(180deg,rgba(59,130,246,.1),rgba(255,255,255,0) 55%),var(--card);box-shadow:var(--glow)}
+.plan-top{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:30px}
+.plan-name{font-size:18px;letter-spacing:-.01em}
+.plan-badge{margin:0;padding:3px 10px;border-radius:999px;background:var(--green-soft);color:#4ade80;border:1px solid rgba(34,197,94,.3);font-size:12px;font-weight:600;white-space:nowrap}
+.plan-price{margin:18px 0 4px;display:flex;align-items:baseline;gap:6px}
+.plan-amount{font-size:60px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.04em;line-height:1}
+.plan-cur{font-size:28px;font-weight:700;color:var(--text)}
+.plan-per{color:var(--muted);font-size:15px;margin-left:4px}
+.plan-desc{color:var(--muted);margin:0 0 6px}
+.plan-list{list-style:none;padding:0;margin:18px 0 26px;display:grid;gap:10px;flex:1}
+.plan-list li{display:flex;gap:10px;align-items:flex-start}
+.plan-list li::before{content:"";flex:none;width:18px;height:18px;margin-top:3px;border-radius:50%;background:var(--green-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 12.5l3.2 3.2L17 9' fill='none' stroke='%2322c55e' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
+.plan .btn{width:100%}
+.plan-fine{color:var(--muted);font-size:13.5px;margin:12px 0 0;text-align:center}
+.vat-note{color:var(--muted);font-size:13.5px;text-align:center;margin:22px 0 0}
+
+/* ---------- FAQ ---------- */
+.faq-list{max-width:760px;margin:0 auto}
+.faq{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:20px 0;cursor:pointer;font-weight:500;font-size:17px}
 .faq summary::-webkit-details-marker{display:none}
 .faq-icon{flex:none;position:relative;width:14px;height:14px}
-.faq-icon::before,.faq-icon::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:var(--rose);transition:transform .5s var(--ease)}
+.faq-icon::before,.faq-icon::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;border-radius:2px;background:var(--muted);transition:transform .3s var(--ease)}
 .faq-icon::after{transform:rotate(90deg)}
 .faq[open] .faq-icon::after{transform:rotate(0)}
-.faq-a{padding:0 0 24px;color:var(--muted);max-width:60ch}
+.faq-a{padding:0 0 20px;color:var(--muted);max-width:62ch}
 .faq-a p{margin:0}
 
-/* Abspann */
-.site-footer{position:relative;z-index:12;background:var(--night);padding:clamp(96px,16vh,180px) 0 40px}
-.footer-mark{width:42px;height:42px;margin-bottom:34px}
-.contact-mail{display:inline-block;font-family:var(--f-display);font-size:clamp(24px,3.6vw,52px);color:var(--rose);text-decoration:none;margin:28px 0 0;word-break:break-all;border-bottom:1px solid rgba(201,154,122,.4);line-height:1.2}
-.contact-mail:hover{border-color:var(--rose)}
-.contact-row{display:grid;gap:24px;margin-top:22px}
-@media (min-width:900px){.contact-row{grid-template-columns:1fr auto;align-items:end}}
-.contact-row p{color:var(--muted);max-width:44ch;margin:0}
-.contact-btns{display:flex;flex-wrap:wrap;gap:12px}
-.footer-bottom{margin-top:clamp(64px,12vh,120px);padding-top:26px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;color:var(--muted)}
-.footer-links{display:flex;flex-wrap:wrap;gap:22px;list-style:none;margin:0;padding:0}
+/* ---------- Kontakt ---------- */
+.contact{position:relative;overflow:hidden;text-align:center;padding:clamp(40px,7vw,72px) clamp(20px,5vw,56px);border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0) 40%),var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
+.contact .glow{width:460px;height:300px;background:var(--accent);top:-180px;left:50%;transform:translateX(-50%);opacity:.25}
+.contact>*:not(.glow){position:relative;z-index:1}
+.contact .lead{margin-left:auto;margin-right:auto}
+.contact-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:28px}
+.contact-mail{display:inline-block;margin-top:18px;color:var(--muted);font-size:15px;text-decoration:none;word-break:break-all}
+.contact-mail:hover{color:var(--text)}
+
+/* ---------- Footer ---------- */
+.site-footer{padding:48px 0 calc(40px + env(safe-area-inset-bottom));border-top:1px solid var(--line);margin-top:clamp(56px,8vw,96px);font-size:14px;color:var(--muted)}
+.footer-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px}
+.footer-links{display:flex;flex-wrap:wrap;gap:8px 20px;list-style:none;padding:0;margin:0}
 .footer-links a{text-decoration:none}
-.footer-links a:hover{color:var(--rose)}
-.footer-fine{color:rgba(239,230,210,.42);font-size:13px;margin:18px 0 0;max-width:90ch}
+.footer-links a:hover{color:var(--text)}
+.footer-fine{margin:18px 0 0;font-size:13px;opacity:.8;max-width:80ch}
 .legal{border-top:1px solid var(--line);margin-top:18px}
-.legal summary{list-style:none;cursor:pointer;padding:16px 0;color:var(--muted)}
+.legal summary{list-style:none;cursor:pointer;padding:14px 0;font-weight:500;color:var(--text)}
 .legal summary::-webkit-details-marker{display:none}
-.legal summary::after{content:" +";color:var(--rose)}
+.legal summary::after{content:" +";color:var(--accent)}
 .legal[open] summary::after{content:" –"}
-.legal-body{padding:0 0 26px;color:var(--muted);max-width:78ch;font-size:15px}
-.legal-body h3{font-family:var(--f-mono);font-weight:400;font-size:12px;text-transform:uppercase;letter-spacing:.2em;color:var(--champagne);margin:26px 0 8px}
+.legal-body{padding:0 0 22px;max-width:78ch;font-size:14.5px}
+.legal-body h3{font-size:14px;letter-spacing:0;color:var(--text);margin:22px 0 6px}
 .legal-body p{margin:0 0 10px}
-.legal-body a{color:var(--rose)}
+.legal-body a{color:var(--accent)}
+
+/* ---------- Schwebender Bestell-Button ---------- */
+.fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:40;box-shadow:var(--glow);
+  opacity:0;transform:translateY(16px);pointer-events:none;transition:opacity .3s,transform .4s var(--ease),background-color .2s}
+.fab.on{opacity:1;transform:none;pointer-events:auto}
 
 /* ---------- Dialoge ---------- */
-dialog{border:0;padding:0;color:var(--champagne);background:transparent;max-width:none;max-height:none}
-dialog::backdrop{background:rgba(5,5,6,.72);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+dialog{padding:0;border:0;background:transparent;color:var(--text)}
+dialog::backdrop{background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 html.has-modal{overflow:hidden}
-.dlg{width:min(680px,calc(100vw - 24px));max-height:calc(100vh - 24px);margin:auto}
-.dlg-inner{background:rgba(22,22,24,.92);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border:1px solid var(--line);border-radius:24px;padding:clamp(22px,4vw,38px);max-height:calc(100vh - 24px);overflow:auto}
-.dlg[open] .dlg-inner{animation:dlgIn .7s var(--ease)}
-@keyframes dlgIn{from{opacity:0;transform:translateY(24px) scale(.98)}to{opacity:1;transform:none}}
+.dlg{width:min(620px,calc(100vw - 24px));max-height:calc(100vh - 24px);margin:auto}
+.dlg-inner{background:var(--card);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border:1px solid var(--line);border-radius:24px;padding:clamp(20px,4vw,32px);max-height:calc(100vh - 24px);overflow:auto}
+.dlg[open] .dlg-inner,.lightbox[open] figure{animation:dlgIn .35s var(--ease)}
+@keyframes dlgIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
 .dlg-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
-.dlg-title{font-family:var(--f-display);font-weight:400;font-size:clamp(32px,4vw,48px);line-height:1;margin:0}
+.dlg-title{font-size:26px}
 .dlg-title:focus{outline:none}
-.dlg-close{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid var(--line-strong);background:transparent;display:grid;place-items:center;cursor:pointer;transition:border-color .3s,color .3s}
-.dlg-close:hover{border-color:var(--rose);color:var(--rose)}
+.dlg-close{flex:none;width:40px;height:40px;border-radius:50%;border:1px solid var(--line-strong);background:rgba(11,11,12,.4);display:grid;place-items:center;cursor:pointer;transition:background-color .2s}
+.dlg-close:hover{background:var(--card-hover)}
 .dlg-close svg{width:18px;height:18px}
-.dlg-intro{color:var(--muted);margin:14px 0 22px}
-.pkg{border:0;margin:0 0 18px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.pkg legend{margin-bottom:10px;color:var(--muted)}
-.pkg-opt{position:relative;cursor:pointer}
-.pkg-input{position:absolute;opacity:0;inset:0}
-.pkg-box{display:block;border:1px solid var(--line-strong);border-radius:16px;padding:14px 16px;transition:border-color .3s,background-color .3s;height:100%}
-.pkg-box b{display:block;font-family:var(--f-display);font-weight:400;font-size:24px;line-height:1.1}
-.pkg-box>span{color:var(--muted);font-size:14px}
-.pkg-input:checked+.pkg-box{border-color:var(--rose);background:var(--rose-soft)}
-.pkg-input:focus-visible+.pkg-box{outline:1.5px solid var(--rose);outline-offset:3px}
-.fields{display:grid;gap:12px;grid-template-columns:1fr}
+.dlg-intro{color:var(--muted);margin:10px 0 20px;font-size:15px}
+.label{display:block;font-size:13.5px;font-weight:500;color:var(--muted);margin-bottom:6px}
+.pkg{border:0;margin:0 0 16px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pkg legend{padding:0}
+.pkg-opt{position:relative;display:block;cursor:pointer}
+.pkg-input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.pkg-box{display:block;padding:14px 16px;border-radius:12px;border:1px solid var(--line-strong);transition:border-color .2s,background-color .2s;font-size:14px;color:var(--muted)}
+.pkg-box b{display:block;color:var(--text);font-weight:600;font-size:15.5px}
+.pkg-input:checked+.pkg-box{border-color:var(--accent);background:var(--accent-soft)}
+.pkg-input:focus-visible+.pkg-box{outline:2px solid var(--accent);outline-offset:2px}
+.fields{display:grid;gap:12px}
 @media (min-width:560px){.fields{grid-template-columns:1fr 1fr}.field--full{grid-column:1/-1}}
-.field label{display:block;margin-bottom:6px;color:var(--muted)}
-.field .opt{opacity:.6;text-transform:none;letter-spacing:0;font-family:var(--f-sans)}
-.field input,.field textarea{width:100%;font:inherit;font-weight:400;color:var(--champagne);background:rgba(11,11,12,.6);border:1px solid var(--line-strong);border-radius:12px;padding:12px 14px;transition:border-color .3s}
-.field input:focus,.field textarea:focus{outline:none;border-color:var(--rose)}
-.field textarea{resize:vertical}
-.preview{margin:16px 0 0}
-.preview summary{cursor:pointer;color:var(--muted)}
-.preview pre{white-space:pre-wrap;font-family:var(--f-mono);font-size:12px;line-height:1.6;color:var(--muted);background:rgba(11,11,12,.6);border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0 0}
-.dlg-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
-.dlg-note{color:var(--muted);font-size:14px;margin:16px 0 0}
-.dlg-note a{color:var(--rose)}
-.link-btn{background:none;border:0;padding:0;color:var(--rose);text-decoration:underline;cursor:pointer}
-.dlg-status{min-height:1.4em;margin:10px 0 0;color:var(--rose);font-size:14px}
-.lightbox{width:min(1200px,calc(100vw - 24px));margin:auto}
+.field input,.field textarea{width:100%;font:inherit;font-size:16px;color:var(--text);background:#0e0e10;border:1px solid var(--line-strong);border-radius:11px;padding:11px 13px;transition:border-color .2s}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--accent)}
+.field textarea{resize:vertical;min-height:84px}
+.opt{opacity:.7;font-weight:400}
+.preview{margin-top:14px}
+.preview summary{cursor:pointer;color:var(--muted);font-size:14px}
+.preview pre{white-space:pre-wrap;font:inherit;font-size:14px;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0 0}
+.dlg-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.dlg-note{color:var(--muted);font-size:14px;margin:14px 0 0}
+.dlg-note a{color:var(--accent)}
+.link-btn{border:0;background:none;padding:0;color:var(--accent);text-decoration:underline;cursor:pointer;font-size:inherit}
+.dlg-status{min-height:1.4em;margin:8px 0 0;color:var(--accent);font-size:14px}
+.lightbox{width:min(1100px,calc(100vw - 24px));margin:auto}
 .lightbox figure{margin:0;position:relative}
-.lightbox img{width:100%;height:auto;border-radius:16px;box-shadow:0 0 0 1px var(--line)}
-.lightbox .dlg-close{position:absolute;top:12px;right:12px;background:rgba(11,11,12,.7)}
-.lightbox figcaption{margin-top:14px;color:var(--muted)}
-.toast{position:fixed;left:50%;bottom:24px;z-index:95;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--moss);border:1px solid var(--line-strong);border-radius:999px;padding:12px 20px;font-size:14px;transition:opacity .4s,transform .6s var(--ease);max-width:calc(100vw - 32px)}
-.toast.is-on{opacity:1;transform:translate(-50%,0)}
-.setup-hint{position:fixed;left:12px;right:12px;bottom:12px;z-index:96;background:#3a2410;color:#ffd9b8;border:1px solid #a8642a;border-radius:14px;padding:12px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;font-size:14px}
-.setup-hint[hidden]{display:none}
-.setup-hint button{background:none;border:1px solid currentColor;border-radius:999px;padding:4px 12px;cursor:pointer}
+.lightbox img{width:100%;height:auto;border-radius:16px}
+.lightbox .dlg-close{position:absolute;top:10px;right:10px}
+.lightbox figcaption{text-align:center;color:var(--muted);margin-top:12px;font-size:14px}
 
-/* ---------- Weniger Bewegung ---------- */
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translate(-50%,12px);z-index:120;padding:11px 18px;border-radius:999px;background:var(--text);color:var(--bg);font-size:14px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .25s,transform .3s var(--ease);max-width:calc(100vw - 32px);text-align:center}
+.toast.is-on{opacity:1;transform:translate(-50%,0)}
+.setup-hint{position:fixed;left:16px;right:16px;bottom:16px;z-index:130;display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:14px;background:#FF9F0A;color:#111;font-size:14px}
+.setup-hint button{border:0;border-radius:999px;padding:6px 14px;background:#111;color:#fff;cursor:pointer}
+[hidden]{display:none!important}
+
+/* ---------- Ruhiges Einblenden ---------- */
+html.js .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .8s var(--ease);transition-delay:calc(var(--d,0) * 80ms)}
+html.js .reveal.in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{transition-duration:0s!important;transition-delay:0s!important;animation-duration:0s!important;animation-iteration-count:1!important}
-  .reveal{opacity:1;transform:none}
+  html.js .reveal{opacity:1;transform:none;transition:none}
+  .card-img img,.ba img,.fab,.toast{transition:none}
 }
 </style>
 </head>
 <body>
-<div class="grain" aria-hidden="true"></div>
-<div class="cursor-ring" aria-hidden="true"></div>
-<div class="cursor-dot" aria-hidden="true"></div>
-<canvas id="stage" aria-hidden="true"></canvas>
 
-<header id="siteHeader" data-theme="night">
-  <a class="brand" href="#top" aria-label="Zum Anfang">
-    <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="11" width="38" height="26" rx="6" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M20.5 18.5v11l9-5.5z" fill="none" stroke="#C99A7A" stroke-width="1.3" stroke-linejoin="round"/><path d="M24 3v4M24 41v4M3 24h0M45 24h0" stroke="#C99A7A" stroke-width="1.3" stroke-linecap="round"/></svg>
-    <span class="brand-word"><span data-cfg="marke">Julius</span> <span data-cfg="markeZusatz">Thumbnails</span></span>
-  </a>
-  <p class="chapter-label type-label" aria-live="off" style="margin:0"><span id="chapterIndex" class="rose">01</span> — <span id="chapterName" class="cl-name">Auftakt</span></p>
-  <div class="head-right">
-    <nav class="nav type-label" aria-label="Kapitel">
-      <a href="#verwandlung" data-nav="verwandlung">Verwandlung</a>
-      <a href="#ablauf" data-nav="ablauf">Ablauf</a>
-      <a href="#beispiele" data-nav="beispiele">Beispiele</a>
-      <a href="#preise" data-nav="preise">Preise</a>
-    </nav>
-    <button class="head-cta type-label" type="button" data-order="einzel">Anfragen</button>
+<header id="siteHeader">
+  <div class="wrap head-in">
+    <a class="brand" href="#top" aria-label="Zum Anfang">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M3.5 1.8v10.4L12 7z" fill="#fff"/></svg></span>
+      <span class="brand-word"><span data-cfg="marke">Julius</span> <span data-cfg="markeZusatz">Thumbnails</span></span>
+    </a>
+    <div class="head-right">
+      <nav class="nav" aria-label="Seitenbereiche">
+        <a href="#vorher-nachher">Beispiele</a>
+        <a href="#ablauf">So läuft’s</a>
+        <a href="#preise">Preise</a>
+        <a href="#faq">Fragen</a>
+      </nav>
+      <button class="btn btn--accent head-cta" type="button" data-order="einzel">Bestellen</button>
+    </div>
   </div>
 </header>
 
 <main id="top">
-  <!-- ============ 01 AUFTAKT ============ -->
-  <section class="chapter" id="auftakt" data-chapter data-name="Auftakt" data-theme="night" aria-labelledby="hero-title">
-    <div class="sticky hero">
-      <div class="wrap">
-        <div class="hero-inner">
-          <p class="eyebrow type-label hero-fade"><b>01</b><i></i>Thumbnail-Design für YouTube &amp; Twitch</p>
-          <h1 class="hero-title type-display" id="hero-title"><span class="ln"><span>Mehr</span></span><span class="ln"><span>Klicks.</span></span></h1>
-          <p class="hero-sub type-manifesto hero-fade" style="font-size:clamp(24px,2.6vw,40px)">Thumbnails, die im Feed auffallen.</p>
-          <p class="hero-copy type-body hero-fade">Ich gestalte Thumbnails, die neugierig machen und auf jedem Handy funktionieren. Damit mehr Menschen auf dein Video klicken.</p>
-          <div class="hero-ctas hero-fade">
-            <a class="btn btn--rose" href="#preise">Angebot wählen</a>
-            <a class="btn btn--line" href="#verwandlung">Vorher-Nachher ansehen</a>
-          </div>
-          <ul class="facts type-label hero-fade">
-            <li>ab <span data-cfg="preisEinzel" data-fmt="euro">5 €</span> pro Thumbnail</li>
-            <li>fertig in <span data-cfg="lieferzeit">24–48 Stunden</span></li>
-            <li>Abo monatlich kündbar</li>
-          </ul>
-        </div>
-      </div>
-      <div class="scroll-hint type-label" aria-hidden="true"><i></i>Scrollen</div>
-    </div>
-  </section>
-
-  <!-- ============ 02 DER FEED ============ -->
-  <section class="chapter" id="feed" data-chapter data-name="Der Feed" data-theme="night" aria-labelledby="feed-title">
-    <div class="sticky feed-panel">
-      <div class="wrap">
-        <p class="eyebrow type-label"><b>02</b><i></i>Der Feed</p>
-        <h2 class="type-manifesto manifesto" id="feed-title" data-words>Im Feed entscheidet ein einziges Bild, ob jemand klickt. Nicht dein Titel. Nicht dein Schnitt. *Dein *Thumbnail.</h2>
-        <p class="feed-note type-body-lg">Blasse Vorschaubilder mit langem Text gehen zwischen hunderten anderen Videos unter. Ein starkes Thumbnail holt die Klicks, die dein Video verdient.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 03 VERWANDLUNG ============ -->
-  <section class="chapter" id="verwandlung" data-chapter data-name="Verwandlung" data-theme="night" aria-labelledby="morph-title">
-    <div class="sticky morph">
-      <div class="morph-fallback" aria-hidden="true">
-        <img class="fb-before" data-img="finance_before" alt="" width="1280" height="720">
-        <img class="fb-after" data-img="finance_after" alt="" width="1280" height="720">
-      </div>
-      <div class="wrap morph-top">
-        <div>
-          <p class="eyebrow type-label"><b>03</b><i></i>Die Verwandlung</p>
-          <h2 class="type-display morph-title" id="morph-title">Vorher. Nachher.</h2>
-        </div>
-        <p class="morph-count type-label" aria-hidden="true"><b id="morphIdx">01</b> / 03</p>
-      </div>
-      <div class="wrap morph-bottom">
-        <div class="morph-cards">
-          <article class="morph-card on" data-pair="0">
-            <h3>Finanzen <span class="title-dash">—</span> Klare Botschaft</h3>
-            <p>Eine große Zahl statt eines langen Titels. Höchstens drei, vier Wörter, die man auch auf dem kleinsten Handy liest.</p>
-          </article>
-          <article class="morph-card" data-pair="1">
-            <h3>Fitness <span class="title-dash">—</span> Emotion &amp; Fokus</h3>
-            <p>Vom Titelbild zur Geschichte auf einen Blick. Ein klares Motiv und ein Gesicht oder Symbol, das sofort neugierig macht.</p>
-          </article>
-          <article class="morph-card" data-pair="2">
-            <h3>Gaming <span class="title-dash">—</span> Starker Kontrast</h3>
-            <p>Vom Stream-Standbild zum Hingucker. Farben, die sich im Feed von allen anderen Videos abheben.</p>
-          </article>
-        </div>
-        <div class="meter type-label" aria-hidden="true">
-          <span id="mBefore" class="is-on">Vorher</span>
-          <span class="meter-bar"><span></span></span>
-          <span id="mAfter">Nachher</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 04 ABLAUF ============ -->
-  <section class="chapter" id="ablauf" data-chapter data-name="Ablauf" data-theme="night" aria-labelledby="ablauf-title">
-    <div class="sticky flow">
-      <div class="wrap">
-        <p class="eyebrow type-label"><b>04</b><i></i>Ablauf</p>
-        <h2 class="type-display flow-title" id="ablauf-title">So einfach geht’s.</h2>
-        <div style="position:relative;max-width:620px">
-        <span class="flow-line" aria-hidden="true"><span></span></span>
-        <ol class="steps">
-          <li class="step on">
-            <span class="step-num type-label" aria-hidden="true">Schritt 01</span>
-            <h3>Paket wählen</h3>
-            <p>Einzel-Thumbnail für <span data-cfg="preisEinzel" data-fmt="euro">5 €</span> oder Monats-Abo für <span data-cfg="preisAbo" data-fmt="euro">35 €</span>. Unbegrenzt viele Thumbnails, monatlich kündbar.</p>
-          </li>
-          <li class="step">
-            <span class="step-num type-label" aria-hidden="true">Schritt 02</span>
-            <h3>Bilder &amp; Wünsche per E-Mail senden</h3>
-            <p>Videotitel, ein paar Fotos oder Screenshots und deine Idee. Mehr brauche ich nicht. Kein Konto, keine Anmeldung.</p>
-          </li>
-          <li class="step">
-            <span class="step-num type-label" aria-hidden="true">Schritt 03</span>
-            <h3>Fertiges Thumbnail erhalten</h3>
-            <p>In <span data-cfg="lieferzeit">24–48 Stunden</span> bekommst du dein Thumbnail in 1280 × 720. Hochladen, im Feed auffallen, mehr Klicks holen.</p>
-          </li>
-        </ol>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 05 BEISPIELE ============ -->
-  <section class="chapter" id="beispiele" data-chapter data-name="Beispiele" data-theme="night" aria-labelledby="beispiele-title">
-    <div class="sticky gallery">
-      <div class="wrap gallery-head">
-        <div>
-          <p class="eyebrow type-label"><b>05</b><i></i>Beispiele</p>
-          <h2 class="type-display gallery-title" id="beispiele-title">Weitere Designs.</h2>
-        </div>
-        <div>
-          <p class="gallery-note type-label">Demo-Designs · zum Vergrößern antippen</p>
-          <div class="track-progress" aria-hidden="true" style="margin-top:14px"><span></span></div>
-        </div>
-      </div>
-      <div class="track" id="track">
-        <button class="card" type="button" data-img="fitness_after" data-caption="Fitness · Tag 1 vs. Tag 30" data-alt="Thumbnail mit großer Schrift „Tag 1“ und „Tag 30“, grübelndem Emoji, Bizeps-Emoji und Banner „100 Liegestütze“."><span class="card-img"><img data-img="fitness_after" alt="" width="1280" height="720" loading="lazy"></span><span class="card-cap"><span class="type-label">Fitness</span><span>Tag 1 vs. Tag 30</span></span></button>
-        <button class="card" type="button" data-img="g_fitness_fehler" data-caption="Fitness · Dieser Fehler killt deine Gains" data-alt="Thumbnail „Dieser Fehler – killt deine Gains“: erschrockenes Emoji und durchgestrichener Gewichtheber auf rotem Hintergrund."><span class="card-img"><img data-img="g_fitness_fehler" alt="" width="1280" height="720" loading="lazy"></span><span class="card-cap"><span class="type-label">Fitness</span><span>Dieser Fehler killt deine Gains</span></span></button>
-        <button class="card" type="button" data-img="finance_after" data-caption="Finanzen · 250.000 € mit 100 € im Monat" data-alt="Thumbnail „100 € im Monat – 250.000 €“ mit leuchtender Wachstumskurve, Geldsack-Emoji und Button „So geht’s“."><span class="card-img"><img data-img="finance_after" alt="" width="1280" height="720" loading="lazy"></span><span class="card-cap"><span class="type-label">Finanzen</span><span>250.000 € mit 100 € im Monat</span></span></button>
-        <button class="card" type="button" data-img="g_etf_fehler" data-caption="Finanzen · ETF-Fehler: Mach das nicht!" data-alt="Thumbnail „ETF-Fehler -50.000 €“ mit fallender roter Kurve, erschrockenem Emoji und Banner „Mach das nicht!“."><span class="card-img"><img data-img="g_etf_fehler" alt="" width="1280" height="720" loading="lazy"></span><span class="card-cap"><span class="type-label">Finanzen</span><span>ETF-Fehler: Mach das nicht!</span></span></button>
-        <button class="card" type="button" data-img="g_fitness_abnehmen" data-caption="Fitness · -10 kg ohne Hungern?" data-alt="Thumbnail „Ohne Hungern? -10 kg“: durchgestrichenes Fast Food links, Gemüse mit Haken rechts, türkiser Hintergrund."><span class="card-img"><img data-img="g_fitness_abnehmen" alt="" width="1280" height="720" loading="lazy"></span><span class="card-cap"><span class="type-label">Fitness</span><span>-10 kg ohne Hungern?</span></span></button>
-        <button class="card" type="button" data-img="g_nebenbei" data-caption="Business · 1.000 € nebenbei in 30 Tagen?" data-alt="Thumbnail „1.000 € nebenbei – in 30 Tagen?“ mit Laptop, Geldscheinen und Emoji mit Sternenaugen auf lila Hintergrund."><span class="card-img"><img data-img="g_nebenbei" alt="" width="1280" height="720" loading="lazy"></span><span class="card-cap"><span class="type-label">Business</span><span>1.000 € nebenbei in 30 Tagen?</span></span></button>
-        <button class="card" type="button" data-img="gaming_after" data-caption="Gaming · 24 Stunden ohne Pause" data-alt="Thumbnail „24 Stunden ohne Pause“ in Neonfarben mit Controller, Stoppuhr und Emoji mit explodierendem Kopf."><span class="card-img"><img data-img="gaming_after" alt="" width="1280" height="720" loading="lazy"></span><span class="card-cap"><span class="type-label">Gaming</span><span>24 Stunden ohne Pause</span></span></button>
-        <button class="card" type="button" data-img="g_tech" data-caption="Tech · 99 € vs. 999 €" data-alt="Thumbnail „99 € vs. 999 €“: zwei Smartphones im Vergleich mit überraschtem Emoji."><span class="card-img"><img data-img="g_tech" alt="" width="1280" height="720" loading="lazy"></span><span class="card-cap"><span class="type-label">Tech</span><span>99 € vs. 999 €</span></span></button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 06 PREISE ============ -->
-  <section class="chapter" id="preise" data-chapter data-name="Preise" data-theme="paper" aria-labelledby="preise-title">
+  <!-- ============ START ============ -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="glow" aria-hidden="true"></div>
     <div class="wrap">
-      <div class="price-head">
-        <div>
-          <p class="eyebrow type-label reveal"><b>06</b><i></i>Preise</p>
-          <h2 class="type-display reveal" id="preise-title" style="font-size:clamp(48px,7.5vw,128px)">Faire Preise. Ohne Haken.</h2>
+      <p class="pill reveal"><i aria-hidden="true"></i>Thumbnails für YouTube &amp; Twitch</p>
+      <h1 class="reveal" id="hero-title" style="--d:1">Mehr Klicks für <span class="accent">deine Videos.</span></h1>
+      <p class="lead reveal" style="--d:2">Ich mache dir Thumbnails, die im Feed auffallen. Du schickst mir dein Thema und ein paar Bilder, ich schicke dir in <span data-cfg="lieferzeit">24–48 Stunden</span> dein fertiges Thumbnail.</p>
+      <div class="hero-ctas reveal" style="--d:3">
+        <button class="btn btn--accent" type="button" data-order="einzel">Thumbnail bestellen</button>
+        <a class="btn btn--ghost" href="#vorher-nachher">Vorher-Nachher ansehen</a>
+      </div>
+      <ul class="chips reveal" style="--d:4">
+        <li><b data-cfg="preisEinzel" data-fmt="euro">5 €</b> pro Thumbnail</li>
+        <li><b data-cfg="preisAbo" data-fmt="euro">35 €</b> im Monat unbegrenzt</li>
+        <li>Abo monatlich kündbar</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ VORHER / NACHHER ============ -->
+  <section class="sec" id="vorher-nachher" aria-labelledby="ba-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="reveal" id="ba-title">Vorher. Nachher.</h2>
+        <p class="lead reveal" style="--d:1">Zieh den Regler und sieh selbst, was ein gutes Thumbnail ausmacht.</p>
+      </div>
+      <div class="ba-box reveal" style="--d:2">
+        <div class="tabs" role="tablist" aria-label="Beispiel wählen">
+          <button class="tab" type="button" role="tab" aria-selected="true" data-pair="0">Finanzen</button>
+          <button class="tab" type="button" role="tab" aria-selected="false" data-pair="1">Fitness</button>
+          <button class="tab" type="button" role="tab" aria-selected="false" data-pair="2">Gaming</button>
         </div>
-        <p class="type-body-lg reveal" style="--d:1">Wähle, was zu deinem Upload-Rhythmus passt. Keine Mindestlaufzeit, keine versteckten Kosten.</p>
+        <div class="ba" id="ba">
+          <img class="ba-after" data-img="finance_after" alt="Nachher: neu gestaltetes Finanz-Thumbnail mit großer Zahl und Wachstumskurve" width="1280" height="720">
+          <img class="ba-before" data-img="finance_before" alt="Vorher: blasses Finanz-Thumbnail mit langem Titel" width="1280" height="720">
+          <span class="ba-tag ba-tag--before" aria-hidden="true">Vorher</span>
+          <span class="ba-tag ba-tag--after" aria-hidden="true">Nachher</span>
+          <span class="ba-line" aria-hidden="true"></span>
+          <button class="ba-handle" type="button" role="slider" aria-label="Vorher-Nachher-Regler" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50 Prozent Vorher">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <p class="ba-cap" id="ba-cap" aria-live="polite"><b>Klare Botschaft.</b> Eine große Zahl statt langem Titel. Lesbar auch auf dem kleinsten Handy.</p>
+        <p class="demo-note">Beispiel-Designs, keine echten Kundenaufträge.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MEHR BEISPIELE ============ -->
+  <section class="sec" id="beispiele" aria-labelledby="beispiele-title" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="reveal" id="beispiele-title">Noch mehr Beispiele</h2>
+        <p class="lead reveal" style="--d:1">Finanzen, Fitness, Gaming, Tech: Ich passe den Look an deinen Kanal an. Zum Vergrößern antippen.</p>
+      </div>
+      <div class="grid">
+        <button class="card reveal" type="button" data-img="fitness_after" data-caption="Fitness · Tag 1 vs. Tag 30" data-alt="Thumbnail mit großer Schrift „Tag 1“ und „Tag 30“, grübelndem Emoji, Bizeps-Emoji und Banner „100 Liegestütze“."><span class="card-img"><img data-img="fitness_after" alt="" width="1280" height="720" loading="lazy"></span><span class="card-cap"><b>Tag 1 vs. Tag 30</b>Fitness</span></button>
+        <button class="card reveal" style="--d:1" type="button" data-img="g_fitness_fehler" data-caption="Fitness · Dieser Fehler killt deine Gains" data-alt="Thumbnail „Dieser Fehler – killt deine Gains“: erschrockenes Emoji und durchgestrichener Gewichtheber auf rotem Hintergrund."><span class="card-img"><img data-img="g_fitness_fehler" alt="" width="1280" height="720" loading="lazy"></span><span class="card-cap"><b>Dieser Fehler killt deine Gains</b>Fitness</span></button>
+        <button class="card reveal" style="--d:2" type="button" data-img="finance_after" data-caption="Finanzen · 250.000 € mit 100 € im Monat" data-alt="Thumbnail „100 € im Monat – 250.000 €“ mit leuchtender Wachstumskurve, Geldsack-Emoji und Button „So geht’s“."><span class="card-img"><img data-img="finance_after" alt="" width="1280" height="720" loading="lazy"></span><span class="card-cap"><b>250.000 € mit 100 € im Monat</b>Finanzen</span></button>
+        <button class="card reveal" style="--d:3" type="button" data-img="g_etf_fehler" data-caption="Finanzen · ETF-Fehler: Mach das nicht!" data-alt="Thumbnail „ETF-Fehler -50.000 €“ mit fallender roter Kurve, erschrockenem Emoji und Banner „Mach das nicht!“."><span class="card-img"><img data-img="g_etf_fehler" alt="" width="1280" height="720" loading="lazy"></span><span class="card-cap"><b>ETF-Fehler: Mach das nicht!</b>Finanzen</span></button>
+        <button class="card reveal" type="button" data-img="g_fitness_abnehmen" data-caption="Fitness · -10 kg ohne Hungern?" data-alt="Thumbnail „Ohne Hungern? -10 kg“: durchgestrichenes Fast Food links, Gemüse mit Haken rechts, türkiser Hintergrund."><span class="card-img"><img data-img="g_fitness_abnehmen" alt="" width="1280" height="720" loading="lazy"></span><span class="card-cap"><b>-10 kg ohne Hungern?</b>Fitness</span></button>
+        <button class="card reveal" style="--d:1" type="button" data-img="g_nebenbei" data-caption="Business · 1.000 € nebenbei in 30 Tagen?" data-alt="Thumbnail „1.000 € nebenbei – in 30 Tagen?“ mit Laptop, Geldscheinen und Emoji mit Sternenaugen auf lila Hintergrund."><span class="card-img"><img data-img="g_nebenbei" alt="" width="1280" height="720" loading="lazy"></span><span class="card-cap"><b>1.000 € nebenbei in 30 Tagen?</b>Business</span></button>
+        <button class="card reveal" style="--d:2" type="button" data-img="gaming_after" data-caption="Gaming · 24 Stunden ohne Pause" data-alt="Thumbnail „24 Stunden ohne Pause“ in Neonfarben mit Controller, Stoppuhr und Emoji mit explodierendem Kopf."><span class="card-img"><img data-img="gaming_after" alt="" width="1280" height="720" loading="lazy"></span><span class="card-cap"><b>24 Stunden ohne Pause</b>Gaming</span></button>
+        <button class="card reveal" style="--d:3" type="button" data-img="g_tech" data-caption="Tech · 99 € vs. 999 €" data-alt="Thumbnail „99 € vs. 999 €“: zwei Smartphones im Vergleich mit überraschtem Emoji."><span class="card-img"><img data-img="g_tech" alt="" width="1280" height="720" loading="lazy"></span><span class="card-cap"><b>99 € vs. 999 €</b>Tech</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SO LÄUFT'S ============ -->
+  <section class="sec" id="ablauf" aria-labelledby="ablauf-title" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="reveal" id="ablauf-title">So einfach geht’s</h2>
+        <p class="lead reveal" style="--d:1">Kein Konto, keine Anmeldung. Alles läuft per E-Mail.</p>
+      </div>
+      <ol class="steps">
+        <li class="step reveal">
+          <span class="step-num" aria-hidden="true">1</span>
+          <h3>Schreib mir</h3>
+          <p>Videotitel, ein paar Fotos oder Screenshots und deine Idee. Mehr brauche ich nicht.</p>
+        </li>
+        <li class="step reveal" style="--d:1">
+          <span class="step-num" aria-hidden="true">2</span>
+          <h3>Ich baue dein Thumbnail</h3>
+          <p>In <span data-cfg="lieferzeit">24–48 Stunden</span> bekommst du es fertig in 1280 × 720, als JPG und PNG.</p>
+        </li>
+        <li class="step reveal" style="--d:2">
+          <span class="step-num" aria-hidden="true">3</span>
+          <h3>Hochladen und Klicks holen</h3>
+          <p>Passt etwas nicht? Sag Bescheid, dann ändere ich es für dich.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ PREISE ============ -->
+  <section class="sec" id="preise" aria-labelledby="preise-title" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="reveal" id="preise-title">Simple Preise</h2>
+        <p class="lead reveal" style="--d:1">Keine Mindestlaufzeit, keine versteckten Kosten.</p>
       </div>
       <div class="plans">
         <article class="plan reveal" aria-labelledby="plan-einzel">
           <div class="plan-top"><h3 class="plan-name" id="plan-einzel">Einzel-Thumbnail</h3></div>
+          <p class="plan-price"><span class="plan-amount" data-cfg="preisEinzel" data-fmt="num">5</span><span class="plan-cur">€</span><span class="plan-per">pro Thumbnail</span></p>
           <p class="plan-desc">Perfekt zum Ausprobieren oder für einzelne Videos.</p>
-          <p class="plan-price"><span class="plan-amount" data-cfg="preisEinzel" data-fmt="num">5</span><span class="plan-cur">€</span><span class="plan-per type-label">pro Thumbnail</span></p>
           <ul class="plan-list">
             <li>1 Thumbnail in 1280 × 720 px</li>
             <li><span>Fertig in <span data-cfg="lieferzeit">24–48 Stunden</span></span></li>
             <li><span><span data-cfg="korrekturEinzel">1 Korrekturrunde</span> inklusive</span></li>
-            <li>Als JPG und PNG, sofort hochladbar</li>
+            <li>Als JPG und PNG</li>
           </ul>
-          <button class="btn btn--ink" type="button" data-order="einzel">Einzeln bestellen</button>
+          <button class="btn btn--ghost" type="button" data-order="einzel">Einzeln bestellen</button>
         </article>
         <article class="plan plan--featured reveal" aria-labelledby="plan-abo" style="--d:1">
-          <div class="plan-top"><h3 class="plan-name" id="plan-abo">Monats-Abo</h3><p class="plan-badge type-label">Empfehlung</p></div>
-          <p class="plan-desc">Unbegrenzt Thumbnails für alle Videos, die du im Monat hochlädst.</p>
-          <p class="plan-price"><span class="plan-amount" data-cfg="preisAbo" data-fmt="num">35</span><span class="plan-cur">€</span><span class="plan-per type-label">pro Monat</span></p>
+          <div class="plan-top"><h3 class="plan-name" id="plan-abo">Monats-Abo</h3><p class="plan-badge" id="abo-badge">Lohnt sich ab 8 Videos</p></div>
+          <p class="plan-price"><span class="plan-amount" data-cfg="preisAbo" data-fmt="num">35</span><span class="plan-cur">€</span><span class="plan-per">pro Monat</span></p>
+          <p class="plan-desc">Unbegrenzt Thumbnails für alle Videos im Monat.</p>
           <ul class="plan-list">
             <li>Unbegrenzt viele Thumbnails</li>
             <li>Korrekturen immer inklusive</li>
             <li>Einheitlicher Look für deinen Kanal</li>
-            <li>Abo-Anfragen haben Vorrang</li>
             <li>Monatlich kündbar</li>
           </ul>
-          <button class="btn btn--rose" type="button" data-order="abo">Abo starten</button>
-          <p class="plan-fine">Deine Anfragen bearbeite ich nacheinander, meist in <span data-cfg="lieferzeit">24–48 Stunden</span> pro Thumbnail.</p>
+          <button class="btn btn--accent" type="button" data-order="abo">Abo starten</button>
+          <p class="plan-fine">Anfragen bearbeite ich nacheinander, meist in <span data-cfg="lieferzeit">24–48 Stunden</span> pro Thumbnail.</p>
         </article>
-      </div>
-      <div class="calc reveal">
-        <div>
-          <label class="calc-q type-label" for="calc-range">Wie viele Videos lädst du im Monat hoch?</label>
-          <div class="calc-row">
-            <input class="range" id="calc-range" type="range" min="1" max="30" step="1" value="8">
-            <output class="calc-num" id="calc-num" for="calc-range" aria-hidden="true">8</output>
-          </div>
-        </div>
-        <p class="calc-out type-body-lg" id="calc-out">Einzeln zahlst du 40 €, im Abo nur 35 €. Du sparst 5 € im Monat.</p>
-        <p class="sr-only" id="calc-live" aria-live="polite"></p>
-        <button class="btn btn--ink" type="button" id="calc-cta" data-order="abo">Monats-Abo bestellen</button>
       </div>
       <p class="vat-note" data-show-if="kleinunternehmer">Alle Preise sind Endpreise. Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.</p>
     </div>
   </section>
 
-  <!-- ============ FAQ ============ -->
-  <section id="faq" data-theme="moss" aria-labelledby="faq-title">
-    <div class="wrap faq-grid">
-      <div class="faq-side">
-        <p class="eyebrow type-label"><b>07</b><i></i>FAQ</p>
-        <h2 class="type-manifesto" id="faq-title">Gute Fragen.</h2>
-        <p class="type-body">Deine Frage ist nicht dabei? <a href="#kontakt">Schreib mir einfach</a>, ich antworte innerhalb von <span data-cfg="antwortzeit">24 Stunden</span>.</p>
+  <!-- ============ FRAGEN ============ -->
+  <section class="sec" id="faq" aria-labelledby="faq-title" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="reveal" id="faq-title">Fragen &amp; Antworten</h2>
       </div>
-      <div class="faq-list">
+      <div class="faq-list reveal">
         <details class="faq">
           <summary>Was brauchst du von mir?<span class="faq-icon" aria-hidden="true"></span></summary>
-          <div class="faq-a"><p>Den Titel oder das Thema deines Videos, ein bis drei Fotos oder Screenshots (zum Beispiel dein Gesicht mit passendem Ausdruck) und kurz, was rüberkommen soll. Lieblingsfarben, Schriften oder Thumbnails, die dir gefallen, kannst du gerne mitschicken.</p></div>
+          <div class="faq-a"><p>Den Titel oder das Thema deines Videos, ein bis drei Fotos oder Screenshots (zum Beispiel dein Gesicht mit passendem Ausdruck) und kurz, was rüberkommen soll. Thumbnails, die dir gefallen, kannst du gern mitschicken.</p></div>
         </details>
         <details class="faq">
           <summary>Wie schnell bekomme ich mein Thumbnail?<span class="faq-icon" aria-hidden="true"></span></summary>
-          <div class="faq-a"><p>In der Regel innerhalb von <span data-cfg="lieferzeit">24–48 Stunden</span> nach deiner E-Mail. Hast du einen festen Upload-Termin, sag mir einfach Bescheid.</p></div>
+          <div class="faq-a"><p>Meist innerhalb von <span data-cfg="lieferzeit">24–48 Stunden</span> nach deiner E-Mail. Hast du einen festen Upload-Termin, sag mir einfach Bescheid.</p></div>
         </details>
         <details class="faq">
-          <summary>Was bedeutet „unbegrenzt“ im Abo?<span class="faq-icon" aria-hidden="true"></span></summary>
-          <div class="faq-a"><p>Du kannst so viele Thumbnails anfragen, wie du im Monat brauchst. Ich bearbeite deine Anfragen nacheinander, meist in <span data-cfg="lieferzeit">24–48 Stunden</span> pro Thumbnail, damit jedes einzelne richtig gut wird.</p></div>
+          <summary>Was heißt „unbegrenzt“ im Abo?<span class="faq-icon" aria-hidden="true"></span></summary>
+          <div class="faq-a"><p>Du kannst so viele Thumbnails anfragen, wie du im Monat brauchst. Ich mache sie nacheinander, meist in <span data-cfg="lieferzeit">24–48 Stunden</span> pro Thumbnail, damit jedes richtig gut wird.</p></div>
         </details>
         <details class="faq">
           <summary>Kann ich Änderungen wünschen?<span class="faq-icon" aria-hidden="true"></span></summary>
-          <div class="faq-a"><p>Ja. Beim Einzel-Thumbnail ist <span data-cfg="korrekturEinzel">1 Korrekturrunde</span> inklusive, im Abo sind Korrekturen immer inklusive.</p></div>
+          <div class="faq-a"><p>Klar. Beim Einzel-Thumbnail ist <span data-cfg="korrekturEinzel">1 Korrekturrunde</span> dabei, im Abo sind Korrekturen immer inklusive.</p></div>
         </details>
         <details class="faq">
           <summary>Wie bezahle ich?<span class="faq-icon" aria-hidden="true"></span></summary>
@@ -623,33 +468,33 @@ html.has-modal{overflow:hidden}
         </details>
         <details class="faq">
           <summary>Darf ich die Thumbnails überall nutzen?<span class="faq-icon" aria-hidden="true"></span></summary>
-          <div class="faq-a"><p>Ja, auf YouTube, Twitch und deinen Social-Media-Kanälen. Wichtig: Für Fotos, die du mir schickst, brauchst du selbst die Rechte.</p></div>
+          <div class="faq-a"><p>Ja, auf YouTube, Twitch und deinen Social-Media-Kanälen. Für Fotos, die du mir schickst, brauchst du selbst die Rechte.</p></div>
         </details>
-        <details class="faq">
-          <summary>Machst du auch Thumbnails für meine Nische?<span class="faq-icon" aria-hidden="true"></span></summary>
-          <div class="faq-a"><p>Ja, ob Gaming, Fitness, Finanzen, Tech, Vlogs oder Podcasts. Jedes Thumbnail gestalte ich passend zu deiner Zielgruppe und deinem Kanal.</p></div>
-        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ KONTAKT ============ -->
+  <section id="kontakt" aria-labelledby="kontakt-title">
+    <div class="wrap">
+      <div class="contact reveal">
+        <div class="glow" aria-hidden="true"></div>
+        <h2 id="kontakt-title">Lust auf <span class="accent">mehr Klicks?</span></h2>
+        <p class="lead">Schreib mir einfach. Ich melde mich innerhalb von <span data-cfg="antwortzeit">24 Stunden</span>.</p>
+        <div class="contact-btns">
+          <button class="btn btn--accent" type="button" data-order="einzel">Thumbnail bestellen</button>
+          <button class="btn btn--ghost" type="button" data-copy-email>E-Mail-Adresse kopieren</button>
+        </div>
+        <a class="contact-mail" data-cfg="email" data-cfg-href="mailto" href="mailto:juliusroll230@gmail.com">juliusroll230@gmail.com</a>
       </div>
     </div>
   </section>
 </main>
 
-<!-- ============ KONTAKT & ABSPANN ============ -->
-<footer class="site-footer" id="kontakt" data-theme="night" aria-labelledby="kontakt-title">
+<!-- ============ FUSSZEILE ============ -->
+<footer class="site-footer">
   <div class="wrap">
-    <svg class="footer-mark reveal" viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="11" width="38" height="26" rx="6" fill="none" stroke="#EFE6D2" stroke-width="1.3"/><path d="M20.5 18.5v11l9-5.5z" fill="none" stroke="#C99A7A" stroke-width="1.3" stroke-linejoin="round"/></svg>
-    <p class="eyebrow type-label reveal"><b>08</b><i></i>Kontakt</p>
-    <h2 class="type-footer reveal" id="kontakt-title">Bereit für <span class="rose">mehr Klicks?</span></h2>
-    <a class="contact-mail reveal" data-cfg="email" data-cfg-href="mailto" href="mailto:juliusroll230@gmail.com">juliusroll230@gmail.com</a>
-    <div class="contact-row">
-      <p class="type-body reveal">Schreib mir eine E-Mail mit deinem Videotitel und ein paar Bildern. Ich melde mich innerhalb von <span data-cfg="antwortzeit">24 Stunden</span>.</p>
-      <div class="contact-btns reveal">
-        <button class="btn btn--rose" type="button" data-order="einzel">Bestellung vorbereiten</button>
-        <button class="btn btn--line" type="button" data-copy-email>E-Mail-Adresse kopieren</button>
-      </div>
-    </div>
-
-    <div class="footer-bottom type-label">
+    <div class="footer-bottom">
       <p style="margin:0">© <span id="year">2026</span> <span data-cfg="marke">Julius</span> <span data-cfg="markeZusatz">Thumbnails</span></p>
       <ul class="footer-links">
         <li><a href="#impressum">Impressum</a></li>
@@ -658,7 +503,7 @@ html.has-modal{overflow:hidden}
         <li><a href="#top">Nach oben</a></li>
       </ul>
     </div>
-    <p class="footer-fine"><span data-show-if="kleinunternehmer">Kleinunternehmer gemäß § 19 UStG, daher keine Umsatzsteuer. </span>Emoji-Grafiken in den Beispielen: Microsoft Fluent Emoji (MIT-Lizenz). Schriften: Italiana, Manrope, DM Mono (SIL Open Font License). 3D-Darstellung: three.js (MIT-Lizenz).</p>
+    <p class="footer-fine"><span data-show-if="kleinunternehmer">Kleinunternehmer gemäß § 19 UStG, daher keine Umsatzsteuer. </span>Emoji-Grafiken in den Beispielen: Microsoft Fluent Emoji (MIT-Lizenz). Schrift: die Systemschrift deines Geräts.</p>
 
     <details class="legal" id="impressum">
       <summary class="type-label">Impressum</summary>
@@ -681,7 +526,7 @@ html.has-modal{overflow:hidden}
         <p>Beim Aufruf der Seite verarbeitet mein Hoster (<span data-cfg="hoster">GitHub Inc. (GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA</span>) technisch notwendige Daten wie IP-Adresse, Datum, Uhrzeit und Browser-Informationen in Server-Logfiles. Das ist nötig, um die Website sicher und stabil auszuliefern (Art. 6 Abs. 1 lit. f DSGVO).</p>
         <p>Dabei können Daten in die USA übertragen werden. GitHub ist nach dem EU-US Data Privacy Framework zertifiziert, für das die EU-Kommission ein angemessenes Datenschutzniveau festgestellt hat (Art. 45 DSGVO).</p>
         <h3>3. Keine Cookies, kein Tracking</h3>
-        <p>Diese Website setzt keine Cookies, nutzt keine Analyse-Tools und lädt keine Schriften, Skripte oder Bilder von fremden Servern. Schriften und die 3D-Bibliothek liegen auf demselben Server wie diese Seite.</p>
+        <p>Diese Website setzt keine Cookies, nutzt keine Analyse-Tools und lädt keine Schriften, Skripte oder Bilder von fremden Servern. Es wird die Schrift deines Geräts verwendet.</p>
         <h3>4. Kontakt per E-Mail</h3>
         <p>Wenn du mir schreibst, verarbeite ich deine Angaben (zum Beispiel Name, E-Mail-Adresse, Kanal und Bilder), um deine Anfrage und deinen Auftrag zu bearbeiten (Art. 6 Abs. 1 lit. b DSGVO). Ich lösche die Daten, sobald sie nicht mehr nötig sind, es sei denn, gesetzliche Aufbewahrungspflichten (etwa für Rechnungen) verlangen etwas anderes.</p>
         <h3>5. Button „In Gmail öffnen“</h3>
@@ -709,33 +554,35 @@ html.has-modal{overflow:hidden}
   </div>
 </footer>
 
+<button class="btn btn--accent fab" type="button" id="fab" data-order="einzel" tabindex="-1" aria-hidden="true">Bestellen · ab <span data-cfg="preisEinzel" data-fmt="euro">5 €</span></button>
+
 <!-- ============ BESTELL-DIALOG ============ -->
 <dialog class="dlg" id="order" aria-labelledby="order-title">
   <form class="dlg-inner" id="order-form" novalidate>
     <div class="dlg-head">
-      <h2 class="dlg-title" id="order-title" tabindex="-1" data-autofocus>Bestellung vorbereiten</h2>
-      <button class="dlg-close" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      <h2 class="dlg-title" id="order-title" tabindex="-1" data-autofocus>Thumbnail bestellen</h2>
+      <button class="dlg-close" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
     </div>
-    <p class="dlg-intro type-body">Du bestellst ganz normal per E-Mail. Füll aus, was du schon weißt, daraus entsteht deine fertige Mail. Diese Seite speichert und versendet nichts.</p>
+    <p class="dlg-intro">Füll aus, was du schon weißt. Daraus wird deine fertige E-Mail an mich. Diese Seite speichert und versendet nichts.</p>
     <fieldset class="pkg">
-      <legend class="type-label">Paket</legend>
-      <label class="pkg-opt"><input class="pkg-input" type="radio" name="paket" value="einzel" checked><span class="pkg-box"><b>Einzel-Thumbnail</b><span><span data-cfg="preisEinzel" data-fmt="euro">5 €</span> pro Thumbnail</span></span></label>
-      <label class="pkg-opt"><input class="pkg-input" type="radio" name="paket" value="abo"><span class="pkg-box"><b>Monats-Abo</b><span><span data-cfg="preisAbo" data-fmt="euro">35 €</span> pro Monat, unbegrenzt</span></span></label>
+      <legend class="label">Paket</legend>
+      <label class="pkg-opt"><input class="pkg-input" type="radio" name="paket" value="einzel" checked><span class="pkg-box"><b>Einzel-Thumbnail</b><span><span data-cfg="preisEinzel" data-fmt="euro">5 €</span> pro Stück</span></span></label>
+      <label class="pkg-opt"><input class="pkg-input" type="radio" name="paket" value="abo"><span class="pkg-box"><b>Monats-Abo</b><span><span data-cfg="preisAbo" data-fmt="euro">35 €</span> im Monat</span></span></label>
     </fieldset>
     <div class="fields">
-      <div class="field"><label class="type-label" for="o-name">Dein Name</label><input id="o-name" name="name" type="text" autocomplete="name"></div>
-      <div class="field"><label class="type-label" for="o-kanal">Dein Kanal <span class="opt">(Name oder Link)</span></label><input id="o-kanal" name="kanal" type="text"></div>
-      <div class="field field--full"><label class="type-label" for="o-video">Videotitel oder Thema</label><input id="o-video" name="video" type="text"></div>
-      <div class="field field--full"><label class="type-label" for="o-wunsch">Deine Wünsche <span class="opt">(Text, Farben, Stimmung, Beispiele)</span></label><textarea id="o-wunsch" name="wunsch" rows="3"></textarea></div>
+      <div class="field"><label class="label" for="o-name">Dein Name</label><input id="o-name" name="name" type="text" autocomplete="name"></div>
+      <div class="field"><label class="label" for="o-kanal">Dein Kanal <span class="opt">(Name oder Link)</span></label><input id="o-kanal" name="kanal" type="text"></div>
+      <div class="field field--full"><label class="label" for="o-video">Videotitel oder Thema</label><input id="o-video" name="video" type="text"></div>
+      <div class="field field--full"><label class="label" for="o-wunsch">Deine Wünsche <span class="opt">(Text, Farben, Stimmung)</span></label><textarea id="o-wunsch" name="wunsch" rows="3"></textarea></div>
     </div>
     <details class="preview">
-      <summary class="type-label">Vorschau der E-Mail</summary>
+      <summary>Vorschau der E-Mail</summary>
       <pre id="o-preview"></pre>
     </details>
     <div class="dlg-actions">
-      <a class="btn btn--rose" id="o-gmail" href="#" target="_blank" rel="noopener">In Gmail öffnen</a>
-      <a class="btn btn--line" id="o-mailto" href="#">Mail-Programm öffnen</a>
-      <button class="btn btn--line" type="button" id="o-copy">Text kopieren</button>
+      <a class="btn btn--accent" id="o-gmail" href="#" target="_blank" rel="noopener">In Gmail öffnen</a>
+      <a class="btn btn--ghost" id="o-mailto" href="#">Mail-Programm öffnen</a>
+      <button class="btn btn--ghost" type="button" id="o-copy">Text kopieren</button>
     </div>
     <p class="dlg-note">Fotos und Screenshots hängst du einfach an die Mail an. Du kannst auch direkt an <a data-cfg="email" data-cfg-href="mailto" href="#kontakt">meine E-Mail-Adresse</a> schreiben (<button class="link-btn" type="button" data-copy-email>Adresse kopieren</button>).</p>
     <p class="dlg-status" role="status" aria-live="polite"></p>
@@ -746,8 +593,8 @@ html.has-modal{overflow:hidden}
 <dialog class="lightbox" id="lightbox" aria-labelledby="lb-cap">
   <figure>
     <img id="lb-img" alt="" width="1280" height="720">
-    <button class="dlg-close" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
-    <figcaption id="lb-cap" class="type-label"></figcaption>
+    <button class="dlg-close" type="button" data-close aria-label="Schließen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+    <figcaption id="lb-cap"></figcaption>
   </figure>
 </dialog>
 
@@ -755,7 +602,7 @@ html.has-modal{overflow:hidden}
 <div class="setup-hint" id="setup-hint" hidden><span>Hinweis für dich: Im Impressum fehlen noch Angaben (oben im CONFIG-Block ausfüllen).</span><button type="button">OK</button></div>
 
 <script>
-/* ===================== Seite: Inhalte, Dialoge, Bestellung ===================== */
+/* ===================== Seite: Inhalte, Regler, Dialoge, Bestellung ===================== */
 (function () {
   "use strict";
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -778,6 +625,8 @@ html.has-modal{overflow:hidden}
     $$('[data-cfg-href="mailto"]').forEach(function (a) { a.href = "mailto:" + CONFIG.email; });
     $$("[data-show-if]").forEach(function (el) { if (!cfg(el.getAttribute("data-show-if"))) el.hidden = true; });
     var y = $("#year"); if (y) y.textContent = new Date().getFullYear();
+    var badge = $("#abo-badge");
+    if (badge) badge.textContent = "Lohnt sich ab " + (Math.floor(Number(CONFIG.preisAbo) / Number(CONFIG.preisEinzel)) + 1) + " Videos";
   }
 
   window.applyImages = function () {
@@ -788,22 +637,88 @@ html.has-modal{overflow:hidden}
     });
   };
 
-  /* Manifest: Wörter einzeln aufleuchten lassen (* = Akzentfarbe) */
-  function splitWords() {
-    $$("[data-words]").forEach(function (el) {
-      var raw = el.textContent.trim();
-      var plain = raw.replace(/\*/g, "");
-      el.setAttribute("aria-label", plain);
-      el.textContent = "";
-      raw.split(/\s+/).forEach(function (w, i, all) {
-        var s = document.createElement("span");
-        s.className = "w" + (w.charAt(0) === "*" ? " accent" : "");
-        s.setAttribute("aria-hidden", "true");
-        s.textContent = w.replace(/\*/g, "");
-        el.appendChild(s);
-        if (i < all.length - 1) el.appendChild(document.createTextNode(" "));
-      });
+  /* Vorher-Nachher-Regler */
+  function initCompare() {
+    var box = $("#ba");
+    if (!box) return;
+    var handle = $(".ba-handle", box), before = $(".ba-before", box), after = $(".ba-after", box), cap = $("#ba-cap");
+    var PAIRS = [
+      { b: "finance_before", a: "finance_after", t: "Finanzen", cap: "<b>Klare Botschaft.</b> Eine große Zahl statt langem Titel. Lesbar auch auf dem kleinsten Handy." },
+      { b: "fitness_before", a: "fitness_after", t: "Fitness", cap: "<b>Emotion und Fokus.</b> Ein klares Motiv, das sofort neugierig macht. Man versteht das Video in einer Sekunde." },
+      { b: "gaming_before", a: "gaming_after", t: "Gaming", cap: "<b>Starker Kontrast.</b> Knallige Farben, die sich im Feed von allen anderen Videos abheben." }
+    ];
+    var pos = 50, dragging = false, touched = false;
+    function set(p) {
+      pos = Math.max(0, Math.min(100, p));
+      box.style.setProperty("--pos", pos + "%");
+      handle.setAttribute("aria-valuenow", Math.round(pos));
+      handle.setAttribute("aria-valuetext", Math.round(pos) + " Prozent Vorher");
+    }
+    function fromEvent(e) {
+      var r = box.getBoundingClientRect();
+      set((e.clientX - r.left) / r.width * 100);
+    }
+    box.addEventListener("pointerdown", function (e) {
+      if (e.button !== 0) return;
+      dragging = true; touched = true;
+      box.classList.add("dragging");
+      try { box.setPointerCapture(e.pointerId); } catch (err) {}
+      fromEvent(e);
     });
+    box.addEventListener("pointermove", function (e) { if (dragging) fromEvent(e); });
+    ["pointerup", "pointercancel", "lostpointercapture"].forEach(function (t) {
+      box.addEventListener(t, function () { dragging = false; box.classList.remove("dragging"); });
+    });
+    handle.addEventListener("keydown", function (e) {
+      var step = e.shiftKey ? 10 : 4;
+      if (e.key === "ArrowLeft" || e.key === "ArrowDown") { set(pos - step); e.preventDefault(); }
+      else if (e.key === "ArrowRight" || e.key === "ArrowUp") { set(pos + step); e.preventDefault(); }
+      else if (e.key === "Home") { set(0); e.preventDefault(); }
+      else if (e.key === "End") { set(100); e.preventDefault(); }
+      touched = true;
+    });
+
+    function show(i) {
+      var pair = PAIRS[i], imgs = window.IMAGES || {};
+      $$(".tab").forEach(function (t) { t.setAttribute("aria-selected", String(Number(t.getAttribute("data-pair")) === i)); });
+      cap.innerHTML = pair.cap;
+      before.setAttribute("data-img", pair.b);
+      after.setAttribute("data-img", pair.a);
+      before.alt = "Vorher: " + pair.t + "-Thumbnail ohne Bearbeitung";
+      after.alt = "Nachher: neu gestaltetes " + pair.t + "-Thumbnail";
+      var swap = function () {
+        if (imgs[pair.b]) before.src = imgs[pair.b];
+        if (imgs[pair.a]) after.src = imgs[pair.a];
+        set(50);
+        requestAnimationFrame(function () { box.classList.remove("swap"); });
+      };
+      if (reduceMotion.matches) { swap(); return; }
+      box.classList.add("swap");
+      setTimeout(swap, 250);
+    }
+    $$(".tab").forEach(function (t) {
+      t.addEventListener("click", function () { show(Number(t.getAttribute("data-pair"))); });
+    });
+
+    /* Einmal kurz hin und her schwingen, damit man sieht: hier kann man ziehen */
+    if (!reduceMotion.matches && "IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        if (!entries[0].isIntersecting) return;
+        io.disconnect();
+        var t0 = null;
+        function hint(ts) {
+          if (touched) return;
+          if (t0 === null) t0 = ts;
+          var k = (ts - t0) / 1600;
+          if (k >= 1) { set(50); return; }
+          set(50 + Math.sin(k * Math.PI * 2) * 18 * (1 - k));
+          requestAnimationFrame(hint);
+        }
+        setTimeout(function () { requestAnimationFrame(hint); }, 500);
+      }, { threshold: 0.6 });
+      io.observe(box);
+    }
+    set(50);
   }
 
   var lastFocus = null;
@@ -823,38 +738,6 @@ html.has-modal{overflow:hidden}
       $$("[data-close]", d).forEach(function (b) { b.addEventListener("click", function () { d.close(); }); });
       d.addEventListener("click", function (e) { if (e.target === d) d.close(); });
     });
-  }
-
-  function initCalc() {
-    var r = $("#calc-range");
-    if (!r) return;
-    var out = $("#calc-out"), numEl = $("#calc-num"), live = $("#calc-live"), cta = $("#calc-cta");
-    var single = Number(CONFIG.preisEinzel), abo = Number(CONFIG.preisAbo);
-    var breakEven = Math.floor(abo / single) + 1;
-    var timer = null;
-    function update() {
-      var n = Number(r.value), cost = n * single, diff = cost - abo, text, rec;
-      if (diff > 0) {
-        text = "Einzeln zahlst du " + euro(cost) + ", im Abo nur " + euro(abo) + ". Du sparst " + euro(diff) + " im Monat.";
-        rec = "abo";
-      } else if (diff === 0) {
-        text = "Einzeln " + euro(cost) + ", im Abo " + euro(abo) + ". Gleicher Preis, im Abo aber mit Korrekturen und Vorrang.";
-        rec = "abo";
-      } else {
-        text = "Einzeln zahlst du " + euro(cost) + ", dafür reicht das Einzel-Thumbnail. Ab " + breakEven + " Videos im Monat lohnt sich das Abo.";
-        rec = "einzel";
-      }
-      numEl.textContent = n;
-      out.textContent = text;
-      r.setAttribute("aria-valuetext", n + (n === 1 ? " Video" : " Videos") + " pro Monat");
-      r.style.setProperty("--fill", ((n - r.min) / (r.max - r.min) * 100) + "%");
-      cta.setAttribute("data-order", rec);
-      cta.textContent = rec === "abo" ? "Monats-Abo bestellen" : "Einzel-Thumbnail bestellen";
-      clearTimeout(timer);
-      timer = setTimeout(function () { live.textContent = text; }, 600);
-    }
-    r.addEventListener("input", update);
-    update();
   }
 
   function gmailUrl(to, subject, body) {
@@ -877,7 +760,7 @@ html.has-modal{overflow:hidden}
       var paket = abo ? "das Monats-Abo (" + euro(CONFIG.preisAbo) + " pro Monat)" : "ein Einzel-Thumbnail (" + euro(CONFIG.preisEinzel) + ")";
       var subject = "Anfrage: " + (abo ? "Monats-Abo" : "Einzel-Thumbnail") + (kanal ? " für " + kanal : "");
       var body = [
-        "Hallo " + CONFIG.marke + ",",
+        "Hi " + CONFIG.marke + ",",
         "",
         "ich möchte gerne " + paket + " bestellen.",
         "",
@@ -972,6 +855,37 @@ html.has-modal{overflow:hidden}
     });
   }
 
+  /* Ruhiges Einblenden, Kopfzeile, schwebender Button */
+  function initScroll() {
+    var header = $("#siteHeader"), fab = $("#fab"), hero = $(".hero"), contact = $("#kontakt"), footer = $(".site-footer");
+    function onScroll() { header.classList.toggle("scrolled", window.scrollY > 8); }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    var items = $$(".reveal");
+    if (!("IntersectionObserver" in window)) { items.forEach(function (el) { el.classList.add("in"); }); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    items.forEach(function (el) { io.observe(el); });
+
+    var vis = { hero: true, end: false };
+    function fabUpdate() {
+      var on = !vis.hero && !vis.end;
+      fab.classList.toggle("on", on);
+      fab.setAttribute("aria-hidden", String(!on));
+      fab.tabIndex = on ? 0 : -1;
+    }
+    var io2 = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.target === hero) vis.hero = en.isIntersecting;
+        else vis[en.target.id === "kontakt" ? "c" : "f"] = en.isIntersecting;
+      });
+      vis.end = !!(vis.c || vis.f);
+      fabUpdate();
+    });
+    io2.observe(hero); io2.observe(contact); io2.observe(footer);
+  }
+
   function initSetupHint() {
     var bar = $("#setup-hint");
     var imp = CONFIG.impressum || {};
@@ -986,457 +900,14 @@ html.has-modal{overflow:hidden}
   }
 
   applyConfig();
-  splitWords();
+  initCompare();
   initDialogs();
-  initCalc();
   initOrder();
   initCopyEmail();
   initGallery();
+  initScroll();
   initSetupHint();
 })();
-</script>
-
-<script>
-/* ===================== Erlebnis: eine einzige Animations-Schleife =====================
-   Jedes Bild liest die Scroll-Position, berechnet den Fortschritt jedes Kapitels,
-   setzt CSS-Variablen, bewegt den Cursor und zeichnet die 3D-Szene. */
-(function () {
-  "use strict";
-  var doc = document.documentElement;
-  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-  var clamp = function (v, a, b) { return v < a ? a : v > b ? b : v; };
-  var range = function (v, a, b) { return clamp((v - a) / (b - a), 0, 1); };
-  var easeIO = function (t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
-
-  var header = document.getElementById("siteHeader");
-  var idxEl = document.getElementById("chapterIndex"), nameEl = document.getElementById("chapterName");
-  var navLinks = Array.prototype.slice.call(document.querySelectorAll("[data-nav]"));
-  var themed = Array.prototype.slice.call(document.querySelectorAll("[data-theme]")).filter(function (el) { return el !== header; });
-
-  /* ---- Kapitel-Steuerungen ---- */
-  var controllers = {
-    auftakt: {},
-    feed: (function () {
-      var words = [];
-      return {
-        measure: function (el) { words = Array.prototype.slice.call(el.querySelectorAll(".manifesto .w")); },
-        update: function (p) {
-          var n = words.length, lit = Math.round(range(p, .04, .6) * n);
-          for (var i = 0; i < n; i++) words[i].classList.toggle("on", i < lit);
-        }
-      };
-    })(),
-    verwandlung: (function () {
-      var cards, idx, mB, mA, bar, fb, fbB, fbA, cur = -1;
-      var PAIRS = [["finance_before", "finance_after"], ["fitness_before", "fitness_after"], ["gaming_before", "gaming_after"]];
-      return {
-        measure: function (el) {
-          cards = el.querySelectorAll(".morph-card"); idx = document.getElementById("morphIdx");
-          mB = document.getElementById("mBefore"); mA = document.getElementById("mAfter");
-          bar = el.querySelector(".meter"); fb = el.querySelector(".morph-fallback");
-          fbB = el.querySelector(".fb-before"); fbA = el.querySelector(".fb-after");
-        },
-        update: function (p, el) {
-          var st = window.morphState(p);
-          bar.style.setProperty("--mix", st.mix.toFixed(3));
-          fb.style.setProperty("--mix", st.mix.toFixed(3));
-          mB.classList.toggle("is-on", st.mix < .5); mA.classList.toggle("is-on", st.mix >= .5);
-          if (st.pair !== cur) {
-            cur = st.pair;
-            for (var i = 0; i < cards.length; i++) cards[i].classList.toggle("on", i === cur);
-            idx.textContent = "0" + (cur + 1);
-            var im = window.IMAGES || {};
-            if (im[PAIRS[cur][0]]) { fbB.src = im[PAIRS[cur][0]]; fbA.src = im[PAIRS[cur][1]]; }
-          }
-        }
-      };
-    })(),
-    ablauf: (function () {
-      var steps, line;
-      return {
-        measure: function (el) { steps = el.querySelectorAll(".step"); line = el.querySelector(".flow-line"); },
-        update: function (p) {
-          var a = Math.min(steps.length - 1, Math.floor(range(p, .05, .85) * steps.length));
-          for (var i = 0; i < steps.length; i++) steps[i].classList.toggle("on", i === a || (window.innerWidth >= 900 && i < a));
-          line.style.setProperty("--fill", range(p, .05, .85).toFixed(3));
-        }
-      };
-    })(),
-    beispiele: (function () {
-      var track, dist = 0;
-      return {
-        measure: function (el) {
-          track = el.querySelector(".track");
-          dist = Math.max(0, track.scrollWidth - window.innerWidth);
-          el.style.height = Math.round(dist + window.innerHeight * 1.6) + "px";
-        },
-        update: function (p) { track.style.setProperty("--tx", (-dist * easeIO(range(p, .08, .94))).toFixed(1) + "px"); }
-      };
-    })(),
-    preise: {}
-  };
-
-  /* Zustand des Vorher-Nachher-Bildschirms in Kapitel 03 (wird auch von der 3D-Szene benutzt) */
-  window.morphState = function (p) {
-    var k = Math.min(2, Math.floor(p * 3)), q = p * 3 - k, pair = k, mix, spin = 0, desat = 0;
-    if (k > 0 && q < .24) {
-      var t = q / .24; spin = easeIO(t);
-      if (t < .5) { pair = k - 1; mix = 1; } else { mix = 0; }
-    } else {
-      mix = easeIO(range(q, k === 0 ? .32 : .36, .84));
-    }
-    if (k === 0) desat = .85 * (1 - range(q, .05, .3));
-    return { pair: pair, mix: mix, spin: spin, desat: desat };
-  };
-
-  var chapters = Array.prototype.slice.call(document.querySelectorAll("[data-chapter]")).map(function (el, i) {
-    return { el: el, id: el.id, name: el.getAttribute("data-name"), i: i, top: 0, h: 1, p: -1, ctrl: controllers[el.id] || {} };
-  });
-
-  var vh = window.innerHeight, sy = window.scrollY, active = -1, theme = "";
-  function measure() {
-    vh = window.innerHeight;
-    chapters.forEach(function (c) { if (c.ctrl.measure) c.ctrl.measure(c.el); });
-    chapters.forEach(function (c) { var r = c.el.getBoundingClientRect(); c.top = r.top + window.scrollY; c.h = c.el.offsetHeight; c.p = -1; });
-    themed.forEach(function (el) { var r = el.getBoundingClientRect(); el._top = r.top + window.scrollY; el._bottom = el._top + el.offsetHeight; });
-  }
-  window.addEventListener("resize", measure);
-  window.addEventListener("load", measure);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
-  if ("ResizeObserver" in window) new ResizeObserver(measure).observe(document.body);
-  measure();
-
-  /* ---- Weiche Sprünge zu Ankern (im selben Loop) ---- */
-  var tween = null;
-  function targetY(el) { return Math.max(0, Math.min(el.getBoundingClientRect().top + window.scrollY, document.documentElement.scrollHeight - vh)); }
-  window.scrollToEl = function (el) {
-    var y = targetY(el);
-    if (reduce.matches) { tween = null; window.scrollTo(0, y); return; }
-    var from = window.scrollY, dist = Math.abs(y - from) / vh;
-    tween = { from: from, to: y, t0: performance.now(), dur: Math.min(2.2, .7 + .12 * dist) * 1000 };
-  };
-  ["wheel", "touchstart", "keydown"].forEach(function (t) { window.addEventListener(t, function () { tween = null; }, { passive: true }); });
-  document.addEventListener("click", function (e) {
-    var a = e.target.closest && e.target.closest('a[href^="#"]');
-    if (!a) return;
-    var hash = a.getAttribute("href");
-    var el = hash.length > 1 ? document.getElementById(hash.slice(1)) : null;
-    if (hash === "#top") el = document.body;
-    if (!el) return;
-    e.preventDefault();
-    if (el.tagName === "DETAILS") { el.open = true; measure(); }
-    window.scrollToEl(el);
-    if (history.pushState) history.pushState(null, "", hash);
-  });
-  function fromHash() {
-    var h = location.hash.slice(1), el = h && document.getElementById(h);
-    if (el && el.tagName === "DETAILS") { el.open = true; measure(); window.scrollTo(0, targetY(el)); }
-  }
-  window.addEventListener("hashchange", fromHash);
-
-  /* ---- Cursor ---- */
-  var fine = window.matchMedia("(hover: hover) and (pointer: fine)");
-  var dot = document.querySelector(".cursor-dot"), ring = document.querySelector(".cursor-ring");
-  var mx = -100, my = -100, rx = -100, ry = -100, seen = false;
-  window.pointer = { x: 0, y: 0 };
-  function setCursorMode() { doc.classList.toggle("has-cursor", fine.matches); }
-  setCursorMode();
-  if (fine.addEventListener) fine.addEventListener("change", setCursorMode);
-  window.addEventListener("pointermove", function (e) {
-    mx = e.clientX; my = e.clientY;
-    if (!seen) { rx = mx; ry = my; seen = true; }
-    window.pointer.x = mx / window.innerWidth * 2 - 1; window.pointer.y = my / window.innerHeight * 2 - 1;
-    var hov = e.target.closest && e.target.closest("a,button,label,summary,[role=button],input[type=range]");
-    doc.classList.toggle("cursor-hover", !!hov);
-    doc.classList.remove("cursor-out");
-  }, { passive: true });
-  document.addEventListener("pointerleave", function () { doc.classList.add("cursor-out"); });
-
-  /* ---- Einblenden beim Scrollen ---- */
-  var reveals = document.querySelectorAll(".reveal");
-  if ("IntersectionObserver" in window && !reduce.matches) {
-    var io = new IntersectionObserver(function (en) {
-      en.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } });
-    }, { threshold: .18 });
-    Array.prototype.forEach.call(reveals, function (el) { io.observe(el); });
-  } else Array.prototype.forEach.call(reveals, function (el) { el.classList.add("in"); });
-
-  /* ---- Die Schleife ---- */
-  var last = performance.now();
-  function frame(now) {
-    var dt = Math.min(.05, (now - last) / 1000); last = now;
-    if (tween) {
-      var t = clamp((now - tween.t0) / tween.dur, 0, 1);
-      window.scrollTo(0, tween.from + (tween.to - tween.from) * easeIO(t));
-      if (t >= 1) tween = null;
-    }
-    sy = window.scrollY;
-    var mid = sy + vh / 2, act = 0;
-    for (var i = 0; i < chapters.length; i++) {
-      var c = chapters[i];
-      var p = c.h > vh ? clamp((sy - c.top) / (c.h - vh), 0, 1) : clamp((sy - c.top + vh) / (c.h + vh), 0, 1);
-      if (c.top <= mid) act = i;
-      if (Math.abs(p - c.p) > .0001) {
-        c.p = p;
-        c.el.style.setProperty("--p", p.toFixed(4));
-        if (c.ctrl.update) c.ctrl.update(p, c.el);
-      }
-    }
-    if (act !== active) {
-      active = act;
-      idxEl.textContent = "0" + (act + 1);
-      nameEl.textContent = chapters[act].name;
-      navLinks.forEach(function (a) { a.setAttribute("aria-current", a.getAttribute("data-nav") === chapters[act].id ? "true" : "false"); });
-    }
-    var probe = sy + 40, th = "night";
-    for (var j = 0; j < themed.length; j++) if (themed[j]._top <= probe && themed[j]._bottom > probe) th = themed[j].getAttribute("data-theme");
-    if (th !== theme) { theme = th; header.setAttribute("data-theme", th); }
-
-    if (seen) {
-      var k = 1 - Math.exp(-14 * dt);
-      rx += (mx - rx) * k; ry += (my - ry) * k;
-      dot.style.transform = "translate3d(" + mx + "px," + my + "px,0)";
-      ring.style.transform = "translate3d(" + rx.toFixed(1) + "px," + ry.toFixed(1) + "px,0)";
-    }
-    if (window.scene3d) {
-      var ch = chapters[act];
-      window.scene3d.render(act + Math.max(0, ch.p), dt, now / 1000);
-    }
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-
-  if (document.fonts && document.fonts.load) {
-    ['400 16px "Italiana"', '300 16px "Manrope"', '400 16px "Manrope"', '400 16px "DM Mono"'].forEach(function (f) { document.fonts.load(f); });
-  }
-  setTimeout(function () { document.body.classList.add("loaded"); fromHash(); }, 450);
-})();
-</script>
-
-<script type="importmap">
-{ "imports": { "three": "./assets/vendor/three.module.min.js" } }
-</script>
-<script type="module">
-/* ===================== 3D-Szene: schwebender Glas-Bildschirm mit Rotgold-Rahmen ===================== */
-import * as THREE from "three";
-import { RoomEnvironment } from "./assets/vendor/RoomEnvironment.js";
-import { RoundedBoxGeometry } from "./assets/vendor/RoundedBoxGeometry.js";
-
-const canvas = document.getElementById("stage");
-let renderer;
-try {
-  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
-} catch (e) {
-  document.documentElement.classList.add("no-webgl");
-  throw e;
-}
-renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
-renderer.setClearColor(0x0B0B0C, 1);
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.85;
-
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
-camera.position.set(0, 0, 7.5);
-const pmrem = new THREE.PMREMGenerator(renderer);
-scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-
-const ROSE = new THREE.Color(0xC99A7A), CHAMP = new THREE.Color(0xEFE6D2);
-
-/* --- Bildschirm-Bilder aus window.IMAGES --- */
-const IM = window.IMAGES || {};
-const loader = new THREE.TextureLoader();
-const maxAniso = renderer.capabilities.getMaxAnisotropy();
-const tex = {};
-function T(key) {
-  if (!tex[key]) {
-    const t = IM[key] ? loader.load(IM[key]) : new THREE.Texture();
-    t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = Math.min(8, maxAniso);
-    tex[key] = t;
-  }
-  return tex[key];
-}
-const PAIRS = [["finance_before", "finance_after"], ["fitness_before", "fitness_after"], ["gaming_before", "gaming_after"]];
-PAIRS.flat().forEach(T);
-
-/* --- Gerät --- */
-const device = new THREE.Group();
-scene.add(device);
-const W = 3.2, H = 1.9, D = 0.11;
-const body = new THREE.Mesh(
-  new RoundedBoxGeometry(W, H, D, 6, 0.09),
-  new THREE.MeshPhysicalMaterial({ color: ROSE, metalness: 1, roughness: 0.28, clearcoat: 0.6, clearcoatRoughness: 0.2, envMapIntensity: 1.1 })
-);
-device.add(body);
-const bezel = new THREE.Mesh(
-  new RoundedBoxGeometry(W - 0.07, H - 0.07, 0.02, 4, 0.06),
-  new THREE.MeshPhysicalMaterial({ color: 0x050506, metalness: 0.2, roughness: 0.15, clearcoat: 1, clearcoatRoughness: 0.05 })
-);
-bezel.position.z = D / 2 + 0.002;
-device.add(bezel);
-
-const SW = 2.98, SH = SW * 9 / 16;
-const screenMat = new THREE.ShaderMaterial({
-  uniforms: {
-    tA: { value: T(PAIRS[0][0]) }, tB: { value: T(PAIRS[0][1]) },
-    uMix: { value: 1 }, uDesat: { value: 0 }, uDim: { value: 1 }, uTime: { value: 0 },
-    uRose: { value: new THREE.Vector3(ROSE.r, ROSE.g, ROSE.b) }, uAspect: { value: SW / SH }
-  },
-  vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
-  fragmentShader: `
-    uniform sampler2D tA; uniform sampler2D tB; uniform float uMix; uniform float uDesat; uniform float uDim; uniform float uTime; uniform vec3 uRose; uniform float uAspect;
-    varying vec2 vUv;
-    float rbox(vec2 p, vec2 b, float r){ vec2 q = abs(p) - b + r; return length(max(q,0.0)) + min(max(q.x,q.y),0.0) - r; }
-    void main(){
-      vec2 p = (vUv - 0.5) * vec2(uAspect, 1.0);
-      float d = rbox(p, vec2(uAspect*0.5, 0.5), 0.035);
-      if (d > 0.0) discard;
-      vec3 a = texture2D(tA, vUv).rgb;
-      vec3 b = texture2D(tB, vUv).rgb;
-      float g = dot(a, vec3(0.299,0.587,0.114));
-      a = mix(a, vec3(g) * 0.8, uDesat);
-      float wave = 0.035 * sin(vUv.y * 9.0 + uTime * 1.6) + 0.018 * sin(vUv.y * 23.0 - uTime * 2.3);
-      float edge = uMix * 1.16 - 0.08 + wave * step(0.001, uMix) * step(uMix, 0.999);
-      float m = smoothstep(edge + 0.006, edge - 0.006, vUv.x);
-      vec3 col = mix(a, b, m);
-      float glow = exp(-abs(vUv.x - edge) * 70.0) * step(0.001, uMix) * step(uMix, 0.999);
-      col += uRose * glow * 0.9;
-      col *= uDim;
-      gl_FragColor = vec4(col, 1.0);
-      #include <colorspace_fragment>
-    }`,
-  toneMapped: false
-});
-const screen = new THREE.Mesh(new THREE.PlaneGeometry(SW, SH), screenMat);
-screen.position.z = D / 2 + 0.014;
-device.add(screen);
-const glass = new THREE.Mesh(
-  new THREE.PlaneGeometry(W - 0.08, H - 0.08),
-  new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0, roughness: 0.04, transparent: true, opacity: 0.08, clearcoat: 1, envMapIntensity: 1.6, depthWrite: false })
-);
-glass.position.z = D / 2 + 0.02;
-device.add(glass);
-
-/* --- Halo, Ring und Staub --- */
-function glowTexture() {
-  const c = document.createElement("canvas"); c.width = c.height = 256;
-  const g = c.getContext("2d"), gr = g.createRadialGradient(128, 128, 0, 128, 128, 128);
-  gr.addColorStop(0, "rgba(201,154,122,0.55)"); gr.addColorStop(0.4, "rgba(201,154,122,0.16)"); gr.addColorStop(1, "rgba(201,154,122,0)");
-  g.fillStyle = gr; g.fillRect(0, 0, 256, 256);
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
-}
-const halo = new THREE.Mesh(new THREE.PlaneGeometry(9, 9), new THREE.MeshBasicMaterial({ map: glowTexture(), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false }));
-halo.position.z = -1.2;
-scene.add(halo);
-const ring = new THREE.Mesh(new THREE.TorusGeometry(2.55, 0.006, 8, 220), new THREE.MeshBasicMaterial({ color: ROSE, transparent: true, opacity: 0.5, toneMapped: false }));
-ring.position.z = -0.9;
-scene.add(ring);
-const ring2 = new THREE.Mesh(new THREE.TorusGeometry(3.1, 0.003, 8, 220), new THREE.MeshBasicMaterial({ color: CHAMP, transparent: true, opacity: 0.16, toneMapped: false }));
-ring2.position.z = -1.0;
-scene.add(ring2);
-
-const N = 380, pos = new Float32Array(N * 3), seeds = new Float32Array(N);
-for (let i = 0; i < N; i++) { pos[i*3] = (Math.random() - 0.5) * 14; pos[i*3+1] = (Math.random() - 0.5) * 9; pos[i*3+2] = -Math.random() * 6 + 1; seeds[i] = Math.random(); }
-const dustGeo = new THREE.BufferGeometry();
-dustGeo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: CHAMP, size: 0.018, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false }));
-scene.add(dust);
-
-const key = new THREE.DirectionalLight(0xfff1e0, 1.6); key.position.set(3, 4, 5); scene.add(key);
-const rim = new THREE.DirectionalLight(0xC99A7A, 2.2); rim.position.set(-5, 1, -3); scene.add(rim);
-
-/* --- Posen pro Kapitel --- */
-const P = (x, y, z, rx, ry, rz, s, dim) => ({ x, y, z, rx, ry, rz, s, dim });
-const DESK = [
-  P(1.45, -0.05, 0.0, 0.06, -0.48, 0.02, 1.0, 1.0),   // 01 Auftakt
-  P(1.25, -0.15, -0.9, 0.18, -0.72, 0.05, 0.95, 0.92), // 02 Feed
-  P(0.0, -0.12, 0.35, 0.0, 0.0, 0.0, 0.9, 1.0),         // 03 Verwandlung
-  P(1.55, 0.0, -0.4, 0.1, -0.88, 0.0, 0.92, 0.95),      // 04 Ablauf
-  P(0.0, 4.6, -4.0, 0.6, 0.0, 0.0, 0.7, 0.4),           // 05 Beispiele
-  P(0.0, 0.3, -5.0, 0.2, 0.6, 0.0, 0.8, 0.35)           // 06 Preise
-];
-const MOB = [
-  P(0.0, 1.05, -0.2, 0.08, -0.32, 0.03, 0.5, 1.0),
-  P(0.0, 0.95, -0.6, 0.22, -0.55, 0.05, 0.5, 0.92),
-  P(0.0, 0.22, 0.4, 0.0, 0.0, 0.0, 0.56, 1.0),
-  P(0.0, 1.0, -0.4, 0.12, -0.5, 0.0, 0.48, 0.95),
-  P(0.0, 4.6, -4.0, 0.6, 0.0, 0.0, 0.5, 0.4),
-  P(0.0, 0.3, -5.0, 0.2, 0.6, 0.0, 0.5, 0.35)
-];
-const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-const range = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
-const easeIO = (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-const lerp = (a, b, t) => a + (b - a) * t;
-function poseAt(s, list) {
-  const i = clamp(Math.floor(s), 0, list.length - 1), p = s - i;
-  const a = list[i], b = list[Math.min(i + 1, list.length - 1)];
-  const t = easeIO(range(p, 0.62, 1));
-  const o = {};
-  for (const k in a) o[k] = lerp(a[k], b[k], t);
-  return o;
-}
-
-let mobile = false;
-function resize() {
-  const w = window.innerWidth, h = window.innerHeight;
-  renderer.setSize(w, h, false);
-  camera.aspect = w / h; camera.updateProjectionMatrix();
-  mobile = w / h < 0.85;
-}
-window.addEventListener("resize", resize);
-resize();
-
-const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-const cur = poseAt(0, DESK);
-let sm = null, px = 0, py = 0, curPair = -1;
-
-window.scene3d = {
-  render(story, dt, time) {
-    const target = poseAt(story, mobile ? MOB : DESK);
-    if (!sm || reduce.matches) sm = Object.assign({}, target);
-    else { const k = 1 - Math.exp(-6 * dt); for (const key in target) sm[key] += (target[key] - sm[key]) * k; }
-
-    /* Bildschirm-Inhalt */
-    let pair = 0, mix = 1, desat = 0, spin = 0;
-    if (story < 1) { mix = 1; }
-    else if (story < 2) { const p = story - 1; mix = 1 - easeIO(range(p, 0.1, 0.55)); desat = 0.85 * range(p, 0.25, 0.6); }
-    else if (story < 3) { const st = window.morphState(story - 2); pair = st.pair; mix = st.mix; spin = st.spin; desat = st.desat; }
-    else { pair = 2; mix = 1; }
-    if (pair !== curPair) { curPair = pair; screenMat.uniforms.tA.value = T(PAIRS[pair][0]); screenMat.uniforms.tB.value = T(PAIRS[pair][1]); }
-    screenMat.uniforms.uMix.value = mix;
-    screenMat.uniforms.uDesat.value = desat;
-    screenMat.uniforms.uDim.value = sm.dim;
-    screenMat.uniforms.uTime.value = time;
-
-    /* Bewegung */
-    const still = reduce.matches ? 0 : 1;
-    const ptr = window.pointer || { x: 0, y: 0 };
-    px += (ptr.x - px) * Math.min(1, dt * 3); py += (ptr.y - py) * Math.min(1, dt * 3);
-    device.position.set(sm.x, sm.y + Math.sin(time * 0.8) * 0.035 * still, sm.z);
-    device.rotation.set(sm.rx + py * 0.06 * still + Math.sin(time * 0.6) * 0.012 * still, sm.ry + px * 0.1 * still + spin * Math.PI * 2, sm.rz);
-    device.scale.setScalar(sm.s);
-    halo.position.set(sm.x * 0.9, sm.y * 0.9, sm.z - 1.4);
-    halo.scale.setScalar(sm.s * (0.95 + 0.05 * Math.sin(time * 0.7)));
-    halo.material.opacity = 0.9 * sm.dim;
-    ring.position.set(sm.x * 0.95, sm.y * 0.95, sm.z - 0.9);
-    ring.scale.setScalar(sm.s);
-    ring.rotation.set(1.15 + py * 0.05, sm.ry * 0.4, time * 0.05 * still);
-    ring2.position.copy(ring.position); ring2.scale.setScalar(sm.s);
-    ring2.rotation.set(1.3, -0.3 + sm.ry * 0.3, -time * 0.03 * still);
-    ring.material.opacity = 0.5 * sm.dim; ring2.material.opacity = 0.16 * sm.dim;
-
-    const arr = dustGeo.attributes.position.array;
-    if (still) {
-      for (let i = 0; i < N; i++) { arr[i*3+1] += dt * (0.05 + seeds[i] * 0.08); if (arr[i*3+1] > 4.5) arr[i*3+1] = -4.5; }
-      dustGeo.attributes.position.needsUpdate = true;
-    }
-    dust.rotation.y = px * 0.05;
-    camera.position.y = -story * 0.04;
-    camera.lookAt(0, camera.position.y, 0);
-    renderer.render(scene, camera);
-  }
-};
 </script>
 
 <script>
